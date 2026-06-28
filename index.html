@@ -1,12 +1,11 @@
-
-                                <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S-JARVIS: GPT Vision Edition</title>
+    <title>S-JARVIS: GPT Edition</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         
         body { 
             background-color: #212121; color: #ececf1; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
@@ -22,7 +21,7 @@
         }
         
         .message-row {
-            width: 100%; padding: 22px 18px; display: flex; justify-content: center;
+            width: 100%; padding: 20px 15px; display: flex; justify-content: center;
         }
         .user-row { background-color: #212121; }
         .ai-row {
@@ -30,27 +29,22 @@
         }
         
         .message-content {
-            width: 100%; max-width: 768px; display: flex; gap: 16px; font-size: 1rem; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap;
+            width: 100%; max-width: 768px; display: flex; gap: 14px; font-size: 1rem; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap;
         }
         
         .avatar {
-            width: 32px; height: 32px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85rem; flex-shrink: 0;
+            width: 30px; height: 30px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85rem; flex-shrink: 0;
         }
         .user-avatar { background-color: #543dcd; color: white; }
         .ai-avatar { background-color: #10a37f; color: white; }
         
         .text { flex: 1; color: #d1d1d3; padding-top: 2px; }
         
-        /* Chat Image Preview Style */
-        .chat-img {
-            max-width: 100%; max-height: 220px; border-radius: 8px; margin-top: 8px; border: 1px solid #4d4d4d; display: block;
-        }
-        
         .input-outer {
             padding: 16px; background-color: #212121; display: flex; justify-content: center; width: 100%;
         }
         .input-container {
-            width: 100%; max-width: 768px; background-color: #2f2f2f; border: 1px solid #4d4d4d; border-radius: 12px; display: flex; align-items: center; padding: 4px 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 100%; max-width: 768px; background-color: #2f2f2f; border: 1px solid #4d4d4d; border-radius: 12px; display: flex; align-items: center; padding: 4px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         input { 
             flex: 1; padding: 12px; border: none; background: transparent; color: #ececf1; outline: none; font-size: 1rem;
@@ -58,109 +52,35 @@
         input::placeholder { color: #8e8e93; }
         
         .btn { 
-            background: transparent; border: none; color: #b4b4b4; width: 38px; height: 38px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; border-radius: 8px; transition: 0.2s;
+            background: transparent; border: none; color: #b4b4b4; width: 38px; height: 38px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.2s;
         }
-        .btn:active { background-color: #3d3d3d; }
-        .send-btn { color: #10a37f; font-size: 1.2rem; }
-        .mic-active { background-color: #ef4444 !important; color: white !important; }
+        .send-btn { color: #10a37f; }
     </style>
 </head>
 <body>
 
-    <div class="header">S-JARVIS (GPT-4o Vision)</div>
+    <div class="header">S-JARVIS (GPT-4o)</div>
     
     <div class="chat-container" id="chatContainer"></div>
 
     <div class="input-outer">
         <div class="input-container">
-            <button class="btn" id="micBtn" onclick="startVoice()">🎤</button>
-            <button class="btn" onclick="triggerCamera()">📷</button>
-            <input type="text" id="userInput" placeholder="Message S-Jarvis or send photo..." onkeypress="if(event.key==='Enter')sendMessage()">
+            <input type="text" id="userInput" placeholder="Message S-Jarvis..." onkeypress="if(event.key==='Enter')sendMessage()">
             <button class="btn send-btn" onclick="sendMessage()">➤</button>
         </div>
     </div>
 
-    <input type="file" id="cameraInput" accept="image/*" onchange="handlePhoto(this)" style="display:none;">
-
     <script>
         var url = "https://text.pollinations.ai/";
-        var system_prompt = "You are S-JARVIS, a highly advanced AI developed for Master Sachin Saini. Reply in friendly, clean Hinglish.";
+        var system_prompt = "You are S-JARVIS, a highly advanced AI developed for Master Sachin Saini. Reply in friendly, clean Hinglish, mimicking a premium ChatGPT style.";
 
-        function jarvisSpeak(text) {
-            try {
-                if ('speechSynthesis' in window && window.speechSynthesis) {
-                    window.speechSynthesis.cancel();
-                    var cleanText = text.replace(/[*#_\[\]]/g, '');
-                    var utterance = new SpeechSynthesisUtterance(cleanText);
-                    utterance.lang = 'hi-IN';
-                    window.speechSynthesis.speak(utterance);
-                }
-            } catch (e) { console.log("Voice blocked."); }
-        }
-
-        // Welcome Greeting
+        // Direct Welcome Message
         try {
-            var welcomeMsg = "Hello Master Sachin. Jarvis Vision system online. Type a message or click 📷 to capture a photo, Boss.";
+            var welcomeMsg = "Hello Master Sachin. S-Jarvis GPT framework is online and ready. How can I help you today, Boss?";
             appendMessage(welcomeMsg, 'ai');
-            jarvisSpeak(welcomeMsg);
         } catch(e) { console.log(e); }
 
-        // Camera Activation
-        function triggerCamera() {
-            document.getElementById('cameraInput').click();
-        }
-
-        // Processing Captured Photo
-        function handlePhoto(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    // Display User Photo in Chat Row
-                    appendImageMessage(e.target.result, 'user');
-                    
-                    // Jarvis Simulated Vision Analysis Response
-                    setTimeout(function() {
-                        var visionReply = "Boss, maine aapki photo receive kar li hai. Mera cybernetic mainframe grid ise successfully process kar raha hai!";
-                        appendMessage(visionReply, 'ai');
-                        jarvisSpeak(visionReply);
-                    }, 1000);
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        // Voice Command
-        function startVoice() {
-            try {
-                var SpeechClass = window.SpeechRecognition || window.webkitSpeechRecognition;
-                if(!SpeechClass) {
-                    alert("Kripya type karke message bhejein, Boss!");
-                    return;
-                }
-                var recognition = new SpeechClass();
-                recognition.lang = 'hi-IN';
-                var micBtn = document.getElementById('micBtn');
-
-                recognition.onstart = function() {
-                    micBtn.className = 'btn mic-active';
-                    document.getElementById('userInput').placeholder = "Listening...";
-                };
-                recognition.onresult = function(event) {
-                    document.getElementById('userInput').value = event.results[0][0].transcript;
-                    sendMessage();
-                };
-                recognition.onerror = function() { stopMic(); };
-                recognition.onend = function() { stopMic(); };
-                recognition.start();
-            } catch(e) { alert("Mic error."); }
-        }
-
-        function stopMic() {
-            document.getElementById('micBtn').className = 'btn';
-            document.getElementById('userInput').placeholder = "Message S-Jarvis or send photo...";
-        }
-
-        // Text Message Transmission
+        // Bulletproof Message Sender (XMLHttpRequest for maximum compatibility)
         function sendMessage() {
             try {
                 var inputField = document.getElementById('userInput');
@@ -170,42 +90,56 @@
                 inputField.value = '';
                 appendMessage(userText, 'user');
 
+                // Quick Local Commands
                 var lowerText = userText.toLowerCase();
                 if (lowerText.indexOf('time') !== -1 || lowerText.indexOf('samay') !== -1) {
                     respondLocal("Current system time is " + new Date().toLocaleTimeString());
                     return;
                 }
+                if (lowerText.indexOf('date') !== -1 || lowerText.indexOf('tarikh') !== -1) {
+                    respondLocal("Today's date is " + new Date().toLocaleDateString());
+                    return;
+                }
 
+                // API Request
                 var xhr = new XMLHttpRequest();
                 var apiLink = url + encodeURIComponent(userText) + "?system=" + encodeURIComponent(system_prompt);
                 
                 xhr.open("GET", apiLink, true);
                 xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        var replyText = xhr.responseText;
-                        appendMessage(replyText, 'ai');
-                        jarvisSpeak(replyText);
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            var replyText = xhr.responseText;
+                            appendMessage(replyText, 'ai');
+                        } else {
+                            respondLocal("Mainframe connection sync failed.");
+                        }
                     }
                 };
                 xhr.send();
-            } catch (e) { respondLocal("Data sync failure, Boss."); }
+
+            } catch (e) {
+                respondLocal("Network data channel error.");
+            }
         }
 
         function respondLocal(text) {
             appendMessage(text, 'ai');
-            jarvisSpeak(text);
         }
 
-        // Text Appender
         function appendMessage(text, sender) {
             var container = document.getElementById('chatContainer');
+            
             var row = document.createElement('div');
             row.className = 'message-row ' + (sender === 'user' ? 'user-row' : 'ai-row');
+            
             var content = document.createElement('div');
             content.className = 'message-content';
+            
             var avatar = document.createElement('div');
             avatar.className = 'avatar ' + (sender === 'user' ? 'user-avatar' : 'ai-avatar');
             avatar.innerText = sender === 'user' ? 'S' : 'G';
+            
             var txtDiv = document.createElement('div');
             txtDiv.className = 'text';
             txtDiv.innerText = text;
@@ -214,36 +148,13 @@
             content.appendChild(txtDiv);
             row.appendChild(content);
             container.appendChild(row);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        // Image Appender (ChatGPT Layout Style)
-        function appendImageMessage(imageSrc, sender) {
-            var container = document.getElementById('chatContainer');
-            var row = document.createElement('div');
-            row.className = 'message-row ' + (sender === 'user' ? 'user-row' : 'ai-row');
-            var content = document.createElement('div');
-            content.className = 'message-content';
-            var avatar = document.createElement('div');
-            avatar.className = 'avatar ' + (sender === 'user' ? 'user-avatar' : 'ai-avatar');
-            avatar.innerText = sender === 'user' ? 'S' : 'G';
-            var txtDiv = document.createElement('div');
-            txtDiv.className = 'text';
             
-            var img = document.createElement('img');
-            img.src = imageSrc;
-            img.className = 'chat-img';
-            
-            txtDiv.appendChild(document.createTextNode(sender === 'user' ? 'Sent a photo Grid:' : 'Analysis Grid:'));
-            txtDiv.appendChild(img);
-            
-            content.appendChild(avatar);
-            content.appendChild(txtDiv);
-            row.appendChild(content);
-            container.appendChild(row);
             container.scrollTop = container.scrollHeight;
         }
     </script>
 </body>
-    </html>
+</html>
+
+            
+            
     
