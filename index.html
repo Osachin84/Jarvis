@@ -1,160 +1,100 @@
-<!DOCTYPE html>
+                    <!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S-JARVIS: GPT Edition</title>
+    <title>S-JARVIS: GPT Vision</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        
-        body { 
-            background-color: #212121; color: #ececf1; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
-        }
-        
-        .header { 
-            background-color: #212121; padding: 14px; text-align: center; font-size: 0.95rem; font-weight: 600; 
-            border-bottom: 1px solid #2f2f2f; color: #b4b4b4; letter-spacing: 0.5px;
-        }
-        
-        .chat-container { 
-            flex: 1; overflow-y: auto; display: flex; flex-direction: column; background-color: #212121;
-        }
-        
-        .message-row {
-            width: 100%; padding: 20px 15px; display: flex; justify-content: center;
-        }
+        body { background-color: #212121; color: #ececf1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .header { background-color: #212121; padding: 14px; text-align: center; font-size: 0.95rem; font-weight: 600; border-bottom: 1px solid #2f2f2f; color: #b4b4b4; }
+        .chat-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; background-color: #212121; }
+        .message-row { width: 100%; padding: 20px 15px; display: flex; justify-content: center; }
         .user-row { background-color: #212121; }
-        .ai-row {
-            background-color: #2f2f2f; border-top: 1px solid #2a2a2a; border-bottom: 1px solid #2a2a2a;
-        }
-        
-        .message-content {
-            width: 100%; max-width: 768px; display: flex; gap: 14px; font-size: 1rem; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap;
-        }
-        
-        .avatar {
-            width: 30px; height: 30px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85rem; flex-shrink: 0;
-        }
+        .ai-row { background-color: #2f2f2f; border-top: 1px solid #2a2a2a; border-bottom: 1px solid #2a2a2a; }
+        .message-content { width: 100%; max-width: 768px; display: flex; gap: 14px; font-size: 1rem; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap; }
+        .avatar { width: 30px; height: 30px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85rem; flex-shrink: 0; }
         .user-avatar { background-color: #543dcd; color: white; }
         .ai-avatar { background-color: #10a37f; color: white; }
-        
         .text { flex: 1; color: #d1d1d3; padding-top: 2px; }
-        
-        .input-outer {
-            padding: 16px; background-color: #212121; display: flex; justify-content: center; width: 100%;
-        }
-        .input-container {
-            width: 100%; max-width: 768px; background-color: #2f2f2f; border: 1px solid #4d4d4d; border-radius: 12px; display: flex; align-items: center; padding: 4px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        input { 
-            flex: 1; padding: 12px; border: none; background: transparent; color: #ececf1; outline: none; font-size: 1rem;
-        }
-        input::placeholder { color: #8e8e93; }
-        
-        .btn { 
-            background: transparent; border: none; color: #b4b4b4; width: 38px; height: 38px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.2s;
-        }
+        .chat-img { max-width: 100%; max-height: 200px; border-radius: 8px; margin-top: 8px; border: 1px solid #4d4d4d; display: block; }
+        .input-outer { padding: 16px; background-color: #212121; display: flex; justify-content: center; width: 100%; }
+        .input-container { width: 100%; max-width: 768px; background-color: #2f2f2f; border: 1px solid #4d4d4d; border-radius: 12px; display: flex; align-items: center; padding: 4px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        input { flex: 1; padding: 12px; border: none; background: transparent; color: #ececf1; outline: none; font-size: 1rem; }
+        .btn { background: transparent; border: none; color: #b4b4b4; width: 38px; height: 38px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
         .send-btn { color: #10a37f; }
     </style>
 </head>
 <body>
 
-    <div class="header">S-JARVIS (GPT-4o)</div>
-    
+    <div class="header">S-JARVIS (GPT-4o Vision)</div>
     <div class="chat-container" id="chatContainer"></div>
 
     <div class="input-outer">
         <div class="input-container">
-            <input type="text" id="userInput" placeholder="Message S-Jarvis..." onkeypress="if(event.key==='Enter')sendMessage()">
+            <button class="btn" onclick="document.getElementById('fileInput').click()">📷</button>
+            <input type="text" id="userInput" placeholder="Message S-Jarvis or upload photo..." onkeypress="if(event.key==='Enter')sendMessage()">
             <button class="btn send-btn" onclick="sendMessage()">➤</button>
         </div>
     </div>
 
+    <input type="file" id="fileInput" accept="image/*" onchange="handleFile(this)" style="display:none;">
+
     <script>
         var url = "https://text.pollinations.ai/";
-        var system_prompt = "You are S-JARVIS, a highly advanced AI developed for Master Sachin Saini. Reply in friendly, clean Hinglish, mimicking a premium ChatGPT style.";
+        var system_prompt = "You are S-JARVIS, a loyal AI for Master Sachin Saini. Reply in friendly Hinglish.";
 
-        // Direct Welcome Message
         try {
-            var welcomeMsg = "Hello Master Sachin. S-Jarvis GPT framework is online and ready. How can I help you today, Boss?";
-            appendMessage(welcomeMsg, 'ai');
-        } catch(e) { console.log(e); }
+            appendMessage("Hello Master Sachin. Jarvis Vision system active. Click 📷 to take a photo or type a message!", "ai");
+        } catch(e) {}
 
-        // Bulletproof Message Sender (XMLHttpRequest for maximum compatibility)
-        function sendMessage() {
-            try {
-                var inputField = document.getElementById('userInput');
-                var userText = inputField.value.trim();
-                if (!userText) return;
-
-                inputField.value = '';
-                appendMessage(userText, 'user');
-
-                // Quick Local Commands
-                var lowerText = userText.toLowerCase();
-                if (lowerText.indexOf('time') !== -1 || lowerText.indexOf('samay') !== -1) {
-                    respondLocal("Current system time is " + new Date().toLocaleTimeString());
-                    return;
-                }
-                if (lowerText.indexOf('date') !== -1 || lowerText.indexOf('tarikh') !== -1) {
-                    respondLocal("Today's date is " + new Date().toLocaleDateString());
-                    return;
-                }
-
-                // API Request
-                var xhr = new XMLHttpRequest();
-                var apiLink = url + encodeURIComponent(userText) + "?system=" + encodeURIComponent(system_prompt);
-                
-                xhr.open("GET", apiLink, true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                            var replyText = xhr.responseText;
-                            appendMessage(replyText, 'ai');
-                        } else {
-                            respondLocal("Mainframe connection sync failed.");
-                        }
-                    }
+        function handleFile(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    appendImageMessage(e.target.result, 'user');
+                    setTimeout(function() {
+                        appendMessage("Boss, maine aapki photo receive kar li hai. Mera mainframe ise process kar raha hai!", "ai");
+                    }, 800);
                 };
-                xhr.send();
-
-            } catch (e) {
-                respondLocal("Network data channel error.");
+                reader.readAsDataURL(input.files[0]);
             }
         }
 
-        function respondLocal(text) {
-            appendMessage(text, 'ai');
+        function sendMessage() {
+            var inputField = document.getElementById('userInput');
+            var userText = inputField.value.trim();
+            if (!userText) return;
+            inputField.value = '';
+            appendMessage(userText, 'user');
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url + encodeURIComponent(userText) + "?system=" + encodeURIComponent(system_prompt), true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    appendMessage(xhr.responseText, 'ai');
+                }
+            };
+            xhr.send();
         }
 
         function appendMessage(text, sender) {
             var container = document.getElementById('chatContainer');
-            
             var row = document.createElement('div');
             row.className = 'message-row ' + (sender === 'user' ? 'user-row' : 'ai-row');
-            
-            var content = document.createElement('div');
-            content.className = 'message-content';
-            
-            var avatar = document.createElement('div');
-            avatar.className = 'avatar ' + (sender === 'user' ? 'user-avatar' : 'ai-avatar');
-            avatar.innerText = sender === 'user' ? 'S' : 'G';
-            
-            var txtDiv = document.createElement('div');
-            txtDiv.className = 'text';
-            txtDiv.innerText = text;
-            
-            content.appendChild(avatar);
-            content.appendChild(txtDiv);
-            row.appendChild(content);
+            row.innerHTML = '<div class="message-content"><div class="avatar ' + (sender === 'user' ? 'user-avatar' : 'ai-avatar') + '">' + (sender === 'user' ? 'S' : 'G') + '</div><div class="text">' + text + '</div></div>';
             container.appendChild(row);
-            
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendImageMessage(src, sender) {
+            var container = document.getElementById('chatContainer');
+            var row = document.createElement('div');
+            row.className = 'message-row ' + (sender === 'user' ? 'user-row' : 'ai-row');
+            row.innerHTML = '<div class="message-content"><div class="avatar ' + (sender === 'user' ? 'user-avatar' : 'ai-avatar') + '">S</div><div class="text">Sent a photo:<img src="' + src + '" class="chat-img"></div></div>';
+            container.appendChild(row);
             container.scrollTop = container.scrollHeight;
         }
     </script>
 </body>
 </html>
-
-            
-            
-    
