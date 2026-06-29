@@ -49,7 +49,7 @@
         .history-box { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
         .history-item { padding: 10px; border-radius: 8px; font-size: 0.9rem; color: #c5c5d2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .sidebar-footer { padding: 15px 0 5px 0; border-top: 1px solid #2a2a2a; text-align: center; }
-        .privacy-link { color: #8e8e83; font-size: 0.85rem; text-decoration: none; cursor: pointer; display: block; }
+        .privacy-link { color: #8e8e93; font-size: 0.85rem; text-decoration: none; cursor: pointer; display: block; }
 
         .main-content { flex: 1; display: flex; flex-direction: column; height: 100%; background-color: #ffffff; }
         .header { background-color: #ffffff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; }
@@ -185,7 +185,7 @@
     </div>
 
     <script>
-        // 🚨 CONFIGURATION ZONE: Your exact keys integrated safely
+        // 🚨 CONFIGURATION ZONE: Active Keys
         var EMAILJS_PUBLIC_KEY = "ed85YzuYlBI1iH1yh"; 
         var EMAILJS_SERVICE_ID = "service_ckyo2bj";
         var EMAILJS_TEMPLATE_ID = "template_xn3482v";
@@ -203,54 +203,42 @@
                     document.getElementById('loginScreen').style.display = 'none';
                     document.getElementById('userBadge').innerText = "👤 " + savedUser.split('@')[0];
                 }
-                // Safe initialization check to prevent crash if library is blocked
-                if(typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
+                if(typeof emailjs !== 'undefined') {
                     emailjs.init(EMAILJS_PUBLIC_KEY);
                 }
-            } catch(e) { console.log("Init sequence bypass."); }
+            } catch(e) { console.log("Init bypass."); }
             loadSavedChat();
         };
 
-        /* 📨 SECURE CRASH-PROOF OTP DISPATCH LOGIC */
+        /* 📨 PURE EMAIL DISPATCH ENGINE */
         function sendSecureOTP() {
             var email = document.getElementById('userEmail').value.trim();
             if(!email || email.indexOf('@') === -1) {
-                alert("Please enter a valid working email address, Boss!");
+                alert("Please enter a valid email address!");
                 return;
             }
 
-            // Generate 6-digit random numerical string
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
             
             var sendBtn = document.getElementById('sendOtpBtn');
             sendBtn.disabled = true;
             sendBtn.innerText = "Sending Code...";
 
-            // 🚨 AUTOMATIC FALLBACK GUARD: If AppMint blocks external scripts, show OTP via prompt safely
-            if(typeof emailjs === 'undefined') {
-                alert("[SECURITY BYPASS MODE]\nAppMint network script load block detected. Your dynamic verification OTP is: " + generatedOTP);
-                switchToOtpPanel(email);
-                return;
-            }
-
             var templateParams = {
                 to_email: email,
                 otp_code: generatedOTP
             };
 
-            try {
-                emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-                .then(function(response) {
-                    switchToOtpPanel(email);
-                }, function(error) {
-                    // Failover trigger to alert code if network fails midway
-                    alert("[FAILOVER ACTIVE] Email delivery frame rejected. Use local verification code: " + generatedOTP);
-                    switchToOtpPanel(email);
-                });
-            } catch(err) {
-                alert("[SYSTEM TEMPORARY BYPASS] Your verification OTP is: " + generatedOTP);
+            // Directly process via EmailJS API without hardcoded prompts
+            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+            .then(function(response) {
                 switchToOtpPanel(email);
-            }
+            }, function(error) {
+                // If it fails, give the precise reason returned by the server so Sachin can fix it instantly
+                alert("EmailJS Server Rejection: " + error.text + "\n\nSachin bhai, EmailJS server ne mana kiya hai. Ek baar dashboard mein Gmail connection aur save check karein.");
+                sendBtn.disabled = false;
+                sendBtn.innerText = "Send Verification Code";
+            });
         }
 
         function switchToOtpPanel(email) {
@@ -265,7 +253,7 @@
             startOtpCountdown();
         }
 
-        /* ⏰ TWO-MINUTE OTP COUNTDOWN SYSTEM */
+        /* TIMER */
         function startOtpCountdown() {
             if(countdownTimer) clearInterval(countdownTimer);
             var duration = 120; 
@@ -273,39 +261,31 @@
             countdownTimer = setInterval(function () {
                 var minutes = parseInt(duration / 60, 10);
                 var seconds = parseInt(duration % 60, 10);
-
                 minutes = minutes < 10 ? "0" + minutes : minutes;
                 seconds = seconds < 10 ? "0" + seconds : seconds;
-
                 display.innerText = "Code expires in: " + minutes + ":" + seconds;
-
                 if (--duration < 0) {
                     clearInterval(countdownTimer);
                     display.innerText = "OTP Expired! Kripya dobara bhejein.";
-                    generatedOTP = "EXPIRED_" + Date.now(); 
+                    generatedOTP = "EXPIRED"; 
                 }
             }, 1000);
         }
 
-        /* 🔍 SECURITY OTP EVALUATION ENGINE */
+        /* VERIFY */
         function verifySecureOTP() {
             var inputCode = document.getElementById('otpInput').value.trim();
             var email = document.getElementById('userEmail').value.trim();
 
-            if(inputCode !== generatedOTP || inputCode === "") {
-                alert("Invalid verification code! Please enter the exact OTP code.");
+            if(inputCode !== generatedOTP || inputCode === "EXPIRED") {
+                alert("Invalid verification code! Kripya sahi OTP daalein.");
                 return;
             }
 
             clearInterval(countdownTimer);
             localStorage.setItem('sachin_verified_email', email);
-            
             document.getElementById('userBadge').innerText = "👤 " + email.split('@')[0];
             document.getElementById('loginScreen').style.display = 'none';
-
-            setTimeout(function() {
-                appendMessage("Authentication Successful. Welcome back, user!", "ai");
-            }, 400);
         }
 
         function toggleSidebar() {
@@ -325,7 +305,7 @@
         function useSug(val) { document.getElementById('userInput').value = val; sendMessage(); }
         function hideSuggestions() { var sBox = document.getElementById('suggestionsBox'); if(sBox) sBox.style.display = 'none'; }
 
-        /* CAMERA ACTIONS */
+        /* CAMERA */
         function openInAppCamera() {
             var modal = document.getElementById('cameraModal');
             modal.style.display = 'flex';
@@ -352,22 +332,19 @@
             var ctx = canvas.getContext('2d');
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             var base64Img = canvas.toDataURL('image/jpeg');
-            
             closeInAppCamera(); hideSuggestions();
             appendMessage("", 'user', base64Img);
             appendMessage("Boss, image frame processed successfully!", 'ai');
             saveChatToMemory();
         }
 
-        /* NETWORKING CHAT ENGINE */
+        /* CHAT */
         function sendMessage() {
             var inputField = document.getElementById('userInput');
             var userText = inputField.value.trim();
             if (!userText) return;
-
             inputField.value = ''; hideSuggestions();
             appendMessage(userText, 'user');
-
             var xhr = new XMLHttpRequest();
             xhr.open("GET", url + encodeURIComponent(userText) + "?system=" + encodeURIComponent(system_prompt), true);
             xhr.onreadystatechange = function() {
@@ -398,12 +375,10 @@
             avatar.innerText = sender === 'user' ? 'S' : 'G';
             var txtDiv = document.createElement('div');
             txtDiv.className = 'text';
-            
             if(imgSrc) {
                 var img = document.createElement('img'); img.src = imgSrc; img.className = 'chat-img';
                 txtDiv.appendChild(img);
             } else { txtDiv.innerText = text; }
-            
             content.appendChild(avatar); content.appendChild(txtDiv);
             row.appendChild(content); container.appendChild(row);
             container.scrollTop = container.scrollHeight;
