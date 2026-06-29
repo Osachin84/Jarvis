@@ -3,164 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT - S-Jarvis</title>
+    <title>ChatGPT</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         
         body { 
-            background-color: #212121; color: #ececf1; display: flex; height: 100vh; overflow: hidden; 
-        }
-
-        /* 1. ChatGPT Sidebar Layout */
-        .sidebar {
-            width: 260px; background-color: #171717; height: 100%; display: flex; flex-direction: column; padding: 10px;
-            position: relative; transition: transform 0.3s ease; z-index: 100;
-        }
-        .new-chat-btn {
-            border: 1px solid #4d4d4d; background: transparent; color: white; padding: 12px; border-radius: 6px;
-            text-align: left; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.2s;
-        }
-        .new-chat-btn:hover { background-color: #2a2a2a; }
-        .history-container { flex: 1; margin-top: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .history-item { padding: 10px; border-radius: 6px; font-size: 0.85rem; color: #c5c5d2; cursor: pointer; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
-        .history-item:hover { background-color: #2a2a2a; }
-
-        /* Main Chat Window */
-        .main-content { 
-            flex: 1; display: flex; flex-direction: column; background-color: #212121; height: 100%; position: relative; 
+            background-color: #ffffff; color: #0d0d0d; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
         }
         
-        /* Top Navigation Bar */
+        /* 1. Top Original Header Layout */
         .header { 
-            background-color: #212121; padding: 14px; display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid #2f2f2f; color: #b4b4b4; font-size: 0.95rem; font-weight: 600;
+            background-color: #ffffff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
+            position: relative; z-index: 10;
         }
-        .menu-toggle { background: transparent; border: none; color: #b4b4b4; font-size: 1.3rem; cursor: pointer; }
+        .header-btn {
+            background: transparent; border: none; color: #202123; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center;
+        }
+        /* Get Plus Premium Pill Button */
+        .get-plus-pill {
+            background-color: #f4f0ff; color: #6e2fc4; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;
+            display: flex; align-items: center; gap: 6px; border: none; cursor: pointer;
+        }
+        .get-plus-pill span { font-size: 0.9rem; }
+        .history-icon { font-size: 1.4rem; color: #202123; }
 
-        /* Chat Display Rows */
-        .chat-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; background-color: #212121; }
-        .message-row { width: 100%; padding: 22px 18px; display: flex; justify-content: center; }
-        .user-row { background-color: #212121; }
-        .ai-row { background-color: #2f2f2f; border-top: 1px solid #2a2a2a; border-bottom: 1px solid #2a2a2a; }
+        /* 2. Main Chat Workspace */
+        .chat-container { 
+            flex: 1; overflow-y: auto; display: flex; flex-direction: column; background-color: #ffffff; padding-bottom: 10px;
+        }
+
+        /* Message Rows - Original Light Mode Style */
+        .message-row {
+            width: 100%; padding: 16px 20px; display: flex; justify-content: center;
+        }
+        .user-row { background-color: #ffffff; }
+        .ai-row { background-color: #f7f7f8; border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5; }
         
-        .message-content { width: 100%; max-width: 768px; display: flex; gap: 16px; font-size: 1rem; line-height: 1.6; word-wrap: break-word; white-space: pre-wrap; }
-        
-        /* ChatGPT Square Avatars */
-        .avatar { width: 30px; height: 30px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85rem; flex-shrink: 0; }
+        .message-content {
+            width: 100%; max-width: 768px; display: flex; gap: 16px; font-size: 1rem; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap;
+        }
+        .avatar {
+            width: 30px; height: 30px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85rem; flex-shrink: 0;
+        }
         .user-avatar { background-color: #543dcd; color: white; }
         .ai-avatar { background-color: #10a37f; color: white; }
-        .text { flex: 1; color: #d1d1d3; }
-        
-        /* Image Preview inside Chat */
-        .chat-img { max-width: 100%; max-height: 250px; border-radius: 8px; margin-top: 10px; border: 1px solid #4d4d4d; display: block; }
+        .text { flex: 1; color: #374151; padding-top: 2px; }
 
-        /* Bottom Centered Input Box */
-        .input-outer { padding: 16px; background-color: #212121; display: flex; justify-content: center; width: 100%; }
-        .input-container { 
-            width: 100%; max-width: 768px; background-color: #2f2f2f; border: 1px solid #4d4d4d; border-radius: 14px; 
-            display: flex; align-items: center; padding: 6px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+        /* 3. Original Suggestion Chips (Disappear when chat starts) */
+        .suggestions-box {
+            margin-top: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 768px; align-self: center;
         }
-        input { flex: 1; padding: 10px; border: none; background: transparent; color: #ececf1; outline: none; font-size: 1rem; }
+        .suggestion-item {
+            display: flex; align-items: center; gap: 14px; color: #4d4d4d; font-size: 0.95rem; cursor: pointer; padding: 4px 10px; transition: 0.2s;
+        }
+        .suggestion-icon { font-size: 1.2rem; color: #6d6d6d; }
+
+        /* 4. Rounded Floating Input Pill Layout */
+        .input-outer { 
+            padding: 16px; background-color: #ffffff; display: flex; justify-content: center; width: 100%;
+        }
+        .input-container { 
+            width: 100%; max-width: 768px; background-color: #ffffff; border: 1px solid #e3e3e3; border-radius: 28px; 
+            display: flex; align-items: center; padding: 4px 8px 4px 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); 
+        }
+        input { 
+            flex: 1; padding: 12px 0; border: none; background: transparent; color: #0d0d0d; outline: none; font-size: 1rem;
+        }
         input::placeholder { color: #8e8e93; }
         
-        .btn { background: transparent; border: none; color: #b4b4b4; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border-radius: 6px; }
-        .btn:hover { background-color: #3d3d3d; }
-        .send-btn { color: #10a37f; }
-
-        /* Responsive design for Mobile */
-        @media (max-width: 768px) {
-            .sidebar { position: absolute; left: 0; top: 0; transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
+        .pill-btn { 
+            background: transparent; border: none; color: #4d4d4d; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; border-radius: 50%;
         }
+        /* Blue Audio-Style Send Button */
+        .blue-voice-btn {
+            background-color: #10a37f; color: white !important; font-size: 1.1rem; box-shadow: 0 2px 6px rgba(16,163,127,0.3);
+        }
+        .blue-voice-btn:active { background-color: #0d8567; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar" id="sidebar">
-        <button class="new-chat-btn" onclick="createNewChat()">➕ New Chat</button>
-        <div class="history-container" id="historyBox">
-            <div class="history-item">🤖 Recent Session: S-Jarvis</div>
-        </div>
+    <div class="header">
+        <button class="header-btn">☰</button>
+        <button class="get-plus-pill">✨ Get Plus</button>
+        <button class="header-btn history-icon">⟳</button>
     </div>
-
-    <div class="main-content">
-        <div class="header">
-            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-            <div>S-JARVIS 4o</div>
-            <div style="width:24px;"></div>
-        </div>
+    
+    <div class="chat-container" id="chatContainer">
         
-        <div class="chat-container" id="chatContainer"></div>
-
-        <div class="input-outer">
-            <div class="input-container">
-                <button class="btn" onclick="document.getElementById('attachInput').click()">📎</button>
-                <input type="text" id="userInput" placeholder="Message S-Jarvis..." onkeypress="if(event.key==='Enter')sendMessage()">
-                <button class="btn send-btn" onclick="sendMessage()">➤</button>
+        <div class="suggestions-box" id="suggestionsBox">
+            <div class="suggestion-item" onclick="selectSuggestion('Follow the World Cup')">
+                <span class="suggestion-icon">⚽</span>
+                <span>Follow the World Cup</span>
+            </div>
+            <div class="suggestion-item" onclick="selectSuggestion('Create an image')">
+                <span class="suggestion-icon">🖼️</span>
+                <span>Create an image</span>
+            </div>
+            <div class="suggestion-item" onclick="selectSuggestion('Write or edit')">
+                <span class="suggestion-icon">✏️</span>
+                <span>Write or edit</span>
             </div>
         </div>
+
     </div>
 
-    <input type="file" id="attachInput" accept="image/*" onchange="uploadImage(this)" style="display:none;">
+    <div class="input-outer">
+        <div class="input-container">
+            <button class="pill-btn" onclick="alert('Photo Feature: Open through browser for direct upload!')">＋</button>
+            <input type="text" id="userInput" placeholder="Ask ChatGPT" onkeypress="if(event.key==='Enter')sendMessage()">
+            <button class="pill-btn" style="margin-right: 4px;">🎤</button>
+            <button class="pill-btn blue-voice-btn" onclick="sendMessage()">➤</button>
+        </div>
+    </div>
 
     <script>
         var url = "https://text.pollinations.ai/";
-        var system_prompt = "You are S-JARVIS, a highly advanced intelligence setup for Master Sachin Saini. Mimic a perfect ChatGPT conversational framework. Respond in precise, high-quality Hinglish.";
+        var system_prompt = "You are ChatGPT, a large language model trained by OpenAI. Respond accurately in short, premium Hinglish as requested by Master Sachin.";
 
-        // Initializing Greeting
-        function initJarvis() {
-            appendMessage("How can I help you today, Master Sachin?", "ai");
-        }
-        initJarvis();
-
-        // Sidebar Hide/Show feature for Mobile
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
+        function selectSuggestion(text) {
+            document.getElementById('userInput').value = text;
+            sendMessage();
         }
 
-        // Feature: Clear & Start New Session
-        function createNewChat() {
-            document.getElementById('chatContainer').innerHTML = "";
-            initJarvis();
-            if(window.innerWidth <= 768) toggleSidebar();
-        }
-
-        // Feature: Photo upload handling via browser
-        function uploadImage(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    appendImageMessage(e.target.result, 'user');
-                    // Dynamic Loading Indicator
-                    appendMessage("Analyzing photo data channel, Boss...", "ai");
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        // Primary Messaging System
+        // Bulletproof Message Sender with Layout Hiding
         function sendMessage() {
             var inputField = document.getElementById('userInput');
             var userText = inputField.value.trim();
             if (!userText) return;
 
             inputField.value = '';
-            appendMessage(userText, 'user');
 
-            // Feature: Thinking/Typing State
-            var loadingId = appendMessage("Thinking...", "ai");
+            // Hide suggestions container as soon as the first text triggers
+            var sugBox = document.getElementById('suggestionsBox');
+            if(sugBox) {
+                sugBox.parentNode.removeChild(sugBox);
+            }
+
+            appendMessage(userText, 'user');
 
             var xhr = new XMLHttpRequest();
             xhr.open("GET", url + encodeURIComponent(userText) + "?system=" + encodeURIComponent(system_prompt), true);
             xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    // Remove typing placeholder
-                    removeMessageById(loadingId);
-                    if (xhr.status === 200) {
-                        appendMessage(xhr.responseText, 'ai');
-                    } else {
-                        appendMessage("Sync error. Mainframe connection lost.", 'ai');
-                    }
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    appendMessage(xhr.responseText, 'ai');
                 }
             };
             xhr.send();
@@ -168,18 +154,16 @@
 
         function appendMessage(text, sender) {
             var container = document.getElementById('chatContainer');
-            var msgId = 'msg-' + Date.now();
             
             var row = document.createElement('div');
             row.className = 'message-row ' + (sender === 'user' ? 'user-row' : 'ai-row');
-            row.id = msgId;
             
             var content = document.createElement('div');
             content.className = 'message-content';
             
             var avatar = document.createElement('div');
             avatar.className = 'avatar ' + (sender === 'user' ? 'user-avatar' : 'ai-avatar');
-            avatar.innerText = sender === 'user' ? 'S' : '🤖';
+            avatar.innerText = sender === 'user' ? 'S' : 'G';
             
             var txtDiv = document.createElement('div');
             txtDiv.className = 'text';
@@ -191,22 +175,8 @@
             container.appendChild(row);
             
             container.scrollTop = container.scrollHeight;
-            return msgId;
-        }
-
-        function appendImageMessage(src, sender) {
-            var container = document.getElementById('chatContainer');
-            var row = document.createElement('div');
-            row.className = 'message-row user-row';
-            row.innerHTML = '<div class="message-content"><div class="avatar user-avatar">S</div><div class="text">Uploaded Image:<img src="' + src + '" class="chat-img"></div></div>';
-            container.appendChild(row);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function removeMessageById(id) {
-            var el = document.getElementById(id);
-            if(el) el.parentNode.removeChild(el);
         }
     </script>
 </body>
-</html>
+                </html>
+        
