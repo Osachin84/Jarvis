@@ -210,7 +210,7 @@
             loadSavedChat();
         };
 
-        /* 📨 PURE MULTI-MAPPED EMAIL DISPATCH ENGINE */
+        /* 📨 SECURE MULTI-MAPPED TRANSMISSION LOGIC */
         function sendSecureOTP() {
             var email = document.getElementById('userEmail').value.trim();
             if(!email || email.indexOf('@') === -1) {
@@ -224,12 +224,13 @@
             sendBtn.disabled = true;
             sendBtn.innerText = "Sending Code...";
 
-            // 🌟 BULLETPROOF MULTI-MAPPING FIX:
-            // Passing all possible placeholder names so that it works seamlessly with any dashboard name tag
+            // 🌟 SMART AUTO-MAPPING: Maps everything to ensure EmailJS doesn't read an empty recipient object
             var templateParams = {
                 to_email: email,
                 email: email,
                 to: email,
+                user_email: email,
+                recipients: email,
                 otp_code: generatedOTP,
                 otp: generatedOTP
             };
@@ -238,7 +239,7 @@
             .then(function(response) {
                 switchToOtpPanel(email);
             }, function(error) {
-                alert("EmailJS Server Rejection: " + error.text + "\n\nSachin bhai, check kijiye dashboard me details sahi save hain ya nahi.");
+                alert("EmailJS Server Rejection: " + error.text + "\n\nSachin bhai, pehle dashboard me template open karke pehle box (To Email *) me {{to_email}} likh kar Save kijiye.");
                 sendBtn.disabled = false;
                 sendBtn.innerText = "Send Verification Code";
             });
@@ -331,74 +332,4 @@
         function captureSnapshot() {
             var video = document.getElementById('videoPreview');
             var canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth || 640; canvas.height = video.videoHeight || 480;
-            var ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            var base64Img = canvas.toDataURL('image/jpeg');
-            closeInAppCamera(); hideSuggestions();
-            appendMessage("", 'user', base64Img);
-            appendMessage("Boss, image frame processed successfully!", 'ai');
-            saveChatToMemory();
-        }
-
-        /* CHAT */
-        function sendMessage() {
-            var inputField = document.getElementById('userInput');
-            var userText = inputField.value.trim();
-            if (!userText) return;
-            inputField.value = ''; hideSuggestions();
-            appendMessage(userText, 'user');
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", url + encodeURIComponent(userText) + "?system=" + encodeURIComponent(system_prompt), true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    appendMessage(xhr.responseText, 'ai');
-                    var lowerInput = userText.toLowerCase();
-                    var mapTriggers = ['map', 'location', 'road', 'kahan hai', 'it park', 'dehradun', 'address'];
-                    var needsMap = false;
-                    for (var i = 0; i < mapTriggers.length; i++) {
-                        if (lowerInput.indexOf(mapTriggers[i]) !== -1) { needsMap = true; break; }
-                    }
-                    if(needsMap) appendLiveMapRow(userText);
-                    saveChatToMemory();
-                }
-            };
-            xhr.send();
-            saveChatToMemory();
-        }
-
-        function appendMessage(text, sender, imgSrc) {
-            var container = document.getElementById('chatContainer');
-            var row = document.createElement('div');
-            row.className = 'message-row ' + (sender === 'user' ? 'user-row' : 'ai-row');
-            var content = document.createElement('div');
-            content.className = 'message-content';
-            var avatar = document.createElement('div');
-            avatar.className = 'avatar ' + (sender === 'user' ? 'user-avatar' : 'ai-avatar');
-            avatar.innerText = sender === 'user' ? 'S' : 'G';
-            var txtDiv = document.createElement('div');
-            txtDiv.className = 'text';
-            if(imgSrc) {
-                var img = document.createElement('img'); img.src = imgSrc; img.className = 'chat-img';
-                txtDiv.appendChild(img);
-            } else { txtDiv.innerText = text; }
-            content.appendChild(avatar); content.appendChild(txtDiv);
-            row.appendChild(content); container.appendChild(row);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function appendLiveMapRow(locationQuery) {
-            var container = document.getElementById('chatContainer');
-            var row = document.createElement('div');
-            row.className = 'message-row ai-row';
-            var embedUrl = "https://maps.google.com/maps?q=" + encodeURIComponent(locationQuery) + "&t=&z=15&ie=UTF-8&iwloc=&output=embed";
-            row.innerHTML = '<div class="message-content"><div class="avatar ai-avatar">🗺️</div><div class="text">Boss, live map check kijiye:<br><iframe width="100%" height="230" style="border:0;border-radius:14px;margin-top:10px;" src="' + embedUrl + '" allowfullscreen></iframe></div></div>';
-            container.appendChild(row); container.scrollTop = container.scrollHeight;
-        }
-
-        function saveChatToMemory() { localStorage.setItem('sachin_chat_history', document.getElementById('chatContainer').innerHTML); }
-        function loadSavedChat() { var savedData = localStorage.getItem('sachin_chat_history'); if(savedData) { document.getElementById('chatContainer').innerHTML = savedData; hideSuggestions(); } }
-        function clearCurrentChat() { localStorage.removeItem('sachin_chat_history'); localStorage.removeItem('sachin_verified_email'); location.reload(); }
-    </script>
-</body>
-</html>
+            canvas.width = video.videoWidth || 640; canvas.heigh
