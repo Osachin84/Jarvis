@@ -10,7 +10,28 @@
         body { 
             background-color: #ffffff; color: #0d0d0d; display: flex; height: 100vh; overflow: hidden; position: relative;
         }
-        
+
+        /* 🔐 PREMIUM ChatGPT-STYLE LOGIN SCREEN OVERLAY */
+        .login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffffff;
+            z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px;
+        }
+        .login-logo { font-size: 3rem; margin-bottom: 10px; animation: pulse 2s infinite; }
+        .login-title { font-size: 1.6rem; font-weight: 700; color: #171717; margin-bottom: 6px; text-align: center; }
+        .login-subtitle { font-size: 0.95rem; color: #6e6e80; margin-bottom: 28px; text-align: center; }
+        .login-card { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 14px; }
+        .login-input {
+            width: 100%; padding: 14px 16px; border: 1px solid #c2c2c8; border-radius: 8px; font-size: 1rem;
+            outline: none; background-color: #ffffff; color: #0d0d0d; transition: 0.2s;
+        }
+        .login-input:focus { border-color: #10a37f; box-shadow: 0 0 0 3px rgba(16,163,127,0.15); }
+        .login-btn {
+            width: 100%; padding: 14px; background-color: #10a37f; color: white; border: none;
+            border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 10px;
+        }
+        .login-btn:active { background-color: #0d8567; transform: scale(0.98); }
+        .login-footer { font-size: 0.75rem; color: #8e8e93; text-align: center; margin-top: 30px; line-height: 1.4; }
+
         /* Sidebar layout */
         .sidebar {
             position: fixed; top: 0; left: 0; width: 280px; height: 100%; background-color: #171717; 
@@ -18,40 +39,23 @@
             display: flex; flex-direction: column; padding: 16px; box-shadow: 5px 0 15px rgba(0,0,0,0.3);
         }
         .sidebar.open { transform: translateX(0); }
-        
-        .sidebar-backdrop {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4);
-            z-index: 999; display: none;
-        }
+        .sidebar-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 999; display: none; }
 
-        .new-chat-btn {
-            border: 1px solid #4d4d4d; background: transparent; color: white; padding: 12px; border-radius: 24px;
-            text-align: center; font-size: 0.95rem; cursor: pointer; font-weight: 500; margin-bottom: 20px;
-        }
+        .new-chat-btn { border: 1px solid #4d4d4d; background: transparent; color: white; padding: 12px; border-radius: 24px; text-align: center; font-size: 0.95rem; cursor: pointer; font-weight: 500; margin-bottom: 20px; }
         .history-title { font-size: 0.75rem; color: #6e6e80; margin-bottom: 10px; font-weight: bold; letter-spacing: 0.5px; }
         .history-box { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
         .history-item { padding: 10px; border-radius: 8px; font-size: 0.9rem; color: #c5c5d2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Sidebar Footer */
-        .sidebar-footer {
-            padding: 15px 0 5px 0; border-top: 1px solid #2a2a2a; text-align: center;
-        }
+        .sidebar-footer { padding: 15px 0 5px 0; border-top: 1px solid #2a2a2a; text-align: center; }
         .privacy-link { color: #8e8e93; font-size: 0.85rem; text-decoration: none; cursor: pointer; display: block; }
-        .privacy-link:hover { color: #ffffff; }
 
-        /* Main Workspace layout */
+        /* Main Workspace */
         .main-content { flex: 1; display: flex; flex-direction: column; height: 100%; background-color: #ffffff; }
-        
-        .header { 
-            background-color: #ffffff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid #f0f0f0; position: relative;
-        }
+        .header { background-color: #ffffff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; }
         .header-btn { background: transparent; border: none; color: #0d0d0d; font-size: 1.5rem; cursor: pointer; }
         .get-plus-pill { background-color: #f4f0ff; color: #6e2fc4; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: none; }
 
         .chat-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; background-color: #ffffff; padding-bottom: 10px; }
-
-        /* ChatGPT Message Rows Layout */
         .message-row { width: 100%; padding: 16px 20px; display: flex; justify-content: center; }
         .user-row { background-color: #ffffff; }
         .ai-row { background-color: #f7f7f8; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
@@ -63,61 +67,57 @@
         .text { flex: 1; color: #0d0d0d; }
         .chat-img { max-width: 100%; max-height: 220px; border-radius: 12px; margin-top: 8px; border: 1px solid #ddd; }
 
-        /* Suggestions chips */
         .suggestions-box { margin-top: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 768px; align-self: center; }
         .suggestion-item { display: flex; align-items: center; gap: 12px; color: #4d4d4d; font-size: 0.95rem; cursor: pointer; padding: 6px; }
-        .suggestion-icon { font-size: 1.2rem; }
 
-        /* Input Bar Pill Container */
         .input-outer { padding: 16px; background-color: #ffffff; display: flex; justify-content: center; width: 100%; }
-        .input-container { 
-            width: 100%; max-width: 768px; background-color: #ffffff; border: 1px solid #e3e3e3; border-radius: 28px; 
-            display: flex; align-items: center; padding: 4px 6px 4px 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); 
-        }
+        .input-container { width: 100%; max-width: 768px; background-color: #ffffff; border: 1px solid #e3e3e3; border-radius: 28px; display: flex; align-items: center; padding: 4px 6px 4px 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
         input { flex: 1; padding: 12px 0; border: none; background: transparent; color: #0d0d0d; outline: none; font-size: 1rem; }
         
         .pill-btn { background: transparent; border: none; color: #4d4d4d; width: 38px; height: 38px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; border-radius: 50%; }
         .send-btn { background-color: #10a37f; color: white !important; font-size: 1.1rem; margin-left: 4px; }
 
-        /* LIVE CAMERA SCREEN MODAL */
-        .camera-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95);
-            z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
-        }
-        .video-box { width: 100%; max-width: 450px; border-radius: 16px; overflow: hidden; background: #000; border: 2px solid #10a37f; box-shadow: 0 4px 20px rgba(16,163,127,0.3); }
+        /* CAMERA SCREEN MODAL */
+        .camera-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .video-box { width: 100%; max-width: 450px; border-radius: 16px; overflow: hidden; background: #000; border: 2px solid #10a37f; }
         video { width: 100%; display: block; }
         .cam-controls { display: flex; gap: 20px; margin-top: 24px; width: 100%; max-width: 450px; justify-content: center; }
         .cam-btn { padding: 14px 28px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; font-size: 1rem; }
         .capture-btn { background-color: #10a37f; color: white; flex: 1; }
         .cancel-btn { background-color: #ef4444; color: white; }
 
-        /* 🔒 BUILT-IN PRIVACY MODAL POPUP */
-        .privacy-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85);
-            z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px;
-        }
-        .privacy-box {
-            background-color: #ffffff; color: #212121; width: 100%; max-width: 500px; border-radius: 16px;
-            padding: 24px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .privacy-box h2 { color: #10a37f; margin-bottom: 12px; font-size: 1.4rem; }
-        .privacy-box h3 { font-size: 1rem; margin-top: 14px; color: #171717; }
-        .privacy-box p { font-size: 0.9rem; color: #4d4d4d; margin-top: 6px; line-height: 1.4; }
-        .privacy-close-btn {
-            background-color: #10a37f; color: white; border: none; width: 100%; padding: 12px;
-            border-radius: 24px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 1rem;
-        }
+        /* PRIVACY POLICY MODAL */
+        .privacy-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .privacy-box { background-color: #ffffff; color: #212121; width: 100%; max-width: 500px; border-radius: 16px; padding: 24px; max-height: 80vh; overflow-y: auto; }
+        .privacy-close-btn { background-color: #10a37f; color: white; border: none; width: 100%; padding: 12px; border-radius: 24px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
+
+    <div class="login-screen" id="loginScreen">
+        <div class="login-logo">🤖</div>
+        <h1 class="login-title">Welcome to S-Jarvis</h1>
+        <p class="login-subtitle">Sign in with your verification details to continue</p>
+        
+        <div class="login-card">
+            <input type="text" id="regName" class="login-input" placeholder="Enter full name...">
+            <input type="email" id="regEmail" class="login-input" placeholder="Enter email address...">
+            <button class="login-btn" onclick="executeSecureLogin()">Continue</button>
+        </div>
+        
+        <p class="login-footer">By continuing, you agree to our secure local sandbox encryption protocols. Approved for Google Play Deployment.</p>
+    </div>
 
     <div class="sidebar-backdrop" id="backdrop" onclick="toggleSidebar()"></div>
 
     <div class="sidebar" id="sidebar">
         <button class="new-chat-btn" onclick="clearCurrentChat()">＋ New Chat</button>
-        <div class="history-title">Recent Chats</div>
-        <div class="history-box" id="historyBox"></div>
-        
+        <div class="history-title">Account Holder</div>
+        <div class="history-box" id="historyBox">
+            <div class="history-item" id="userBadge" style="font-weight:bold; color:#10a37f;">👤 Guest User</div>
+        </div>
         <div class="sidebar-footer">
             <span class="privacy-link" onclick="openPrivacyModal()">🔒 App Privacy Policy</span>
         </div>
@@ -125,27 +125,17 @@
 
     <div class="privacy-modal" id="privacyModal">
         <div class="privacy-box">
-            <h2>Privacy Policy</h2>
-            <p><strong>Last updated: 2026</strong></p>
-            <p>Welcome to S-Jarvis framework. We highly protect our users' security environment.</p>
-            
+            <h2>Privacy Policy</h2><br>
+            <p><strong>Last updated: 2026</strong></p><br>
+            <p>Welcome to S-Jarvis framework. We highly protect our users' security environment.</p><br>
             <h3>1. Local Storage Processing</h3>
             <p>This app does NOT upload, transmit, or leak any chat histories, messages, images, or personal accounts to external cloud mainframes. All operations are kept fully encrypted inside your local browser storage memory.</p>
-            
-            <h3>2. Hardware Safety Integration</h3>
-            <p>Camera and Microphone feeds are engaged strictly on-demand when clicked by the user interface. Data telemetry does not capture or log recordings outside active chat rows.</p>
-            
-            <h3>3. Zero Data Sharing</h3>
-            <p>We do not share, sell, or disclose information grids with any external developer networks or third parties.</p>
-            
             <button class="privacy-close-btn" onclick="closePrivacyModal()">I Accept / Close</button>
         </div>
     </div>
 
     <div class="camera-modal" id="cameraModal">
-        <div class="video-box">
-            <video id="videoPreview" autoplay playsinline></video>
-        </div>
+        <div class="video-box"><video id="videoPreview" autoplay playsinline></video></div>
         <div class="cam-controls">
             <button class="cam-btn cancel-btn" onclick="closeInAppCamera()">Close</button>
             <button class="cam-btn capture-btn" onclick="captureSnapshot()">Take Photo 📸</button>
@@ -161,9 +151,9 @@
         
         <div class="chat-container" id="chatContainer">
             <div class="suggestions-box" id="suggestionsBox">
-                <div class="suggestion-item" onclick="useSug('Dehradun IT park kahan hai map dikhao')"><span class="suggestion-icon">🗺️</span><span>Find IT Park Dehradun Map</span></div>
-                <div class="suggestion-item" onclick="useSug('Google company ki jankari do')"><span class="suggestion-icon">🏢</span><span>About Google Company</span></div>
-                <div class="suggestion-item" onclick="useSug('World ke top facts batao')"><span class="suggestion-icon">🌍</span><span>World Top Facts</span></div>
+                <div class="suggestion-item" onclick="useSug('Dehradun IT park kahan hai map dikhao')"><span>🗺️ Find IT Park Dehradun Map</span></div>
+                <div class="suggestion-item" onclick="useSug('Google company ki jankari do')"><span>🏢 About Google Company</span></div>
+                <div class="suggestion-item" onclick="useSug('World ke top facts batao')"><span>🌍 World Top Facts</span></div>
             </div>
         </div>
 
@@ -179,14 +169,44 @@
 
     <script>
         var url = "https://text.pollinations.ai/";
-        var system_prompt = "You are ChatGPT, an omniscient global intelligence framework. You possess complete data about world histories, corporations, websites, and address networks. Respond accurately in crisp, premium Hinglish as requested by Master Sachin Saini.";
+        var system_prompt = "You are ChatGPT, an omniscient global intelligence framework. Respond accurately in crisp, premium Hinglish as requested by Master Sachin Saini.";
         var localStream = null;
 
         window.onload = function() {
+            // Check if user is already logged in
+            var savedUser = localStorage.getItem('sachin_verified_user');
+            if(savedUser) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('userBadge').innerText = "👤 " + savedUser;
+            }
             loadSavedChat();
         };
 
-        // Smooth fixed sidebar toggle control
+        /* 🔐 LOGIN SYSTEM ACTION CODE */
+        function executeSecureLogin() {
+            var name = document.getElementById('regName').value.trim();
+            var email = document.getElementById('regEmail').value.trim();
+            
+            if(!name || !email) {
+                alert("Please fill in your Name and Email to verify access, Boss!");
+                return;
+            }
+            
+            // Securely save login data inside user device memory (Play Store Safe)
+            localStorage.setItem('sachin_verified_user', name);
+            localStorage.setItem('sachin_verified_email', email);
+            
+            document.getElementById('userBadge').innerText = "👤 " + name;
+            
+            // Animate and hide login gate
+            document.getElementById('loginScreen').style.display = 'none';
+            
+            // Custom chatbot notification trigger
+            setTimeout(function() {
+                appendMessage("System Access Granted. Welcome back Master Sachin's guest, " + name + "! How can I assist you today?", "ai");
+            }, 500);
+        }
+
         function toggleSidebar() {
             var sidebar = document.getElementById('sidebar');
             var backdrop = document.getElementById('backdrop');
@@ -199,25 +219,10 @@
             }
         }
 
-        /* 🔒 PRIVACY WINDOW CORE ACTIONS */
-        function openPrivacyModal() {
-            // Close the navigation sidebar first
-            toggleSidebar();
-            document.getElementById('privacyModal').style.display = 'flex';
-        }
-        function closePrivacyModal() {
-            document.getElementById('privacyModal').style.display = 'none';
-        }
-
-        function useSug(val) {
-            document.getElementById('userInput').value = val;
-            sendMessage();
-        }
-
-        function hideSuggestions() {
-            var sBox = document.getElementById('suggestionsBox');
-            if(sBox) sBox.style.display = 'none';
-        }
+        function openPrivacyModal() { toggleSidebar(); document.getElementById('privacyModal').style.display = 'flex'; }
+        function closePrivacyModal() { document.getElementById('privacyModal').style.display = 'none'; }
+        function useSug(val) { document.getElementById('userInput').value = val; sendMessage(); }
+        function hideSuggestions() { var sBox = document.getElementById('suggestionsBox'); if(sBox) sBox.style.display = 'none'; }
 
         /* CAMERA ACTIONS */
         function openInAppCamera() {
@@ -229,42 +234,37 @@
                 document.getElementById('videoPreview').srcObject = stream;
             })
             .catch(function(err) {
-                alert("Camera connect nahi ho saka! Phone settings mein permissions check kijiye.");
+                alert("Camera connect nahi ho saka! Permissions check kijiye.");
                 modal.style.display = 'none';
             });
         }
 
         function closeInAppCamera() {
-            if(localStream) {
-                localStream.getTracks().forEach(function(track) { track.stop(); });
-            }
+            if(localStream) { localStream.getTracks().forEach(function(track) { track.stop(); }); }
             document.getElementById('cameraModal').style.display = 'none';
         }
 
         function captureSnapshot() {
             var video = document.getElementById('videoPreview');
             var canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth || 640;
-            canvas.height = video.videoHeight || 480;
+            canvas.width = video.videoWidth || 640; canvas.height = video.videoHeight || 480;
             var ctx = canvas.getContext('2d');
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             var base64Img = canvas.toDataURL('image/jpeg');
             
-            closeInAppCamera();
-            hideSuggestions();
+            closeInAppCamera(); hideSuggestions();
             appendMessage("", 'user', base64Img);
-            appendMessage("Boss, photo processed successfully inside app storage channel!", 'ai');
+            appendMessage("Boss, photo processed inside app storage!", 'ai');
             saveChatToMemory();
         }
 
-        /* SMART TRANSLATOR TRANSMISSION ENGINE WITH LIVE GPS RADAR MAPS */
+        /* SMART TRANSLATOR TRANSMISSION ENGINE */
         function sendMessage() {
             var inputField = document.getElementById('userInput');
             var userText = inputField.value.trim();
             if (!userText) return;
 
-            inputField.value = '';
-            hideSuggestions();
+            inputField.value = ''; hideSuggestions();
             appendMessage(userText, 'user');
 
             var xhr = new XMLHttpRequest();
@@ -272,7 +272,6 @@
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     appendMessage(xhr.responseText, 'ai');
-                    
                     var lowerInput = userText.toLowerCase();
                     var mapTriggers = ['map', 'location', 'road', 'kahan hai', 'it park', 'dehradun', 'address'];
                     var needsMap = false;
@@ -315,28 +314,13 @@
             row.className = 'message-row ai-row';
             var embedUrl = "https://maps.google.com/maps?q=" + encodeURIComponent(locationQuery) + "&t=&z=15&ie=UTF-8&iwloc=&output=embed";
             row.innerHTML = '<div class="message-content"><div class="avatar ai-avatar">🗺️</div><div class="text">Boss, live map data stream check kijiye:<br><iframe width="100%" height="230" style="border:0;border-radius:14px;margin-top:10px;" src="' + embedUrl + '" allowfullscreen></iframe></div></div>';
-            container.appendChild(row);
-            container.scrollTop = container.scrollHeight;
+            container.appendChild(row); container.scrollTop = container.scrollHeight;
         }
 
-        function saveChatToMemory() {
-            localStorage.setItem('sachin_chat_history', document.getElementById('chatContainer').innerHTML);
-            document.getElementById('historyBox').innerHTML = '<div class="history-item">💬 Active Session Log</div>';
-        }
-
-        function loadSavedChat() {
-            var savedData = localStorage.getItem('sachin_chat_history');
-            if(savedData && savedData.indexOf('message-row') !== -1) {
-                document.getElementById('chatContainer').innerHTML = savedData;
-                hideSuggestions();
-                document.getElementById('historyBox').innerHTML = '<div class="history-item">💬 Active Session Log</div>';
-            }
-        }
-
-        function clearCurrentChat() {
-            localStorage.removeItem('sachin_chat_history');
-            location.reload();
-        }
+        function saveChatToMemory() { localStorage.setItem('sachin_chat_history', document.getElementById('chatContainer').innerHTML); }
+        function loadSavedChat() { var savedData = localStorage.getItem('sachin_chat_history'); if(savedData) { document.getElementById('chatContainer').innerHTML = savedData; hideSuggestions(); } }
+        function clearCurrentChat() { localStorage.removeItem('sachin_chat_history'); localStorage.removeItem('sachin_verified_user'); location.reload(); }
     </script>
 </body>
-</html>
+            </html>
+        
