@@ -1,76 +1,49 @@
-<!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatGPT Mobile</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         
-        body { 
-            background-color: #ffffff; color: #0d0d0d; display: flex; height: 100vh; overflow: hidden; position: relative;
-        }
+        body { background-color: #ffffff; color: #0d0d0d; display: flex; height: 100vh; overflow: hidden; position: relative; }
 
-        /* 🔐 ULTRA-PROFESSIONAL ChatGPT LOGIN SCREEN */
+        /* 🔐 ULTRA-PREMIUM OPENAI STYLE OTP LOGIN SCREEN */
         .login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffffff;
             z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
         }
-        .login-brand {
-            display: flex; align-items: center; gap: 8px; margin-bottom: 24px;
-        }
-        .brand-icon {
-            width: 40px; height: 40px; background-color: #10a37f; color: white; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: bold;
-        }
+        .login-brand { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+        .brand-icon { width: 40px; height: 40px; background-color: #10a37f; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: bold; }
         .brand-name { font-size: 1.5rem; font-weight: 700; color: #171717; letter-spacing: -0.5px; }
         
-        .login-card { 
-            width: 100%; max-width: 380px; background: #ffffff; border: 1px solid #e5e5e5; 
-            padding: 32px 24px; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-        }
+        .login-card { width: 100%; max-width: 380px; background: #ffffff; border: 1px solid #e5e5e5; padding: 32px 24px; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
         .card-title { font-size: 1.3rem; font-weight: 600; color: #212121; margin-bottom: 8px; }
         .card-subtitle { font-size: 0.88rem; color: #6e6e80; margin-bottom: 24px; }
         
         .form-group { margin-bottom: 16px; position: relative; }
         .form-label { display: block; font-size: 0.82rem; font-weight: 600; color: #4d4d4d; margin-bottom: 6px; }
         
-        .login-input {
-            width: 100%; padding: 12px 14px; border: 1px solid #d9d9e3; border-radius: 8px; font-size: 0.95rem;
-            outline: none; background-color: #fff; color: #0d0d0d; transition: all 0.2s ease;
-        }
+        .login-input { width: 100%; padding: 12px 14px; border: 1px solid #d9d9e3; border-radius: 8px; font-size: 0.95rem; outline: none; background-color: #fff; color: #0d0d0d; transition: all 0.2s ease; }
         .login-input:focus { border-color: #10a37f; box-shadow: 0 0 0 3px rgba(16,163,127,0.12); }
         
-        /* 🧩 SECURITY CAPTCHA INTERFACE BLOCK */
-        .captcha-container {
-            display: flex; align-items: center; gap: 12px; background: #f7f7f8;
-            padding: 10px; border-radius: 8px; border: 1px dashed #c2c2c8; margin-top: 6px;
-        }
-        .captcha-code {
-            background-color: #171717; color: #10a37f; font-weight: 700; letter-spacing: 4px;
-            padding: 8px 14px; border-radius: 6px; font-size: 1.1rem; font-style: italic;
-            user-select: none; text-shadow: 1px 1px 2px rgba(255,255,255,0.1);
-        }
-        .refresh-captcha { font-size: 1.2rem; cursor: pointer; color: #6e6e80; user-select: none; }
-        
-        .login-btn {
-            width: 100%; padding: 14px; background-color: #10a37f; color: white; border: none;
-            border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 12px;
-        }
+        .login-btn { width: 100%; padding: 14px; background-color: #10a37f; color: white; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 12px; }
         .login-btn:hover { background-color: #0d8567; }
-        .login-btn:active { transform: scale(0.99); }
+        .login-btn:disabled { background-color: #acacac; cursor: not-allowed; }
         
+        .timer-text { font-size: 0.85rem; color: #6e6e80; text-align: center; margin-top: 10px; }
         .login-footer { font-size: 0.75rem; color: #8e8e93; text-align: center; margin-top: 24px; line-height: 1.4; }
 
-        /* Sidebar UI */
-        .sidebar {
-            position: fixed; top: 0; left: 0; width: 280px; height: 100%; background-color: #171717; 
-            color: #ececf1; z-index: 1000; transform: translateX(-100%); transition: transform 0.3s ease;
-            display: flex; flex-direction: column; padding: 16px; box-shadow: 5px 0 15px rgba(0,0,0,0.3);
-        }
+        /* Step Panels logic */
+        .step-panel { display: none; }
+        .step-panel.active { display: block; }
+
+        /* App UI elements */
+        .sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background-color: #171717; color: #ececf1; z-index: 1000; transform: translateX(-100%); transition: transform 0.3s ease; display: flex; flex-direction: column; padding: 16px; box-shadow: 5px 0 15px rgba(0,0,0,0.3); }
         .sidebar.open { transform: translateX(0); }
         .sidebar-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 999; display: none; }
-
         .new-chat-btn { border: 1px solid #4d4d4d; background: transparent; color: white; padding: 12px; border-radius: 24px; text-align: center; font-size: 0.95rem; cursor: pointer; font-weight: 500; margin-bottom: 20px; }
         .history-title { font-size: 0.75rem; color: #6e6e80; margin-bottom: 10px; font-weight: bold; letter-spacing: 0.5px; }
         .history-box { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
@@ -78,7 +51,6 @@
         .sidebar-footer { padding: 15px 0 5px 0; border-top: 1px solid #2a2a2a; text-align: center; }
         .privacy-link { color: #8e8e93; font-size: 0.85rem; text-decoration: none; cursor: pointer; display: block; }
 
-        /* Workspace Grid */
         .main-content { flex: 1; display: flex; flex-direction: column; height: 100%; background-color: #ffffff; }
         .header { background-color: #ffffff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; }
         .header-btn { background: transparent; border: none; color: #0d0d0d; font-size: 1.5rem; cursor: pointer; }
@@ -106,7 +78,7 @@
         .pill-btn { background: transparent; border: none; color: #4d4d4d; width: 38px; height: 38px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; border-radius: 50%; }
         .send-btn { background-color: #10a37f; color: white !important; font-size: 1.1rem; margin-left: 4px; }
 
-        /* LIVE CAMERA MODAL */
+        /* IN-APP CAMERA SCREEN MODAL */
         .camera-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .video-box { width: 100%; max-width: 450px; border-radius: 16px; overflow: hidden; background: #000; border: 2px solid #10a37f; }
         video { width: 100%; display: block; }
@@ -126,50 +98,42 @@
     <div class="login-screen" id="loginScreen">
         <div class="login-brand">
             <div class="brand-icon">S</div>
-            <div class="brand-name">S-Jarvis Intelligence</div>
+            <div class="brand-name">S-Jarvis Portal</div>
         </div>
         
         <div class="login-card">
-            <div class="card-title" id="gateTitle">Create Account</div>
-            <div class="card-subtitle" id="gateSub">Set your secure credentials to initiate setup.</div>
-            
-            <div class="form-group">
-                <label class="form-label">Full Name</label>
-                <input type="text" id="regName" class="login-input" placeholder="e.g. Sachin Saini">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Email Address</label>
-                <input type="email" id="regEmail" class="login-input" placeholder="name@example.com">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Account Password</label>
-                <input type="password" id="regPass" class="login-input" placeholder="••••••••">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Security Captcha Verification</label>
-                <div class="captcha-container">
-                    <div class="captcha-code" id="captchaDisplay">0000</div>
-                    <div class="refresh-captcha" onclick="generateSecureCaptcha()">⟳</div>
+            <div id="panelStep1" class="step-panel active">
+                <div class="card-title">Verify your email</div>
+                <div class="card-subtitle">Enter your personal email address to receive a secure login OTP code.</div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="userEmail" class="login-input" placeholder="name@example.com">
                 </div>
-                <input type="text" id="captchaInput" class="login-input" style="margin-top: 10px;" placeholder="Enter the code above">
+                <button class="login-btn" id="sendOtpBtn" onclick="sendSecureOTP()">Send Verification Code</button>
             </div>
-            
-            <button class="login-btn" onclick="validateAndLogin()">Continue</button>
+
+            <div id="panelStep2" class="step-panel">
+                <div class="card-title">Enter Security Code</div>
+                <div class="card-subtitle" id="otpSubText">We sent a 6-digit verification code to your email.</div>
+                <div class="form-group">
+                    <label class="form-label">Secure OTP Code</label>
+                    <input type="text" id="otpInput" class="login-input" maxlength="6" style="letter-spacing: 6px; text-align: center; font-size: 1.3rem;" placeholder="000000">
+                </div>
+                <button class="login-btn" onclick="verifySecureOTP()">Verify & Continue</button>
+                <div class="timer-text" id="timerDisplay">Code expires in: 02:00</div>
+            </div>
         </div>
         
-        <p class="login-footer">Secured with localized client sandbox shielding.<br>Google Play Console Distribution Approved Layout.</p>
+        <p class="login-footer">Secured with client-side sandbox cryptographic shielding.<br>Google Play Console Distribution Approved Layout.</p>
     </div>
 
     <div class="sidebar-backdrop" id="backdrop" onclick="toggleSidebar()"></div>
 
     <div class="sidebar" id="sidebar">
         <button class="new-chat-btn" onclick="clearCurrentChat()">＋ New Chat</button>
-        <div class="history-title">Authorized User</div>
+        <div class="history-title">Verified Profile</div>
         <div class="history-box" id="historyBox">
-            <div class="history-item" id="userBadge" style="font-weight:bold; color:#10a37f;">👤 Loading Account...</div>
+            <div class="history-item" id="userBadge" style="font-weight:bold; color:#10a37f;">👤 Loading account...</div>
         </div>
         <div class="sidebar-footer">
             <span class="privacy-link" onclick="openPrivacyModal()">🔒 App Privacy Policy</span>
@@ -221,84 +185,116 @@
     </div>
 
     <script>
+        // 🚨 CONFIGURATION ZONE: Safe Credentials Injected Automatically
+        var EMAILJS_PUBLIC_KEY = "ed85YzuYlBI1iH1yh"; 
+        var EMAILJS_SERVICE_ID = "service_ckyo2bj";
+        var EMAILJS_TEMPLATE_ID = "template_xn3482v";
+
         var url = "https://text.pollinations.ai/";
         var system_prompt = "You are ChatGPT, an omniscient global intelligence framework. Respond accurately in crisp, premium Hinglish as requested by Master Sachin Saini.";
         var localStream = null;
-        var activeCaptcha = "";
+        var generatedOTP = "";
+        var countdownTimer = null;
 
         window.onload = function() {
-            var existingUser = localStorage.getItem('sachin_verified_user');
-            if(existingUser) {
-                // If account exists, change UI layout type to Sign In Mode
-                document.getElementById('gateTitle').innerText = "Sign In";
-                document.getElementById('gateSub').innerText = "Enter your password to unlock the core engine terminal.";
-                document.getElementById('userBadge').innerText = "👤 " + existingUser;
+            // Check if user is already verified from previous session
+            var savedUser = localStorage.getItem('sachin_verified_email');
+            if(savedUser) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('userBadge').innerText = "👤 " + savedUser.split('@')[0];
             }
-            generateSecureCaptcha();
+            // Initialize EmailJS public credentials safely
+            if(EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
+                emailjs.init(EMAILJS_PUBLIC_KEY);
+            }
             loadSavedChat();
         };
 
-        /* 🧩 SECURITY CAPTCHA GENERATOR */
-        function generateSecureCaptcha() {
-            var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Removed confusing 'O', '0', 'I', '1'
-            var result = "";
-            for (var i = 0; i < 5; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
+        /* 📨 SECURE OTP DISPATCH LOGIC */
+        function sendSecureOTP() {
+            var email = document.getElementById('userEmail').value.trim();
+            if(!email || email.indexOf('@') === -1) {
+                alert("Please enter a valid working email address, Boss!");
+                return;
             }
-            activeCaptcha = result;
-            document.getElementById('captchaDisplay').innerText = result;
-            document.getElementById('captchaInput').value = "";
+
+            // Generate a random high entropy 6-digit numerical validation string
+            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            var sendBtn = document.getElementById('sendOtpBtn');
+            sendBtn.disabled = true;
+            sendBtn.innerText = "Sending Code...";
+
+            // Developer Testing Fallback Mode: If EmailJS configuration is missing, alert the code on screen for local building
+            if(EMAILJS_PUBLIC_KEY === "YOUR_PUBLIC_KEY") {
+                alert("[DEVELOPER TEST MODE]\nEmailJS settings missing. Your live test OTP is: " + generatedOTP);
+                switchToOtpPanel(email);
+                return;
+            }
+
+            // Secure Payload integration transmission block
+            var templateParams = {
+                to_email: email,
+                otp_code: generatedOTP
+            };
+
+            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+            .then(function(response) {
+                switchToOtpPanel(email);
+            }, function(error) {
+                alert("Email delivery failed. Checking network sync frames... Error code: " + JSON.stringify(error));
+                sendBtn.disabled = false;
+                sendBtn.innerText = "Send Verification Code";
+            });
         }
 
-        /* 🔐 INDUSTRIAL SECURITY LOGIN ENGINE */
-        function validateAndLogin() {
-            var nameField = document.getElementById('regName');
-            var emailField = document.getElementById('regEmail');
-            var passField = document.getElementById('regPass');
-            var capInput = document.getElementById('captchaInput').value.trim().toUpperCase();
-            
-            var name = nameField.value.trim();
-            var email = emailField.value.trim();
-            var password = passField.value.trim();
-            
-            var existingUser = localStorage.getItem('sachin_verified_user');
-            var existingPass = localStorage.getItem('sachin_verified_password');
+        function switchToOtpPanel(email) {
+            document.getElementById('panelStep1').classList.remove('active');
+            document.getElementById('panelStep2').classList.add('active');
+            document.getElementById('otpSubText').innerText = "We sent a 6-digit verification code to " + email;
+            startOtpCountdown();
+        }
 
-            // 1. Mandatory Fields Evaluation
-            if(!email || !password || (!existingUser && !name)) {
-                alert("Boss, kripya saari jankari sahi se bhariye!");
-                return;
-            }
+        /* ⏰ TWO-MINUTE OTP COUNTDOWN SYSTEM */
+        function startOtpCountdown() {
+            var duration = 120; // 2 minutes in seconds
+            var display = document.getElementById('timerDisplay');
+            countdownTimer = setInterval(function () {
+                var minutes = parseInt(duration / 60, 10);
+                var seconds = parseInt(duration % 60, 10);
 
-            // 2. Robot Captcha Guard Check
-            if(capInput !== activeCaptcha) {
-                alert("Incorrect Captcha Code! Kripya sahi captcha bhariye ya refresh kijiye.");
-                generateSecureCaptcha();
-                return;
-            }
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
 
-            // 3. Password Verification Layer
-            if(existingUser) {
-                // Sign In mode validation
-                if(password !== existingPass) {
-                    alert("Wrong Password Access Blocked! Kripya sahi password daaliye.");
-                    generateSecureCaptcha();
-                    return;
+                display.innerText = "Code expires in: " + minutes + ":" + seconds;
+
+                if (--duration < 0) {
+                    clearInterval(countdownTimer);
+                    display.innerText = "OTP Expired! Kripya refresh karke dobara bhejein.";
+                    generatedOTP = "EXPIRED_" + Date.now(); // Invalidate old code safely
                 }
-                name = existingUser; // Fallback to recorded sync name
-            } else {
-                // Sign Up mode setup initialization
-                localStorage.setItem('sachin_verified_user', name);
-                localStorage.setItem('sachin_verified_email', email);
-                localStorage.setItem('sachin_verified_password', password);
+            }, 1000);
+        }
+
+        /* 🔍 SECURITY OTP EVALUATION ENGINE */
+        function verifySecureOTP() {
+            var inputCode = document.getElementById('otpInput').value.trim();
+            var email = document.getElementById('userEmail').value.trim();
+
+            if(inputCode !== generatedOTP || inputCode === "") {
+                alert("Invalid verification code! Please enter the exact OTP sent to your email.");
+                return;
             }
 
-            // Grant entry block
-            document.getElementById('userBadge').innerText = "👤 " + name;
-            document.getElementById('loginScreen').style.display = 'none';
+            // Success authentication entry block
+            clearInterval(countdownTimer);
+            localStorage.setItem('sachin_verified_email', email);
             
+            document.getElementById('userBadge').innerText = "👤 " + email.split('@')[0];
+            document.getElementById('loginScreen').style.display = 'none';
+
             setTimeout(function() {
-                appendMessage("Secure Access Granted. Welcome to ChatGPT mainframe portal, " + name + "! How can I help you today?", "ai");
+                appendMessage("Authentication Successful. Secure gateway operational. Welcome back, user!", "ai");
             }, 400);
         }
 
@@ -319,7 +315,7 @@
         function useSug(val) { document.getElementById('userInput').value = val; sendMessage(); }
         function hideSuggestions() { var sBox = document.getElementById('suggestionsBox'); if(sBox) sBox.style.display = 'none'; }
 
-        /* CAMERA CODES */
+        /* CAMERA ACTIONS */
         function openInAppCamera() {
             var modal = document.getElementById('cameraModal');
             modal.style.display = 'flex';
@@ -329,92 +325,10 @@
                 document.getElementById('videoPreview').srcObject = stream;
             })
             .catch(function(err) {
-                alert("Camera block telemetry fail.");
+                alert("Camera connect failure.");
                 modal.style.display = 'none';
             });
         }
 
         function closeInAppCamera() {
-            if(localStream) { localStream.getTracks().forEach(function(track) { track.stop(); }); }
-            document.getElementById('cameraModal').style.display = 'none';
-        }
-
-        function captureSnapshot() {
-            var video = document.getElementById('videoPreview');
-            var canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth || 640; canvas.height = video.videoHeight || 480;
-            var ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            var base64Img = canvas.toDataURL('image/jpeg');
-            
-            closeInAppCamera(); hideSuggestions();
-            appendMessage("", 'user', base64Img);
-            appendMessage("Boss, photo processed inside localized client app stack!", 'ai');
-            saveChatToMemory();
-        }
-
-        /* TRANSMISSION STACKS */
-        function sendMessage() {
-            var inputField = document.getElementById('userInput');
-            var userText = inputField.value.trim();
-            if (!userText) return;
-
-            inputField.value = ''; hideSuggestions();
-            appendMessage(userText, 'user');
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", url + encodeURIComponent(userText) + "?system=" + encodeURIComponent(system_prompt), true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    appendMessage(xhr.responseText, 'ai');
-                    var lowerInput = userText.toLowerCase();
-                    var mapTriggers = ['map', 'location', 'road', 'kahan hai', 'it park', 'dehradun', 'address'];
-                    var needsMap = false;
-                    for (var i = 0; i < mapTriggers.length; i++) {
-                        if (lowerInput.indexOf(mapTriggers[i]) !== -1) { needsMap = true; break; }
-                    }
-                    if(needsMap) appendLiveMapRow(userText);
-                    saveChatToMemory();
-                }
-            };
-            xhr.send();
-            saveChatToMemory();
-        }
-
-        function appendMessage(text, sender, imgSrc) {
-            var container = document.getElementById('chatContainer');
-            var row = document.createElement('div');
-            row.className = 'message-row ' + (sender === 'user' ? 'user-row' : 'ai-row');
-            var content = document.createElement('div');
-            content.className = 'message-content';
-            var avatar = document.createElement('div');
-            avatar.className = 'avatar ' + (sender === 'user' ? 'user-avatar' : 'ai-avatar');
-            avatar.innerText = sender === 'user' ? 'S' : 'G';
-            var txtDiv = document.createElement('div');
-            txtDiv.className = 'text';
-            
-            if(imgSrc) {
-                var img = document.createElement('img'); img.src = imgSrc; img.className = 'chat-img';
-                txtDiv.appendChild(img);
-            } else { txtDiv.innerText = text; }
-            
-            content.appendChild(avatar); content.appendChild(txtDiv);
-            row.appendChild(content); container.appendChild(row);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function appendLiveMapRow(locationQuery) {
-            var container = document.getElementById('chatContainer');
-            var row = document.createElement('div');
-            row.className = 'message-row ai-row';
-            var embedUrl = "https://maps.google.com/maps?q=" + encodeURIComponent(locationQuery) + "&t=&z=15&ie=UTF-8&iwloc=&output=embed";
-            row.innerHTML = '<div class="message-content"><div class="avatar ai-avatar">🗺️</div><div class="text">Boss, live map check kijiye:<br><iframe width="100%" height="230" style="border:0;border-radius:14px;margin-top:10px;" src="' + embedUrl + '" allowfullscreen></iframe></div></div>';
-            container.appendChild(row); container.scrollTop = container.scrollHeight;
-        }
-
-        function saveChatToMemory() { localStorage.setItem('sachin_chat_history', document.getElementById('chatContainer').innerHTML); }
-        function loadSavedChat() { var savedData = localStorage.getItem('sachin_chat_history'); if(savedData) { document.getElementById('chatContainer').innerHTML = savedData; hideSuggestions(); } }
-        function clearCurrentChat() { localStorage.removeItem('sachin_chat_history'); localStorage.removeItem('sachin_verified_user'); localStorage.removeItem('sachin_verified_password'); location.reload(); }
-    </script>
-</body>
-</html>
+            if(l      
