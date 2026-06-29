@@ -11,7 +11,7 @@
             background-color: #ffffff; color: #0d0d0d; display: flex; height: 100vh; overflow: hidden; position: relative;
         }
         
-        /* Floating Sidebar Overlay */
+        /* 1. Fixed & Smooth Sidebar overlay */
         .sidebar {
             position: fixed; top: 0; left: 0; width: 280px; height: 100%; background-color: #171717; 
             color: #ececf1; z-index: 1000; transform: translateX(-100%); transition: transform 0.3s ease;
@@ -23,7 +23,6 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4);
             z-index: 999; display: none;
         }
-        .sidebar-backdrop.show { display: block; }
 
         .new-chat-btn {
             border: 1px solid #4d4d4d; background: transparent; color: white; padding: 12px; border-radius: 24px;
@@ -33,7 +32,14 @@
         .history-box { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
         .history-item { padding: 10px; border-radius: 8px; font-size: 0.9rem; color: #c5c5d2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Main Window Layout */
+        /* Play Store Essential Privacy Footer Link */
+        .sidebar-footer {
+            padding: 15px 0 5px 0; border-top: 1px solid #2a2a2a; text-align: center;
+        }
+        .privacy-link { color: #8e8e93; font-size: 0.85rem; text-decoration: none; cursor: pointer; }
+        .privacy-link:hover { color: #ffffff; }
+
+        /* Main Workspace layout */
         .main-content { flex: 1; display: flex; flex-direction: column; height: 100%; background-color: #ffffff; }
         
         .header { 
@@ -45,7 +51,7 @@
 
         .chat-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; background-color: #ffffff; padding-bottom: 10px; }
 
-        /* Message Rows styling */
+        /* ChatGPT Message Layout */
         .message-row { width: 100%; padding: 16px 20px; display: flex; justify-content: center; }
         .user-row { background-color: #ffffff; }
         .ai-row { background-color: #f7f7f8; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
@@ -55,9 +61,9 @@
         .user-avatar { background-color: #543dcd; color: white; }
         .ai-avatar { background-color: #10a37f; color: white; }
         .text { flex: 1; color: #0d0d0d; }
-        .chat-img { max-width: 100%; max-height: 220px; border-radius: 12px; margin-top: 8px; border: 1px solid #ddd; display: block; }
+        .chat-img { max-width: 100%; max-height: 220px; border-radius: 12px; margin-top: 8px; border: 1px solid #ddd; }
 
-        /* Suggestions chips layout */
+        /* Suggestions chips */
         .suggestions-box { margin-top: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 768px; align-self: center; }
         .suggestion-item { display: flex; align-items: center; gap: 12px; color: #4d4d4d; font-size: 0.95rem; cursor: pointer; padding: 6px; }
         .suggestion-icon { font-size: 1.2rem; }
@@ -94,6 +100,10 @@
         <button class="new-chat-btn" onclick="clearCurrentChat()">＋ New Chat</button>
         <div class="history-title">Recent Chats</div>
         <div class="history-box" id="historyBox"></div>
+        
+        <div class="sidebar-footer">
+            <a class="privacy-link" href="privacy.html" target="_self">🔒 App Privacy Policy</a>
+        </div>
     </div>
 
     <div class="camera-modal" id="cameraModal">
@@ -133,18 +143,24 @@
 
     <script>
         var url = "https://text.pollinations.ai/";
-        // Advanced System Prompt to hold universal global knowledge base
-        var system_prompt = "You are ChatGPT, an omniscient global intelligence framework. You possess complete data about all world records, histories, locations, corporate companies, global websites, and address networks. Respond accurately in crisp, friendly, high-quality Hinglish as requested by Master Sachin Saini.";
+        var system_prompt = "You are ChatGPT, an omniscient global intelligence framework. You possess complete data about world histories, corporations, websites, and address networks. Respond accurately in crisp, premium Hinglish as requested by Master Sachin Saini.";
         var localStream = null;
 
         window.onload = function() {
             loadSavedChat();
         };
 
+        // Complete robust sidebar trigger
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            var bd = document.getElementById('backdrop');
-            bd.className = bd.className.indexOf('show') !== -1 ? 'sidebar-backdrop' : 'sidebar-backdrop show';
+            var sidebar = document.getElementById('sidebar');
+            var backdrop = document.getElementById('backdrop');
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                backdrop.style.display = 'none';
+            } else {
+                sidebar.classList.add('open');
+                backdrop.style.display = 'block';
+            }
         }
 
         function useSug(val) {
@@ -157,18 +173,17 @@
             if(sBox) sBox.style.display = 'none';
         }
 
-        /* IN-APP LIVE CAMERA ENGINE */
+        /* IN-APP CAMERA ENGINE */
         function openInAppCamera() {
             var modal = document.getElementById('cameraModal');
             modal.style.display = 'flex';
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false })
             .then(function(stream) {
                 localStream = stream;
-                var video = document.getElementById('videoPreview');
-                video.srcObject = stream;
+                document.getElementById('videoPreview').srcObject = stream;
             })
             .catch(function(err) {
-                alert("Camera Access Required. Allow camera permissions in app settings Boss.");
+                alert("Camera connect nahi ho saka! Kripya phone settings mein jaakar Camera ALLOW kijiye.");
                 modal.style.display = 'none';
             });
         }
@@ -192,11 +207,11 @@
             closeInAppCamera();
             hideSuggestions();
             appendMessage("", 'user', base64Img);
-            appendMessage("Boss, photo processed. Mainframe running image telemetry grid analytics!", 'ai');
+            appendMessage("Boss, photo processed successfully via internal secure framework!", 'ai');
             saveChatToMemory();
         }
 
-        /* SMART MESSAGING SYSTEM WITH DYNAMIC EMBEDDED GPS MAPS */
+        /* SMART NETWORK ENGINE WITH MAPS */
         function sendMessage() {
             var inputField = document.getElementById('userInput');
             var userText = inputField.value.trim();
@@ -210,25 +225,15 @@
             xhr.open("GET", url + encodeURIComponent(userText) + "?system=" + encodeURIComponent(system_prompt), true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    var aiResponse = xhr.responseText;
-                    appendMessage(aiResponse, 'ai');
+                    appendMessage(xhr.responseText, 'ai');
                     
-                    // 🗺️ GPS MAP ENGINE DETECTION AUTOMATION
                     var lowerInput = userText.toLowerCase();
-                    var mapTriggers = ['map', 'location', 'road', 'kahan hai', 'it park', 'dehradun', 'address', 'jaga'];
+                    var mapTriggers = ['map', 'location', 'road', 'kahan hai', 'it park', 'dehradun', 'address'];
                     var needsMap = false;
-                    
                     for (var i = 0; i < mapTriggers.length; i++) {
-                        if (lowerInput.indexOf(mapTriggers[i]) !== -1) {
-                            needsMap = true;
-                            break;
-                        }
+                        if (lowerInput.indexOf(mapTriggers[i]) !== -1) { needsMap = true; break; }
                     }
-                    
-                    // If user inquires about roads, hubs, or GPS location, automatically stream live iframe maps row
-                    if(needsMap) {
-                        appendLiveMapRow(userText);
-                    }
+                    if(needsMap) appendLiveMapRow(userText);
                     saveChatToMemory();
                 }
             };
@@ -240,44 +245,53 @@
             var container = document.getElementById('chatContainer');
             var row = document.createElement('div');
             row.className = 'message-row ' + (sender === 'user' ? 'user-row' : 'ai-row');
-            
             var content = document.createElement('div');
             content.className = 'message-content';
-            
             var avatar = document.createElement('div');
             avatar.className = 'avatar ' + (sender === 'user' ? 'user-avatar' : 'ai-avatar');
             avatar.innerText = sender === 'user' ? 'S' : 'G';
-            
             var txtDiv = document.createElement('div');
             txtDiv.className = 'text';
             
             if(imgSrc) {
-                var img = document.createElement('img');
-                img.src = imgSrc;
-                img.className = 'chat-img';
+                var img = document.createElement('img'); img.src = imgSrc; img.className = 'chat-img';
                 txtDiv.appendChild(img);
-            } else {
-                txtDiv.innerText = text;
-            }
+            } else { txtDiv.innerText = text; }
             
-            content.appendChild(avatar);
-            content.appendChild(txtDiv);
-            row.appendChild(content);
-            container.appendChild(row);
+            content.appendChild(avatar); content.appendChild(txtDiv);
+            row.appendChild(content); container.appendChild(row);
             container.scrollTop = container.scrollHeight;
         }
 
-        /* GENERATE DYNAMIC LIVE GOOGLE MAP ROW INSIDE THE CHAT BUBBLE */
         function appendLiveMapRow(locationQuery) {
             var container = document.getElementById('chatContainer');
             var row = document.createElement('div');
             row.className = 'message-row ai-row';
-            
-            // Generate clean embedded standard Google map interface link via search parameters
             var embedUrl = "https://maps.google.com/maps?q=" + encodeURIComponent(locationQuery) + "&t=&z=15&ie=UTF-8&iwloc=&output=embed";
-            
-            row.innerHTML = '<div class="message-content"><div class="avatar ai-avatar">🗺️</div><div class="text">Boss, maine automatic location trace karke aapke liye live GPS radar map niche attach kar diya hai:<br><iframe width="100%" height="230" style="border:0;border-radius:14px;margin-top:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1);" src="' + embedUrl + '" allowfullscreen></iframe></div></div>';
-            
+            row.innerHTML = '<div class="message-content"><div class="avatar ai-avatar">🗺️</div><div class="text">Boss, live map check kijiye:<br><iframe width="100%" height="230" style="border:0;border-radius:14px;margin-top:10px;" src="' + embedUrl + '" allowfullscreen></iframe></div></div>';
             container.appendChild(row);
-            container.scrollTop
-                                                                                                                                                 
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function saveChatToMemory() {
+            localStorage.setItem('sachin_chat_history', document.getElementById('chatContainer').innerHTML);
+            document.getElementById('historyBox').innerHTML = '<div class="history-item">💬 Active Session Log</div>';
+        }
+
+        function loadSavedChat() {
+            var savedData = localStorage.getItem('sachin_chat_history');
+            if(savedData && savedData.indexOf('message-row') !== -1) {
+                document.getElementById('chatContainer').innerHTML = savedData;
+                hideSuggestions();
+                document.getElementById('historyBox').innerHTML = '<div class="history-item">💬 Active Session Log</div>';
+            }
+        }
+
+        function clearCurrentChat() {
+            localStorage.removeItem('sachin_chat_history');
+            location.reload();
+        }
+    </script>
+</body>
+    </html>
+                                                                                              
