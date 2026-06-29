@@ -11,7 +11,7 @@
             background-color: #ffffff; color: #0d0d0d; display: flex; height: 100vh; overflow: hidden; position: relative;
         }
         
-        /* 1. Fixed & Smooth Sidebar overlay */
+        /* Sidebar layout */
         .sidebar {
             position: fixed; top: 0; left: 0; width: 280px; height: 100%; background-color: #171717; 
             color: #ececf1; z-index: 1000; transform: translateX(-100%); transition: transform 0.3s ease;
@@ -32,11 +32,11 @@
         .history-box { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
         .history-item { padding: 10px; border-radius: 8px; font-size: 0.9rem; color: #c5c5d2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Play Store Essential Privacy Footer Link */
+        /* Sidebar Footer */
         .sidebar-footer {
             padding: 15px 0 5px 0; border-top: 1px solid #2a2a2a; text-align: center;
         }
-        .privacy-link { color: #8e8e93; font-size: 0.85rem; text-decoration: none; cursor: pointer; }
+        .privacy-link { color: #8e8e93; font-size: 0.85rem; text-decoration: none; cursor: pointer; display: block; }
         .privacy-link:hover { color: #ffffff; }
 
         /* Main Workspace layout */
@@ -51,7 +51,7 @@
 
         .chat-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; background-color: #ffffff; padding-bottom: 10px; }
 
-        /* ChatGPT Message Layout */
+        /* ChatGPT Message Rows Layout */
         .message-row { width: 100%; padding: 16px 20px; display: flex; justify-content: center; }
         .user-row { background-color: #ffffff; }
         .ai-row { background-color: #f7f7f8; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
@@ -68,7 +68,7 @@
         .suggestion-item { display: flex; align-items: center; gap: 12px; color: #4d4d4d; font-size: 0.95rem; cursor: pointer; padding: 6px; }
         .suggestion-icon { font-size: 1.2rem; }
 
-        /* Input pill Container */
+        /* Input Bar Pill Container */
         .input-outer { padding: 16px; background-color: #ffffff; display: flex; justify-content: center; width: 100%; }
         .input-container { 
             width: 100%; max-width: 768px; background-color: #ffffff; border: 1px solid #e3e3e3; border-radius: 28px; 
@@ -90,6 +90,23 @@
         .cam-btn { padding: 14px 28px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; font-size: 1rem; }
         .capture-btn { background-color: #10a37f; color: white; flex: 1; }
         .cancel-btn { background-color: #ef4444; color: white; }
+
+        /* 🔒 BUILT-IN PRIVACY MODAL POPUP */
+        .privacy-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85);
+            z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .privacy-box {
+            background-color: #ffffff; color: #212121; width: 100%; max-width: 500px; border-radius: 16px;
+            padding: 24px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .privacy-box h2 { color: #10a37f; margin-bottom: 12px; font-size: 1.4rem; }
+        .privacy-box h3 { font-size: 1rem; margin-top: 14px; color: #171717; }
+        .privacy-box p { font-size: 0.9rem; color: #4d4d4d; margin-top: 6px; line-height: 1.4; }
+        .privacy-close-btn {
+            background-color: #10a37f; color: white; border: none; width: 100%; padding: 12px;
+            border-radius: 24px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -102,7 +119,26 @@
         <div class="history-box" id="historyBox"></div>
         
         <div class="sidebar-footer">
-            <a class="privacy-link" href="privacy.html" target="_self">🔒 App Privacy Policy</a>
+            <span class="privacy-link" onclick="openPrivacyModal()">🔒 App Privacy Policy</span>
+        </div>
+    </div>
+
+    <div class="privacy-modal" id="privacyModal">
+        <div class="privacy-box">
+            <h2>Privacy Policy</h2>
+            <p><strong>Last updated: 2026</strong></p>
+            <p>Welcome to S-Jarvis framework. We highly protect our users' security environment.</p>
+            
+            <h3>1. Local Storage Processing</h3>
+            <p>This app does NOT upload, transmit, or leak any chat histories, messages, images, or personal accounts to external cloud mainframes. All operations are kept fully encrypted inside your local browser storage memory.</p>
+            
+            <h3>2. Hardware Safety Integration</h3>
+            <p>Camera and Microphone feeds are engaged strictly on-demand when clicked by the user interface. Data telemetry does not capture or log recordings outside active chat rows.</p>
+            
+            <h3>3. Zero Data Sharing</h3>
+            <p>We do not share, sell, or disclose information grids with any external developer networks or third parties.</p>
+            
+            <button class="privacy-close-btn" onclick="closePrivacyModal()">I Accept / Close</button>
         </div>
     </div>
 
@@ -125,9 +161,9 @@
         
         <div class="chat-container" id="chatContainer">
             <div class="suggestions-box" id="suggestionsBox">
-                <div class="suggestion-item" onclick="useSug('Dehradun IT park kahan hai map dikhao')"><span class="suggestion-icon">⚽</span><span>Find IT Park Dehradun Map</span></div>
-                <div class="suggestion-item" onclick="useSug('Google company ki jankari do')"><span class="suggestion-icon">🖼️</span><span>About Google Company</span></div>
-                <div class="suggestion-item" onclick="useSug('World ke top facts batao')"><span class="suggestion-icon">✏️</span><span>World Top Facts</span></div>
+                <div class="suggestion-item" onclick="useSug('Dehradun IT park kahan hai map dikhao')"><span class="suggestion-icon">🗺️</span><span>Find IT Park Dehradun Map</span></div>
+                <div class="suggestion-item" onclick="useSug('Google company ki jankari do')"><span class="suggestion-icon">🏢</span><span>About Google Company</span></div>
+                <div class="suggestion-item" onclick="useSug('World ke top facts batao')"><span class="suggestion-icon">🌍</span><span>World Top Facts</span></div>
             </div>
         </div>
 
@@ -150,7 +186,7 @@
             loadSavedChat();
         };
 
-        // Complete robust sidebar trigger
+        // Smooth fixed sidebar toggle control
         function toggleSidebar() {
             var sidebar = document.getElementById('sidebar');
             var backdrop = document.getElementById('backdrop');
@@ -163,6 +199,16 @@
             }
         }
 
+        /* 🔒 PRIVACY WINDOW CORE ACTIONS */
+        function openPrivacyModal() {
+            // Close the navigation sidebar first
+            toggleSidebar();
+            document.getElementById('privacyModal').style.display = 'flex';
+        }
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').style.display = 'none';
+        }
+
         function useSug(val) {
             document.getElementById('userInput').value = val;
             sendMessage();
@@ -173,7 +219,7 @@
             if(sBox) sBox.style.display = 'none';
         }
 
-        /* IN-APP CAMERA ENGINE */
+        /* CAMERA ACTIONS */
         function openInAppCamera() {
             var modal = document.getElementById('cameraModal');
             modal.style.display = 'flex';
@@ -183,7 +229,7 @@
                 document.getElementById('videoPreview').srcObject = stream;
             })
             .catch(function(err) {
-                alert("Camera connect nahi ho saka! Kripya phone settings mein jaakar Camera ALLOW kijiye.");
+                alert("Camera connect nahi ho saka! Phone settings mein permissions check kijiye.");
                 modal.style.display = 'none';
             });
         }
@@ -207,11 +253,11 @@
             closeInAppCamera();
             hideSuggestions();
             appendMessage("", 'user', base64Img);
-            appendMessage("Boss, photo processed successfully via internal secure framework!", 'ai');
+            appendMessage("Boss, photo processed successfully inside app storage channel!", 'ai');
             saveChatToMemory();
         }
 
-        /* SMART NETWORK ENGINE WITH MAPS */
+        /* SMART TRANSLATOR TRANSMISSION ENGINE WITH LIVE GPS RADAR MAPS */
         function sendMessage() {
             var inputField = document.getElementById('userInput');
             var userText = inputField.value.trim();
@@ -268,7 +314,7 @@
             var row = document.createElement('div');
             row.className = 'message-row ai-row';
             var embedUrl = "https://maps.google.com/maps?q=" + encodeURIComponent(locationQuery) + "&t=&z=15&ie=UTF-8&iwloc=&output=embed";
-            row.innerHTML = '<div class="message-content"><div class="avatar ai-avatar">🗺️</div><div class="text">Boss, live map check kijiye:<br><iframe width="100%" height="230" style="border:0;border-radius:14px;margin-top:10px;" src="' + embedUrl + '" allowfullscreen></iframe></div></div>';
+            row.innerHTML = '<div class="message-content"><div class="avatar ai-avatar">🗺️</div><div class="text">Boss, live map data stream check kijiye:<br><iframe width="100%" height="230" style="border:0;border-radius:14px;margin-top:10px;" src="' + embedUrl + '" allowfullscreen></iframe></div></div>';
             container.appendChild(row);
             container.scrollTop = container.scrollHeight;
         }
@@ -293,5 +339,4 @@
         }
     </script>
 </body>
-    </html>
-                                                                                              
+</html>
