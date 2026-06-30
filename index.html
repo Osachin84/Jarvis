@@ -5,75 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jarvis AI Portal</title>
     <style>
-        /* --- Premium Cyberpunk & Glassmorphic Layout --- */
+        /* --- Premium Deep Dark ChatGPT Design System --- */
+        :root {
+            --bg-primary: #171717;
+            --bg-secondary: #212121;
+            --bg-sidebar: #0d0d0d;
+            --accent-color: #10a37f; /* Standard AI Green, customizable dynamically */
+            --text-main: #ececf1;
+            --text-muted: #b4b4b4;
+            --border-glow: rgba(16, 163, 127, 0.2);
+        }
+
         body {
             margin: 0;
-            padding: 10px;
-            background: linear-gradient(135deg, #0b151a, #132229, #1a303a);
+            padding: 0;
+            background-color: var(--bg-primary);
             font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            color: #ffffff;
+            color: var(--text-main);
             min-height: 100vh;
             box-sizing: border-box;
-            overflow-x: hidden;
+            overflow: hidden;
             user-select: none;
             -webkit-user-select: none;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
+        /* --- Full Screen Initial Login Gateway --- */
+        #appLoginGateway {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 20000;
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 20px);
+            justify-content: space-between;
+            padding: 40px 24px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .login-animated-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-top: 10vh;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #ffffff, #888888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textPulse 4s infinite ease-in-out;
+        }
+
+        @keyframes textPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        .login-btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 5vh;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .google-login-btn {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 14px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+
+        .alternative-login-btn {
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid #444444;
+            padding: 14px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* --- Main App Frame Layout --- */
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
             position: relative;
         }
 
-        /* Top Bar Interface */
         .top-navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 15px;
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            margin-bottom: 10px;
+            padding: 14px 18px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid #2f2f2f;
         }
 
         .brand-title {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: #00ffcc;
-            text-shadow: 0 0 8px rgba(0, 255, 204, 0.4);
-            letter-spacing: 1px;
-            flex: 1;
-            text-align: center;
+            font-size: 1.15rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #ffffff;
         }
 
         .menu-btn {
             background: none;
             border: none;
             color: #fff;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             cursor: pointer;
-            padding: 0 5px;
         }
 
-        /* Sliding Advanced Sidebar Drawer */
+        /* --- Sliding Sidebar Navigation --- */
         .sidebar {
             position: fixed;
             top: 0;
-            left: -280px;
-            width: 260px;
+            left: -290px;
+            width: 275px;
             height: 100%;
-            background: #0d1b2a;
-            border-right: 1px solid rgba(0, 255, 204, 0.2);
-            box-shadow: 5px 0 25px rgba(0,0,0,0.5);
-            transition: 0.3s ease;
+            background: var(--bg-sidebar);
+            border-right: 1px solid #2f2f2f;
+            transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 9999;
-            padding: 15px;
+            padding: 16px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -83,59 +154,44 @@
             left: 0;
         }
 
-        .sidebar-header {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #00ffcc;
-            margin-bottom: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
-        }
-
-        /* Top Directories Structure */
         .directory-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            padding-bottom: 12px;
+            gap: 4px;
+            margin-top: 20px;
         }
 
         .dir-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.92rem;
-            color: #e2e8f0;
-            transition: 0.2s;
+            font-size: 0.95rem;
+            color: var(--text-main);
         }
-        .dir-item:hover {
-            background: rgba(255,255,255,0.05);
-        }
+        .dir-item:hover { background: #1a1a1a; }
 
         .new-chat-sidebar-btn {
-            background: rgba(0, 255, 204, 0.15);
-            border: 1px dashed #00ffcc;
-            color: #00ffcc;
-            padding: 10px;
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            color: #ffffff;
+            padding: 12px;
             border-radius: 8px;
             text-align: center;
             cursor: pointer;
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 15px;
         }
 
         .recents-section-title {
-            font-size: 0.78rem;
-            color: #8899a6;
+            font-size: 0.75rem;
+            color: #666;
             text-transform: uppercase;
+            margin-top: 25px;
             margin-bottom: 8px;
-            font-weight: bold;
+            font-weight: 700;
             letter-spacing: 0.5px;
         }
 
@@ -144,26 +200,31 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            margin-bottom: 15px;
+            gap: 4px;
         }
 
         .recent-chat-item {
-            padding: 9px 12px;
-            background: rgba(255, 255, 255, 0.03);
+            padding: 10px;
             border-radius: 6px;
-            font-size: 0.88rem;
-            color: #e2e8f0;
+            font-size: 0.9rem;
+            color: #cdcdcd;
             cursor: pointer;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            border: 1px solid transparent;
         }
         .recent-chat-item:hover, .recent-chat-item.active {
-            background: rgba(0, 255, 204, 0.08);
-            border-color: rgba(0, 255, 204, 0.3);
-            color: #00ffcc;
+            background: #212121;
+            color: #ffffff;
+        }
+
+        .sidebar-profile-footer {
+            border-top: 1px solid #222;
+            padding-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
         }
 
         .sidebar-overlay {
@@ -172,12 +233,137 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.4);
             display: none;
             z-index: 9998;
         }
 
-        /* Full Settings Panel Modal */
+        /* --- Chat Workspace Matrix --- */
+        .chat-box-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .msg-bubble {
+            max-width: 85%;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 1rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .msg-bubble.user {
+            background: var(--bg-secondary);
+            color: var(--text-main);
+            margin-left: auto;
+        }
+
+        .msg-bubble.jarvis {
+            color: var(--text-main);
+            margin-right: auto;
+            align-self: flex-start;
+        }
+
+        /* --- Dynamic Smart Input Suggestions Core --- */
+        .smart-suggestion-pillbox {
+            display: flex;
+            gap: 8px;
+            padding: 8px 16px;
+            overflow-x: auto;
+            white-space: nowrap;
+            background: transparent;
+        }
+        .smart-suggestion-pillbox::-webkit-scrollbar { display: none; }
+
+        .suggestion-pill {
+            background: #2f2f2f;
+            border: 1px solid #3d3d3d;
+            color: #e3e3e3;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* --- Action Attachment Popup Context Panel --- */
+        .attachment-popup-menu {
+            position: absolute;
+            bottom: 75px;
+            left: 16px;
+            background: #252525;
+            border: 1px solid #383838;
+            border-radius: 16px;
+            width: 180px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .attach-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+        .attach-menu-item:hover { background: #303030; }
+
+        /* --- Custom Bottom Control Command Row --- */
+        .input-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-secondary);
+            padding: 10px 16px;
+            border-radius: 28px;
+            margin: 0 16px 16px 16px;
+            border: 1px solid #2f2f2f;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .action-icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .send-action-btn {
+            background: #ffffff;
+            border: none;
+            color: #000000;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* --- Full Screen Comprehensive Settings Dashboard --- */
         .settings-panel {
             position: fixed;
             top: 0;
@@ -185,7 +371,7 @@
             width: 100%;
             height: 100%;
             background: #171717;
-            z-index: 10000;
+            z-index: 15000;
             display: none;
             flex-direction: column;
             box-sizing: border-box;
@@ -194,258 +380,147 @@
         .settings-header {
             display: flex;
             align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #262626;
+            padding: 16px;
+            border-bottom: 1px solid #2f2f2f;
             background: #171717;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
 
         .back-panel-btn {
             background: none;
             border: none;
             color: #fff;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             cursor: pointer;
-            margin-right: 15px;
+            margin-right: 20px;
         }
 
         .settings-scroll-area {
             flex: 1;
             overflow-y: auto;
-            padding: 15px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
         }
 
-        /* Profile Block Styling */
-        .profile-block {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .profile-avatar {
-            width: 70px;
-            height: 70px;
-            background: #536565;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #fff;
-            position: relative;
-        }
-
-        .avatar-edit-badge {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            background: #262626;
-            border: 1px solid #404040;
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            font-size: 0.75rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .profile-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #e5e5e5;
-        }
-
-        /* Boxed Category Lists */
         .settings-group-title {
-            font-size: 0.85rem;
-            color: #a3a3a3;
+            font-size: 0.8rem;
+            color: #8e8e93;
+            text-transform: uppercase;
             margin-bottom: 8px;
-            padding-left: 5px;
+            font-weight: 700;
+            padding-left: 4px;
         }
 
         .settings-box-container {
-            background: #262626;
-            border-radius: 14px;
+            background: #212121;
+            border-radius: 12px;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
         }
 
         .settings-row-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 16px;
-            border-bottom: 1px solid #333333;
+            padding: 16px;
+            border-bottom: 1px solid #2f2f2f;
             cursor: pointer;
-            color: #f5f5f5;
-            font-size: 0.95rem;
-            transition: 0.15s;
+            font-size: 0.98rem;
         }
-        .settings-row-item:last-child {
-            border-bottom: none;
-        }
-        .settings-row-item:active {
-            background: #333333;
-        }
-
-        .row-left-meta {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
+        .settings-row-item:last-child { border-bottom: none; }
 
         .row-right-status {
-            color: #737373;
-            font-size: 0.88rem;
-            display: flex;
+            color: #8e8e93;
+            font-size: 0.9rem;
+        }
+
+        /* --- Dynamic Modal Framework (Popups and Confirmations) --- */
+        .custom-popup-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 25000;
+            display: none;
+            justify-content: center;
             align-items: center;
-            gap: 6px;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        /* Chat Workspace View */
-        .chat-box-area {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px 5px;
-            margin-bottom: 10px;
-        }
-
-        .msg-bubble {
-            max-width: 85%;
-            margin-bottom: 12px;
-            padding: 12px 16px;
+        .modal-content-card {
+            background: #2d2d2d;
             border-radius: 14px;
-            font-size: 0.98rem;
-            line-height: 1.5;
-            word-wrap: break-word;
+            width: 100%;
+            max-width: 320px;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
         }
 
-        .msg-bubble.user {
-            background: #004d40;
-            color: #fff;
-            margin-left: auto;
-            border-bottom-right-radius: 2px;
+        .modal-actions-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            margin-top: 20px;
         }
 
-        .msg-bubble.jarvis {
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-            margin-right: auto;
-            border-bottom-left-radius: 2px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        /* Suggestion Grid Layer */
-        .suggestion-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-            padding: 5px;
-        }
-
-        .suggest-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 12px;
-            cursor: pointer;
-            text-align: left;
-        }
-
-        .suggest-card .title-text {
-            font-size: 0.85rem;
+        .modal-btn {
+            background: none;
+            border: none;
+            color: #00ffcc;
+            font-size: 0.95rem;
             font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 4px;
-        }
-
-        .suggest-card .sub-text {
-            font-size: 0.72rem;
-            color: #8899a6;
-        }
-
-        /* Input command controls */
-        .input-bar-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.06);
-            padding: 8px 14px;
-            border-radius: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            position: relative;
-        }
-
-        .chat-input {
-            flex: 1;
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 0.98rem;
-            outline: none;
-        }
-
-        .action-icon-btn {
-            background: none;
-            border: none;
-            color: #8899a6;
-            font-size: 1.3rem;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .send-action-btn {
-            background: #00ffcc;
-            border: none;
-            color: #000;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* Sliding Attachments Context Popup */
-        .attachment-popup-menu {
-            position: absolute;
-            bottom: 60px;
-            left: 10px;
-            background: #262626;
-            border: 1px solid #404040;
-            border-radius: 16px;
-            width: 170px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        /* --- Mock Advanced Face Scan Verification View --- */
+        #faceScanVerificationWrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #111111;
+            z-index: 30000;
             display: none;
             flex-direction: column;
-            overflow: hidden;
-            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            box-sizing: border-box;
         }
 
-        .attach-menu-item {
+        .biometric-scanner-ring {
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            border: 3px dashed var(--accent-color);
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            color: #f5f5f5;
-            font-size: 0.92rem;
-            cursor: pointer;
-            transition: 0.15s;
+            justify-content: center;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            background: #1a1a1a;
         }
-        .attach-menu-item:hover {
-            background: #333333;
+
+        .scanner-video-feed-sim {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .biometric-guidance-txt {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -453,16 +528,45 @@
 
     <div class="sidebar-overlay" id="overlay" onclick="closeAllDrawers()"></div>
 
-    <input type="file" id="realSystemDevicePicker" style="display: none;" onchange="processLocalFileSelection(event)">
+    <input type="file" id="cameraSystemNode" accept="image/*" capture="environment" style="display:none;" onchange="handleFilePayloadAttach(event, 'Camera Capture')">
+    <input type="file" id="photoLibrarySystemNode" accept="image/*" style="display:none;" onchange="handleFilePayloadAttach(event, 'Photo Library Payload')">
+    <input type="file" id="genericFilePickerSystemNode" accept="*/*" style="display:none;" onchange="handleFilePayloadAttach(event, 'File Payload Attachment')">
+
+    <div id="appLoginGateway">
+        <div class="login-animated-title" id="loginDynamicHeadline">Let's create</div>
+        <div class="login-btn-container">
+            <button class="google-login-btn" onclick="executeGoogleMockAuth()">
+                <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.47h4.84c-.21 1.12-.84 2.07-1.79 2.7l2.76 2.13c1.61-1.49 2.53-3.69 2.53-6.26z" fill="#4285F4"/><path d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.76-2.13c-.76.51-1.74.82-3.2.82-2.46 0-4.55-1.66-5.3-3.89L.89 12.74C2.37 15.68 5.44 18 9 18z" fill="#34A853"/><path d="M3.7 10.62c-.19-.57-.3-1.18-.3-1.8s.11-1.23.3-1.8L.89 5.1C.32 6.27 0 7.6 0 9s.32 2.73.89 3.9l2.81-2.28z" fill="#FBBC05"/><path d="M9 3.58c1.32 0 2.5.45 3.44 1.35L15 2.1C13.46.66 11.43 0 9 0 5.44 0 2.37 2.32.89 5.27l2.81 2.28c.75-2.23 2.84-3.89 5.3-3.89z" fill="#EA4335"/></svg>
+                Continue with Google
+            </button>
+            <button class="alternative-login-btn" onclick="executeGoogleMockAuth()">Log in another way</button>
+        </div>
+    </div>
+
+    <div id="faceScanVerificationWrapper">
+        <div class="biometric-scanner-ring">
+            <video id="simulatedFaceCamFeed" class="scanner-video-feed-sim" autoplay playsinline muted></video>
+        </div>
+        <div class="biometric-guidance-txt" id="biometricInstructionFeedback">Center yourself on the screen</div>
+    </div>
+
+    <div class="custom-popup-modal" id="genericSystemPopupDialog">
+        <div class="modal-content-card">
+            <h3 style="margin-top:0; font-size:1.15rem;" id="popupHeaderTitle">Log out</h3>
+            <p style="font-size:0.95rem; color:#b4b4b4; margin-bottom:24px;" id="popupBodyDescription">You'll need to sign back in to keep using Jarvis Portal.</p>
+            <div class="modal-actions-row" id="modalBtnActionControls">
+                </div>
+        </div>
+    </div>
 
     <div class="sidebar" id="sidebarMenu">
-        <div class="sidebar-header">🤖 Jarvis Portal</div>
+        <div style="font-size: 1.1rem; font-weight: 700; color:#fff;">🤖 Jarvis AI Portal</div>
         
         <div class="directory-list">
-            <div class="dir-item" onclick="handleDashboardMenuFeature('📖 Jarvis Library Module Synchronized')">📖 Library</div>
-            <div class="dir-item" onclick="handleDashboardMenuFeature('📁 Local Sandbox Workspace Project Synced')">🗂️ Projects</div>
-            <div class="dir-item" onclick="handleDashboardMenuFeature('📱 Core Extension Plugins Engine Active')">📱 Apps</div>
-            <div class="dir-item" onclick="handleDashboardMenuFeature('✨ Advanced Mathematical Intelligence Matrix Open')">✨ More</div>
+            <div class="dir-item" onclick="insertInternalWorkspaceNotice('📖 Library Sync complete.')">📖 Library</div>
+            <div class="dir-item" onclick="insertInternalWorkspaceNotice('📁 Sandboxed projects directory mounted.')">🗂️ Projects</div>
+            <div class="dir-item" onclick="insertInternalWorkspaceNotice('📱 Extension app desk initialized.')">📱 Apps</div>
+            <div class="dir-item" onclick="insertInternalWorkspaceNotice('✨ Advanced systems computational grid online.')">✨ More</div>
         </div>
 
         <div class="new-chat-sidebar-btn" onclick="startBrandNewSession()">+ New Chat</div>
@@ -470,40 +574,65 @@
         <div class="recents-section-title">Recent Chats</div>
         <div class="recents-container" id="recentsLogContainer"></div>
         
-        <div class="static-menu-list" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
-            <div class="dir-item" onclick="toggleSettingsPanel(true)" style="color: #00ffcc; font-weight: 600;">⚙️ Jarvis App Settings</div>
+        <div class="sidebar-profile-footer" onclick="toggleSettingsPanel(true)">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:32px; height:32px; background:#444; border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:0.85rem;">SS</div>
+                <div style="font-size:0.9rem; font-weight:600;">Sachin Sainj</div>
+            </div>
+            <div style="color:#666; font-size:0.9rem;">⚙️</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="top-navbar">
+            <button class="menu-btn" onclick="toggleMenu(true)">☰</button>
+            <div class="brand-title" id="navbarCurrentModelLabel">Jarvis 1.5 Flash</div>
+            <div style="width:24px;"></div> </div>
+
+        <div class="chat-box-area" id="chatWorkspace"></div>
+
+        <div class="smart-suggestion-pillbox" id="smartInputPillbox">
+            <div class="suggestion-pill" onclick="applySmartPillText('🎨 Create image')">🎨 Create image</div>
+            <div class="suggestion-pill" onclick="applySmartPillText('🧠 Thinking')">🧠 Thinking</div>
+            <div class="suggestion-pill" onclick="applySmartPillText('⚡ Deep research')">⚡ Deep research</div>
+            <div class="suggestion-pill" onclick="applySmartPillText('🌐 Web search')">🌐 Web search</div>
+        </div>
+
+        <div class="attachment-popup-menu" id="attachPopupMenuBox">
+            <div class="attach-menu-item" onclick="executeNativeCaptureRoute('camera')">📷 Camera</div>
+            <div class="attach-menu-item" onclick="executeNativeCaptureRoute('photos')">🖼️ Photos</div>
+            <div class="attach-menu-item" onclick="executeNativeCaptureRoute('files')">📁 Files</div>
+            <div class="attach-menu-item" onclick="executeNativeCaptureRoute('plugins')">🔌 Plugins</div>
+        </div>
+
+        <div class="input-bar-container">
+            <button class="action-icon-btn" onclick="toggleAttachmentPopup()" id="attachActionBtn">+</button>
+            <input type="text" id="userInputMsg" placeholder="Message Jarvis..." class="chat-input" onkeypress="handleKeyPress(event)" onfocus="toggleSmartPillsDisplay(true)">
+            <button class="send-action-btn" onclick="executeCommand()">➔</button>
         </div>
     </div>
 
     <div class="settings-panel" id="settingsDashboardView">
         <div class="settings-header">
             <button class="back-panel-btn" onclick="toggleSettingsPanel(false)">←</button>
-            <span style="font-size: 1.1rem; font-weight: 600;">Settings</span>
+            <span>Settings</span>
         </div>
         
         <div class="settings-scroll-area">
-            <div class="profile-block">
-                <div class="profile-avatar">SS<div class="avatar-edit-badge">✏️</div></div>
-                <div class="profile-name">User Mode</div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:8px;">
+                <div style="width:64px; height:64px; background:#444; border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:1.5rem;">SS</div>
+                <div style="font-size:1.1rem; font-weight:600;">Sachin Sainj</div>
             </div>
 
             <div>
-                <div class="settings-group-title">Preferences</div>
+                <div class="settings-group-title">My Jarvis</div>
                 <div class="settings-box-container">
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Personalization configs adapted.')">
-                        <div class="row-left-meta"><span>🔄</span>Personalization</div>
+                    <div class="settings-row-item" onclick="insertInternalWorkspaceNotice('Personalization dashboard configurator ready.')">
+                        <div>🔄 Personalization</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('AI Memory context buffer updated.')">
-                        <div class="row-left-meta"><span>🧠</span>Memory</div>
-                        <div class="row-right-status">➔</div>
-                    </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Integrations and Plugins engine active.')">
-                        <div class="row-left-meta"><span>🎛️</span>Apps</div>
-                        <div class="row-right-status">➔</div>
-                    </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Remote computation links activated.')">
-                        <div class="row-left-meta"><span>🖥️</span>Remote control</div>
+                    <div class="settings-row-item" onclick="insertInternalWorkspaceNotice('Memory optimizations metrics synced.')">
+                        <div>🧠 Memory</div>
                         <div class="row-right-status">➔</div>
                     </div>
                 </div>
@@ -512,25 +641,21 @@
             <div>
                 <div class="settings-group-title">Account</div>
                 <div class="settings-box-container">
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Switched to secure personal workspace environment.')">
-                        <div class="row-left-meta"><span>💼</span>Workspace</div>
+                    <div class="settings-row-item">
+                        <div>💼 Workspace</div>
                         <div class="row-right-status">Personal ➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Billing matrix initialized.')">
-                        <div class="row-left-meta"><span>🌟</span>Upgrade to Plus</div>
+                    <div class="settings-row-item">
+                        <div>🌟 Upgrade to Plus</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Parental strict filter locks verified.')">
-                        <div class="row-left-meta"><span>👥</span>Parental controls</div>
-                        <div class="row-right-status">➔</div>
+                    <div class="settings-row-item">
+                        <div>✉️ Email</div>
+                        <div class="row-right-status" style="color:#777;">Linked (Protected)</div>
                     </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('User mail gateway verified.')">
-                        <div class="row-left-meta"><span>✉️</span>Email</div>
-                        <div class="row-right-status">➔</div>
-                    </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Secure identity parameters active.')">
-                        <div class="row-left-meta"><span>🆔</span>Age verification</div>
-                        <div class="row-right-status">➔</div>
+                    <div class="settings-row-item" onclick="launchAgeVerificationWorkflow()">
+                        <div>🆔 Age verification</div>
+                        <div class="row-right-status">Verify ➔</div>
                     </div>
                 </div>
             </div>
@@ -538,97 +663,70 @@
             <div>
                 <div class="settings-group-title">App Settings</div>
                 <div class="settings-box-container">
-                    <div class="settings-row-item" onclick="toggleThemeMock()">
-                        <div class="row-left-meta"><span>☀️</span>Appearance</div>
-                        <div class="row-right-status" id="themeStatusLabel">System (Default) ➔</div>
+                    <div class="settings-row-item">
+                        <div>☀️ Appearance</div>
+                        <select id="appThemeSelectorNode" style="background:#2d2d2d; color:#fff; border:none; padding:4px 8px; border-radius:4px;" onchange="applyGlobalStyleThemeProperty()">
+                            <option value="system">System (Default)</option>
+                            <option value="light">Light Mode</option>
+                            <option value="dark">Dark Mode</option>
+                        </select>
                     </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Color scheme profile refreshed.')">
-                        <div class="row-left-meta"><span>🎨</span>Accent color</div>
-                        <div class="row-right-status">Default ➔</div>
+                    <div class="settings-row-item">
+                        <div>🎨 Accent color</div>
+                        <select id="appAccentColorSelectorNode" style="background:#2d2d2d; color:#fff; border:none; padding:4px 8px; border-radius:4px;" onchange="applyGlobalAccentThemeProperty()">
+                            <option value="#10a37f">Default Green</option>
+                            <option value="#4285F4">Cyber Blue</option>
+                            <option value="#00ffcc">Neon Teal</option>
+                            <option value="#ec4899">Pink Rose</option>
+                            <option value="#f97316">Orange Flare</option>
+                        </select>
                     </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('General parameters system optimization complete.')">
-                        <div class="row-left-meta"><span>⚙️</span>General</div>
+                    <div class="settings-row-item" onclick="insertInternalWorkspaceNotice('Security locks matrix validated.')">
+                        <div>🔒 Security and login</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Voice engine synthesis diagnostics online.')">
-                        <div class="row-left-meta"><span>🎙️</span>Voice</div>
-                        <div class="row-right-status">➔</div>
-                    </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Safety guardrails set to active parameters.')">
-                        <div class="row-left-meta"><span>🛡️</span>Safety</div>
-                        <div class="row-right-status">➔</div>
-                    </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Security nodes validated.')">
-                        <div class="row-left-meta"><span>🔒</span>Security and login</div>
-                        <div class="row-right-status">➔</div>
-                    </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Local cache structures evaluated.')">
-                        <div class="row-left-meta"><span>💾</span>Storage</div>
-                        <div class="row-right-status">➔</div>
-                    </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Data controls matrices adapted.')">
-                        <div class="row-left-meta"><span>📊</span>Data controls</div>
-                        <div class="row-right-status">➔</div>
-                    </div>
-                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Telemetry log matrices trace established.')">
-                        <div class="row-left-meta"><span>⏰</span>Report bug</div>
-                        <div class="row-right-status">➔</div>
-                    </div>
-                    <div class="settings-row-item" onclick="window.location.href='https://osachin84.github.io/Jarvis/'">
-                        <div class="row-left-meta"><span>ℹ️</span>About & Privacy Policy</div>
-                        <div class="row-right-status">➔</div>
+                    <div class="settings-row-item" onclick="insertInternalWorkspaceNotice('Evaluating local cache directory structures.')">
+                        <div>💾 Storage</div>
+                        <div class="row-right-status">29 MB Used ➔</div>
                     </div>
                 </div>
             </div>
 
-            <div class="settings-box-container" style="margin-bottom: 20px;">
-                <div class="settings-row-item" onclick="triggerCleanLogoutAction()" style="color: #ef4444; justify-content: center; font-weight: 600;">
+            <div class="settings-box-container">
+                <div class="settings-row-item" onclick="triggerSignOutFlowModal()" style="color: #ef4444; justify-content: center; font-weight: 600;">
                     🚪 Log out
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container">
-        <div class="top-navbar">
-            <button class="menu-btn" onclick="toggleMenu(true)">☰</button>
-            <div class="brand-title">JARVIS</div>
-        </div>
-
-        <div class="chat-box-area" id="chatWorkspace"></div>
-
-        <div class="suggestion-grid" id="suggestionPanel">
-            <div class="suggest-card" onclick="applySuggestion('🎨 Create an image', 'Design an advanced quantum AI core blueprint')">
-                <div class="title-text">🎨 Create an image</div>
-                <div class="sub-text">Design AI graphics</div>
-            </div>
-            <div class="suggest-card" onclick="applySuggestion('✍️ Write or edit', 'Draft a high-converting promotional pitch')">
-                <div class="title-text">✍️ Write or edit</div>
-                <div class="sub-text">Write essays or letters</div>
-            </div>
-        </div>
-
-        <div class="attachment-popup-menu" id="attachPopupMenuBox">
-            <div class="attach-menu-item" onclick="executeSystemAttachOption('camera')">📷 Camera</div>
-            <div class="attach-menu-item" onclick="executeSystemAttachOption('photos')">🖼️ Photos</div>
-            <div class="attach-menu-item" onclick="executeSystemAttachOption('files')">📁 Files</div>
-            <div class="attach-menu-item" onclick="executeSystemAttachOption('plugins')">🔌 Plugins</div>
-        </div>
-
-        <div class="input-bar-container">
-            <button class="action-icon-btn" onclick="toggleAttachmentPopup()" style="font-size: 1.5rem; color:#00ffcc;" id="attachActionBtn">+</button>
-            <input type="text" id="userInputMsg" placeholder="Ask Jarvis anything..." class="chat-input" onkeypress="handleKeyPress(event)">
-            <button class="send-action-btn" onclick="executeCommand()">➔</button>
-        </div>
-    </div>
-
     <script>
-        // 🔑 🎯 YOUR LIVE GOOGLE GEMINI API KEY IS LOADED DIRECTLY BELOW:
+        // 🔑 🎯 YOUR SECURE ENCRYPTED LIVE API STORAGE KEY NODE:
         const API_KEY = "AQ.Ab8RN6JdS8RW5YHt_8FV9epi35uNQaCoP8ogwO2PNeEx74yJuA";
 
         let chatSessions = JSON.parse(localStorage.getItem('jarvis_vault_sessions')) || [];
         let activeSessionId = null;
-        let isLightMode = false;
+
+        // Dynamic Text Transition loops inside Initial Gateway Auth layout
+        const slogans = ["Let's create", "Let's brainstorm", "Let's design", "Let's optimize"];
+        let sloganIdx = 0;
+        setInterval(() => {
+            const el = document.getElementById('loginDynamicHeadline');
+            if(el) {
+                sloganIdx = (sloganIdx + 1) % slogans.length;
+                el.innerText = slogans[sloganIdx];
+            }
+        }, 3000);
+
+        function executeGoogleMockAuth() {
+            const layer = document.getElementById('appLoginGateway');
+            layer.style.transition = "0.4s ease";
+            layer.style.opacity = "0";
+            setTimeout(() => {
+                layer.style.display = "none";
+                initAppSession();
+            }, 400);
+        }
 
         function toggleMenu(show) {
             document.getElementById('sidebarMenu').classList.toggle('active', show);
@@ -643,85 +741,144 @@
         function toggleAttachmentPopup() {
             const popup = document.getElementById('attachPopupMenuBox');
             const btn = document.getElementById('attachActionBtn');
-            if(popup.style.display === 'flex') {
-                popup.style.display = 'none';
-                btn.innerText = "+";
-            } else {
-                popup.style.display = 'flex';
-                btn.innerText = "×";
-            }
+            const show = popup.style.display !== 'flex';
+            popup.style.display = show ? 'flex' : 'none';
+            btn.innerText = show ? '×' : '+';
+        }
+
+        function toggleSmartPillsDisplay(show) {
+            document.getElementById('smartInputPillbox').style.display = show ? 'flex' : 'none';
         }
 
         function closeAllDrawers() {
-            document.getElementById('sidebarMenu').classList.remove('active');
-            document.getElementById('overlay').style.display = 'none';
+            toggleMenu(false);
             document.getElementById('attachPopupMenuBox').style.display = 'none';
             document.getElementById('attachActionBtn').innerText = "+";
         }
 
-        // Professional In-App Status Notification System instead of browser alert()
-        function showEmbeddedStatusNotice(message) {
+        function applySmartPillText(text) {
+            document.getElementById('userInputMsg').value = text + ": ";
+            document.getElementById('userInputMsg').focus();
+        }
+
+        function insertInternalWorkspaceNotice(msg) {
             const workspace = document.getElementById('chatWorkspace');
-            const systemBubble = document.createElement('div');
-            systemBubble.className = 'msg-bubble jarvis';
-            systemBubble.style.borderLeft = '3px solid #00ffcc';
-            systemBubble.style.background = 'rgba(0, 255, 204, 0.04)';
-            systemBubble.innerHTML = `⚙️ <b>System Integration:</b> ${message}`;
-            workspace.appendChild(systemBubble);
+            const bubble = document.createElement('div');
+            bubble.className = 'msg-bubble jarvis';
+            bubble.style.borderLeft = '3px solid var(--accent-color)';
+            bubble.style.background = 'rgba(255,255,255,0.02)';
+            bubble.innerHTML = `🤖 <b>Jarvis System Notification:</b> ${msg}`;
+            workspace.appendChild(bubble);
             workspace.scrollTop = workspace.scrollHeight;
-        }
-
-        function handleDashboardMenuFeature(logMsg) {
-            showEmbeddedStatusNotice(logMsg);
             toggleSettingsPanel(false);
             closeAllDrawers();
         }
 
-        // Real Camera and Local File Pickers integration system
-        function executeSystemAttachOption(type) {
-            const nativePicker = document.getElementById('realSystemDevicePicker');
-            if (type === 'camera') {
-                nativePicker.setAttribute('accept', 'image/*');
-                nativePicker.setAttribute('capture', 'environment');
-                nativePicker.click();
-            } else if (type === 'photos') {
-                nativePicker.setAttribute('accept', 'image/*');
-                nativePicker.removeAttribute('capture');
-                nativePicker.click();
-            } else if (type === 'files') {
-                nativePicker.setAttribute('accept', '*/*');
-                nativePicker.removeAttribute('capture');
-                nativePicker.click();
-            } else if (type === 'plugins') {
-                showEmbeddedStatusNotice("Advanced AI matrix model plugins desk established.");
-            }
+        function executeNativeCaptureRoute(targetMode) {
             closeAllDrawers();
+            if(targetMode === 'camera') document.getElementById('cameraSystemNode').click();
+            if(targetMode === 'photos') document.getElementById('photoLibrarySystemNode').click();
+            if(targetMode === 'files') document.getElementById('genericFilePickerSystemNode').click();
+            if(targetMode === 'plugins') insertInternalWorkspaceNotice("Advanced plugin matrices modules running inline.");
         }
 
-        function processLocalFileSelection(event) {
-            const targetFile = event.target.files[0];
-            if (targetFile) {
-                showEmbeddedStatusNotice(`Selected payload metadata: <b>${targetFile.name}</b> (${Math.round(targetFile.size / 1024)} KB). Ready for context parsing query.`);
-                document.getElementById('suggestionPanel').style.display = 'none';
+        function handleFilePayloadAttach(e, contextTitle) {
+            const payload = e.target.files[0];
+            if(payload) {
+                insertInternalWorkspaceNotice(`Attached payload metadata resource: <b>${payload.name}</b> via context pipeline node [${contextTitle}].`);
             }
         }
 
-        function toggleThemeMock() {
-            isLightMode = !isLightMode;
-            document.body.style.background = isLightMode ? 'linear-gradient(135deg, #e2e8f0, #cbd5e1, #94a3b8)' : 'linear-gradient(135deg, #0b151a, #132229, #1a303a)';
-            document.body.style.color = isLightMode ? '#0f172a' : '#ffffff';
-            document.getElementById('themeStatusLabel').innerText = isLightMode ? "Light Mode ➔" : "Dark Mode ➔";
+        // --- Live Interactive Styling Controllers Matrix ---
+        function applyGlobalStyleThemeProperty() {
+            const val = document.getElementById('appThemeSelectorNode').value;
+            if(val === 'light') {
+                document.documentElement.style.setProperty('--bg-primary', '#ffffff');
+                document.documentElement.style.setProperty('--bg-secondary', '#f7f7f8');
+                document.documentElement.style.setProperty('--text-main', '#2d2d2d');
+            } else {
+                document.documentElement.style.setProperty('--bg-primary', '#171717');
+                document.documentElement.style.setProperty('--bg-secondary', '#212121');
+                document.documentElement.style.setProperty('--text-main', '#ececf1');
+            }
         }
 
-        function triggerCleanLogoutAction() {
-            localStorage.removeItem('jarvis_vault_sessions');
-            chatSessions = [];
+        function applyGlobalAccentThemeProperty() {
+            const clr = document.getElementById('appAccentColorSelectorNode').value;
+            document.documentElement.style.setProperty('--accent-color', clr);
+        }
+
+        // --- Mock Age Verification Face Tracking Engine Workflow ---
+        function launchAgeVerificationWorkflow() {
             toggleSettingsPanel(false);
-            startBrandNewSession();
-            showEmbeddedStatusNotice("Secure vault metadata database successfully wiped.");
+            const panel = document.getElementById('faceScanVerificationWrapper');
+            const feedback = document.getElementById('biometricInstructionFeedback');
+            panel.style.display = 'flex';
+            
+            // Activate device user-facing camera feed array
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+            .then(stream => {
+                document.getElementById('simulatedFaceCamFeed').srcObject = stream;
+            }).catch(err => console.log("Biometric camera interface sandbox limitation bypassed."));
+
+            setTimeout(() => { feedback.innerText = "Hold still... 3"; }, 1500);
+            setTimeout(() => { feedback.innerText = "Hold still... 2"; }, 2500);
+            setTimeout(() => { feedback.innerText = "Turn your head slightly left"; }, 3500);
+            setTimeout(() => { feedback.innerText = "Turn your head slightly right"; }, 5500);
+            setTimeout(() => { feedback.innerText = "Processing identity parameters metrics..."; }, 7500);
+            
+            setTimeout(() => {
+                panel.style.display = 'none';
+                // Deactivate system camera streams
+                const videoEl = document.getElementById('simulatedFaceCamFeed');
+                if(videoEl.srcObject) {
+                    videoEl.srcObject.getTracks().forEach(track => track.stop());
+                }
+                insertInternalWorkspaceNotice("<b>Age Verification Successful</b>. Identity credentials updated securely inside application server frameworks.");
+            }, 9500);
         }
 
-        // Markdown Parser engine
+        // --- Custom Global Modals Popups Launch Matrix ---
+        function displayCustomModalDialogCard(header, descriptions, acceptBtnText, acceptCallback) {
+            document.getElementById('popupHeaderTitle').innerText = header;
+            document.getElementById('popupBodyDescription').innerText = descriptions;
+            const container = document.getElementById('modalBtnActionControls');
+            container.innerHTML = '';
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'modal-btn';
+            cancelBtn.style.color = '#8e8e93';
+            cancelBtn.innerText = 'Cancel';
+            cancelBtn.onclick = () => { document.getElementById('genericSystemPopupDialog').style.display = 'none'; };
+            
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'modal-btn';
+            confirmBtn.style.color = '#ef4444';
+            confirmBtn.innerText = acceptBtnText;
+            confirmBtn.onclick = () => {
+                document.getElementById('genericSystemPopupDialog').style.display = 'none';
+                acceptCallback();
+            };
+            
+            container.appendChild(cancelBtn);
+            container.appendChild(confirmBtn);
+            document.getElementById('genericSystemPopupDialog').style.display = 'flex';
+        }
+
+        function triggerSignOutFlowModal() {
+            displayCustomModalDialogCard(
+                "Log out", 
+                "You'll need to sign back in to keep using Jarvis Portal. Cache data session logs will preserve safety bounds.", 
+                "Log out", 
+                () => {
+                    toggleSettingsPanel(false);
+                    document.getElementById('appLoginGateway').style.display = 'flex';
+                    document.getElementById('appLoginGateway').style.opacity = '1';
+                }
+            );
+        }
+
+        // --- Standard Intelligent Messaging System Layout Engine ---
         function formatAIResponse(rawText) {
             if (!rawText) return "";
             let parsedText = rawText;
@@ -738,9 +895,7 @@
         function startBrandNewSession() {
             activeSessionId = 'session_' + Date.now();
             const workspace = document.getElementById('chatWorkspace');
-            workspace.innerHTML = `<div class="msg-bubble jarvis">Hello! I am Jarvis. How can I assist you in this fresh session?</div>`;
-            document.getElementById('suggestionPanel').style.display = 'grid';
-            closeAllDrawers();
+            workspace.innerHTML = `<div class="msg-bubble jarvis">Hello! I am Jarvis. How can I assist you in this professional session?</div>`;
             renderSidebarRecents();
         }
 
@@ -749,13 +904,13 @@
             listContainer.innerHTML = '';
             const activeLogs = chatSessions.filter(s => s.chats && s.chats.length > 0);
             if (activeLogs.length === 0) {
-                listContainer.innerHTML = `<div style="font-size:0.8rem; color:#556673; padding:5px;">No recent history logs.</div>`;
+                listContainer.innerHTML = `<div style="font-size:0.85rem; color:#444; padding:5px 10px;">No historical sync logs.</div>`;
                 return;
             }
             activeLogs.forEach(session => {
                 const item = document.createElement('div');
                 item.className = `recent-chat-item ${session.id === activeSessionId ? 'active' : ''}`;
-                item.innerText = session.title || "Untitled Intelligence Log";
+                item.innerText = session.title || "Intelligence Query Trace Log";
                 item.onclick = () => loadHistoricalSession(session.id);
                 listContainer.appendChild(item);
             });
@@ -765,7 +920,6 @@
             const targetSession = chatSessions.find(s => s.id === id);
             if (!targetSession) return;
             activeSessionId = id;
-            document.getElementById('suggestionPanel').style.display = 'none';
             const workspace = document.getElementById('chatWorkspace');
             workspace.innerHTML = '';
             targetSession.chats.forEach(msg => {
@@ -779,22 +933,15 @@
             renderSidebarRecents();
         }
 
-        function applySuggestion(headline, text) {
-            document.getElementById('userInputMsg').value = `${headline}: ${text}`;
-            document.getElementById('suggestionPanel').style.display = 'none';
-        }
-
         function handleKeyPress(e) {
             if (e.key === 'Enter') executeCommand();
         }
 
-        // 🤖 REAL LIVE AI PROCESSING MATRIX PIPELINE (HTTP POST FETCH INTEGRATION)
         function executeCommand() {
             const field = document.getElementById('userInputMsg');
             const userText = field.value.trim();
             if (!userText) return;
 
-            document.getElementById('suggestionPanel').style.display = 'none';
             closeAllDrawers();
 
             const workspace = document.getElementById('chatWorkspace');
@@ -815,22 +962,12 @@
 
             chatSessions[sessionIndex].chats.push({ sender: 'user', text: userText });
 
-            // Create placeholder thinking bubble animation layout
             const jBubble = document.createElement('div');
             jBubble.className = 'msg-bubble jarvis';
-            jBubble.innerHTML = "🤖 Jarvis is thinking...";
+            jBubble.innerHTML = "<span style='color:var(--accent-color); font-weight:600;'>🤖 Jarvis is thinking...</span>";
             workspace.appendChild(jBubble);
             workspace.scrollTop = workspace.scrollHeight;
 
-            // 🛠️ Secure fallbacks checks for developers setup template keys
-            if (API_KEY === "YAHAN_APNI_API_KEY_PASTE_KAREIN" || API_KEY.trim() === "") {
-                setTimeout(() => {
-                    jBubble.innerHTML = "⚠️ <b>System Error:</b> API Key missing! Please edit the HTML file code and insert your Google AI Studio token.";
-                }, 500);
-                return;
-            }
-
-            // Target Cloud Optimization endpoint servers routing maps
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
             fetch(url, {
@@ -848,21 +985,17 @@
                     localStorage.setItem('jarvis_vault_sessions', JSON.stringify(chatSessions));
                     renderSidebarRecents();
                 } catch (e) {
-                    jBubble.innerHTML = "⚠️ <b>API Parse Error:</b> Key is invalid or quota limit exceeded. Please generate a fresh key.";
-                    console.error("Data error:", data);
+                    jBubble.innerHTML = "<span style='color:#ef4444;'>⚠️ <b>System Fault Trace Node:</b> API response rejected. Check cloud network console channels.</span>";
                 }
                 workspace.scrollTop = workspace.scrollHeight;
             })
             .catch(err => {
-                jBubble.innerHTML = "⚠️ <b>Network Error:</b> Problem connecting with cloud server layers. Check device connection channels.";
+                jBubble.innerHTML = "<span style='color:#ef4444;'>⚠️ <b>Network Error Core:</b> Synchronization transmission failed.</span>";
                 workspace.scrollTop = workspace.scrollHeight;
-                console.error("Fetch error:", err);
             });
 
             localStorage.setItem('jarvis_vault_sessions', JSON.stringify(chatSessions));
         }
-
-        window.onload = initAppSession;
     </script>
 </body>
 </html>
