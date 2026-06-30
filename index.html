@@ -10,10 +10,9 @@
             --bg-primary: #171717;
             --bg-secondary: #212121;
             --bg-sidebar: #0d0d0d;
-            --accent-color: #10a37f; /* Standard AI Green, customizable dynamically */
+            --accent-color: #10a37f; 
             --text-main: #ececf1;
             --text-muted: #b4b4b4;
-            --border-glow: rgba(16, 163, 127, 0.2);
         }
 
         body {
@@ -54,7 +53,7 @@
             background: linear-gradient(to right, #ffffff, #888888);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: textPulse 4s infinite ease-in-out;
+            animation: textPulse 3s infinite ease-in-out;
         }
 
         @keyframes textPulse {
@@ -86,7 +85,6 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            transition: 0.2s;
         }
 
         .alternative-login-btn {
@@ -98,6 +96,78 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
+        }
+
+        /* --- Google Account Dynamic Registration Selector Sheet --- */
+        #googleAccountPickerModal {
+            position: fixed;
+            bottom: -360px;
+            left: 0;
+            width: 100%;
+            background: #202124;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            padding: 24px;
+            box-sizing: border-box;
+            text-align: left;
+            z-index: 25000;
+            color: #fff;
+            transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 -8px 32px rgba(0,0,0,0.5);
+        }
+
+        .picker-input-field {
+            width: 100%;
+            background: #2d2d2d;
+            border: 1px solid #5f6368;
+            padding: 12px;
+            border-radius: 8px;
+            color: #fff;
+            margin-bottom: 12px;
+            outline: none;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+        }
+
+        .picker-submit-btn {
+            width: 100%;
+            background: #10a37f;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* --- Login Real Processing Spinner Loader --- */
+        #loginLoaderOverlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 26000;
+        }
+
+        .spinner-node {
+            width: 42px;
+            height: 42px;
+            border: 4px solid #333;
+            border-top: 4px solid #10a37f;
+            border-radius: 50%;
+            animation: spinMatrix 1s linear infinite;
+        }
+
+        @keyframes spinMatrix {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* --- Main App Frame Layout --- */
@@ -150,9 +220,7 @@
             flex-direction: column;
         }
 
-        .sidebar.active {
-            left: 0;
-        }
+        .sidebar.active { left: 0; }
 
         .directory-list {
             display: flex;
@@ -236,6 +304,36 @@
             background: rgba(0,0,0,0.4);
             display: none;
             z-index: 9998;
+        }
+
+        /* --- Generic Full View Modal Overlays for Sidebar Tabs --- */
+        .app-view-overlay-card {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            z-index: 12000;
+            display: none;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .view-card-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid #2f2f2f;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .view-card-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         /* --- Chat Workspace Matrix --- */
@@ -436,7 +534,39 @@
             font-size: 0.9rem;
         }
 
-        /* --- Dynamic Modal Framework (Popups and Confirmations) --- */
+        /* Profile Avatar Node Circle styling */
+        .profile-pic-container-node {
+            width: 64px;
+            height: 64px;
+            background: #444;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.4rem;
+            position: relative;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .avatar-edit-pencil-badge {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #202124;
+            border: 1px solid #5f6368;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Dynamic Modal Framework --- */
         .custom-popup-modal {
             position: fixed;
             top: 0;
@@ -472,7 +602,7 @@
         .modal-btn {
             background: none;
             border: none;
-            color: #00ffcc;
+            color: #10a37f;
             font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
@@ -531,16 +661,42 @@
     <input type="file" id="cameraSystemNode" accept="image/*" capture="environment" style="display:none;" onchange="handleFilePayloadAttach(event, 'Camera Capture')">
     <input type="file" id="photoLibrarySystemNode" accept="image/*" style="display:none;" onchange="handleFilePayloadAttach(event, 'Photo Library Payload')">
     <input type="file" id="genericFilePickerSystemNode" accept="*/*" style="display:none;" onchange="handleFilePayloadAttach(event, 'File Payload Attachment')">
+    
+    <input type="file" id="profileAvatarPhotoSystemPicker" accept="image/*" style="display:none;" onchange="processProfileAvatarLocalUpload(event)">
 
     <div id="appLoginGateway">
         <div class="login-animated-title" id="loginDynamicHeadline">Let's create</div>
         <div class="login-btn-container">
-            <button class="google-login-btn" onclick="executeGoogleMockAuth()">
+            <button class="google-login-btn" onclick="openGoogleAccountRegistrationPicker(true)">
                 <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.47h4.84c-.21 1.12-.84 2.07-1.79 2.7l2.76 2.13c1.61-1.49 2.53-3.69 2.53-6.26z" fill="#4285F4"/><path d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.76-2.13c-.76.51-1.74.82-3.2.82-2.46 0-4.55-1.66-5.3-3.89L.89 12.74C2.37 15.68 5.44 18 9 18z" fill="#34A853"/><path d="M3.7 10.62c-.19-.57-.3-1.18-.3-1.8s.11-1.23.3-1.8L.89 5.1C.32 6.27 0 7.6 0 9s.32 2.73.89 3.9l2.81-2.28z" fill="#FBBC05"/><path d="M9 3.58c1.32 0 2.5.45 3.44 1.35L15 2.1C13.46.66 11.43 0 9 0 5.44 0 2.37 2.32.89 5.27l2.81 2.28c.75-2.23 2.84-3.89 5.3-3.89z" fill="#EA4335"/></svg>
                 Continue with Google
             </button>
-            <button class="alternative-login-btn" onclick="executeGoogleMockAuth()">Log in another way</button>
+            <button class="alternative-login-btn" onclick="openGoogleAccountRegistrationPicker(true)">Log in another way</button>
         </div>
+
+        <div id="loginLoaderOverlay">
+            <div class="spinner-node"></div>
+            <div style="color:#fff; margin-top:16px; font-size:14px; font-weight:500;" id="loaderStatusTxt">Signing in...</div>
+        </div>
+    </div>
+
+    <div id="googleAccountPickerModal">
+        <div style="font-size:16px; font-weight:600; color:#e8eaed; margin-bottom:4px;">Sign in with Google</div>
+        <div style="font-size:13px; color:#9aa0a6; margin-bottom:18px;">Enter details to synchronize Jarvis Portal matrix</div>
+        
+        <input type="text" id="authInputFullName" class="picker-input-field" placeholder="Enter Full Name (e.g. Sachin Sainj)">
+        <input type="email" id="authInputEmailAddress" class="picker-input-field" placeholder="Enter Gmail (e.g. user912@gmail.com)">
+        
+        <button class="picker-submit-btn" onclick="processDynamicUserRegistrationFlow()">Continue</button>
+    </div>
+
+    <div class="app-view-overlay-card" id="genericAppViewOverlay">
+        <div class="view-card-header">
+            <button class="back-panel-btn" onclick="closeGenericAppOverlayCard()">←</button>
+            <span id="genericAppOverlayTitleNode">Module Hub</span>
+        </div>
+        <div class="view-card-body" id="genericAppOverlayBodyNode">
+            </div>
     </div>
 
     <div id="faceScanVerificationWrapper">
@@ -554,8 +710,7 @@
         <div class="modal-content-card">
             <h3 style="margin-top:0; font-size:1.15rem;" id="popupHeaderTitle">Log out</h3>
             <p style="font-size:0.95rem; color:#b4b4b4; margin-bottom:24px;" id="popupBodyDescription">You'll need to sign back in to keep using Jarvis Portal.</p>
-            <div class="modal-actions-row" id="modalBtnActionControls">
-                </div>
+            <div class="modal-actions-row" id="modalBtnActionControls"></div>
         </div>
     </div>
 
@@ -563,10 +718,10 @@
         <div style="font-size: 1.1rem; font-weight: 700; color:#fff;">🤖 Jarvis AI Portal</div>
         
         <div class="directory-list">
-            <div class="dir-item" onclick="insertInternalWorkspaceNotice('📖 Library Sync complete.')">📖 Library</div>
-            <div class="dir-item" onclick="insertInternalWorkspaceNotice('📁 Sandboxed projects directory mounted.')">🗂️ Projects</div>
-            <div class="dir-item" onclick="insertInternalWorkspaceNotice('📱 Extension app desk initialized.')">📱 Apps</div>
-            <div class="dir-item" onclick="insertInternalWorkspaceNotice('✨ Advanced systems computational grid online.')">✨ More</div>
+            <div class="dir-item" onclick="launchAppOverlayInterface('library')">📖 Library</div>
+            <div class="dir-item" onclick="launchAppOverlayInterface('projects')">🗂️ Projects</div>
+            <div class="dir-item" onclick="launchAppOverlayInterface('apps')">📱 Apps</div>
+            <div class="dir-item" onclick="launchAppOverlayInterface('more')">✨ More</div>
         </div>
 
         <div class="new-chat-sidebar-btn" onclick="startBrandNewSession()">+ New Chat</div>
@@ -576,8 +731,11 @@
         
         <div class="sidebar-profile-footer" onclick="toggleSettingsPanel(true)">
             <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:32px; height:32px; background:#444; border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:0.85rem;">SS</div>
-                <div style="font-size:0.9rem; font-weight:600;">Sachin Sainj</div>
+                <div style="width:32px; height:32px; background:#444; border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:0.85rem; background-size:cover; background-position:center;" id="sidebarProfileAvatar">??</div>
+                <div>
+                    <div style="font-size:0.9rem; font-weight:600; white-space:nowrap; max-width:160px; overflow:hidden; text-overflow:ellipsis;" id="sidebarProfileName">User Mode</div>
+                    <div style="font-size:0.75rem; color:#666; white-space:nowrap; max-width:160px; overflow:hidden; text-overflow:ellipsis;" id="sidebarProfileEmail">loading sync...</div>
+                </div>
             </div>
             <div style="color:#666; font-size:0.9rem;">⚙️</div>
         </div>
@@ -587,7 +745,8 @@
         <div class="top-navbar">
             <button class="menu-btn" onclick="toggleMenu(true)">☰</button>
             <div class="brand-title" id="navbarCurrentModelLabel">Jarvis 1.5 Flash</div>
-            <div style="width:24px;"></div> </div>
+            <div style="width:24px;"></div>
+        </div>
 
         <div class="chat-box-area" id="chatWorkspace"></div>
 
@@ -620,18 +779,21 @@
         
         <div class="settings-scroll-area">
             <div style="display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:8px;">
-                <div style="width:64px; height:64px; background:#444; border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:1.5rem;">SS</div>
-                <div style="font-size:1.1rem; font-weight:600;">Sachin Sainj</div>
+                <div class="profile-pic-container-node" id="settingsProfileAvatar" onclick="triggerProfileAvatarPhotoUploadSelection()">
+                    <span id="settingsAvatarInitialsTxt">??</span>
+                    <div class="avatar-edit-pencil-badge">✏️</div>
+                </div>
+                <div style="font-size:1.1rem; font-weight:600;" id="settingsProfileName">User Mode</div>
             </div>
 
             <div>
                 <div class="settings-group-title">My Jarvis</div>
                 <div class="settings-box-container">
-                    <div class="settings-row-item" onclick="insertInternalWorkspaceNotice('Personalization dashboard configurator ready.')">
+                    <div class="settings-row-item" onclick="launchAppOverlayInterface('personalization')">
                         <div>🔄 Personalization</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="insertInternalWorkspaceNotice('Memory optimizations metrics synced.')">
+                    <div class="settings-row-item" onclick="launchAppOverlayInterface('memory')">
                         <div>🧠 Memory</div>
                         <div class="row-right-status">➔</div>
                     </div>
@@ -646,12 +808,8 @@
                         <div class="row-right-status">Personal ➔</div>
                     </div>
                     <div class="settings-row-item">
-                        <div>🌟 Upgrade to Plus</div>
-                        <div class="row-right-status">➔</div>
-                    </div>
-                    <div class="settings-row-item">
                         <div>✉️ Email</div>
-                        <div class="row-right-status" style="color:#777;">Linked (Protected)</div>
+                        <div class="row-right-status" style="color:#b4b4b4;" id="settingsProfileEmail">unlinked</div>
                     </div>
                     <div class="settings-row-item" onclick="launchAgeVerificationWorkflow()">
                         <div>🆔 Age verification</div>
@@ -681,11 +839,11 @@
                             <option value="#f97316">Orange Flare</option>
                         </select>
                     </div>
-                    <div class="settings-row-item" onclick="insertInternalWorkspaceNotice('Security locks matrix validated.')">
+                    <div class="settings-row-item" onclick="launchAppOverlayInterface('security')">
                         <div>🔒 Security and login</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="insertInternalWorkspaceNotice('Evaluating local cache directory structures.')">
+                    <div class="settings-row-item" onclick="launchAppOverlayInterface('storage')">
                         <div>💾 Storage</div>
                         <div class="row-right-status">29 MB Used ➔</div>
                     </div>
@@ -718,14 +876,163 @@
             }
         }, 3000);
 
-        function executeGoogleMockAuth() {
-            const layer = document.getElementById('appLoginGateway');
-            layer.style.transition = "0.4s ease";
-            layer.style.opacity = "0";
+        function openGoogleAccountRegistrationPicker(show) {
+            const picker = document.getElementById('googleAccountPickerModal');
+            picker.style.bottom = show ? "0px" : "-360px";
+        }
+
+        function processDynamicUserRegistrationFlow() {
+            const nameField = document.getElementById('authInputFullName').value.trim();
+            const emailField = document.getElementById('authInputEmailAddress').value.trim();
+            
+            if(!nameField || !emailField || !emailField.includes('@')) {
+                alert("Please insert a valid Full Name and Google Account Email Address to process network login sync.");
+                return;
+            }
+
+            openGoogleAccountRegistrationPicker(false);
+            
+            const loader = document.getElementById('loginLoaderOverlay');
+            const statusTxt = document.getElementById('loaderStatusTxt');
+            loader.style.display = "flex";
+            statusTxt.innerText = "Connecting to Google Cloud nodes...";
+            
+            setTimeout(() => { statusTxt.innerText = "Synchronizing dynamic data profiles..."; }, 1200);
+
             setTimeout(() => {
-                layer.style.display = "none";
-                initAppSession();
-            }, 400);
+                // Save customized dynamic data parameters inside storage memory layers
+                localStorage.setItem('jarvis_user_name', nameField);
+                localStorage.setItem('jarvis_user_email', emailField);
+                
+                applyLoggedUserDetailsToUI(emailField, nameField);
+                
+                const gateway = document.getElementById('appLoginGateway');
+                gateway.style.transition = "0.4s ease";
+                gateway.style.opacity = "0";
+                
+                setTimeout(() => {
+                    gateway.style.display = "none";
+                    loader.style.display = "none";
+                    initAppSession();
+                }, 400);
+            }, 2600);
+        }
+
+        function applyLoggedUserDetailsToUI(email, name) {
+            const initials = name.substring(0, 2).toUpperCase();
+            
+            // Render Profile text strings programmatically
+            document.getElementById('sidebarProfileName').innerText = name;
+            document.getElementById('sidebarProfileEmail').innerText = email;
+            document.getElementById('settingsProfileName').innerText = name;
+            document.getElementById('settingsProfileEmail').innerText = email;
+            document.getElementById('settingsAvatarInitialsTxt').innerText = initials;
+            
+            // Dynamic Avatar Initials Fallback handling
+            const savedAvatarPic = localStorage.getItem('jarvis_user_avatar_base64');
+            if(savedAvatarPic) {
+                document.getElementById('sidebarProfileAvatar').style.backgroundImage = `url('${savedAvatarPic}')`;
+                document.getElementById('sidebarProfileAvatar').innerText = '';
+                document.getElementById('settingsProfileAvatar').style.backgroundImage = `url('${savedAvatarPic}')`;
+                document.getElementById('settingsAvatarInitialsTxt').style.display = 'none';
+            } else {
+                document.getElementById('sidebarProfileAvatar').style.backgroundImage = 'none';
+                document.getElementById('sidebarProfileAvatar').innerText = initials;
+                document.getElementById('settingsProfileAvatar').style.backgroundImage = 'none';
+                document.getElementById('settingsAvatarInitialsTxt').style.display = 'block';
+            }
+        }
+
+        // --- Real Profile Avatar Local Upload Integration Engine ---
+        function triggerProfileAvatarPhotoUploadSelection() {
+            document.getElementById('profileAvatarPhotoSystemPicker').click();
+        }
+
+        function processProfileAvatarLocalUpload(event) {
+            const file = event.target.files[0];
+            if(file) {
+                const fileReader = new FileReader();
+                fileReader.onload = function(e) {
+                    const base64DataUrl = e.target.result;
+                    localStorage.setItem('jarvis_user_avatar_base64', base64DataUrl);
+                    
+                    // Refresh dynamic elements
+                    const curEmail = localStorage.getItem('jarvis_user_email') || 'user@gmail.com';
+                    const curName = localStorage.getItem('jarvis_user_name') || 'User Mode';
+                    applyLoggedUserDetailsToUI(curEmail, curName);
+                };
+                fileReader.readAsDataURL(file);
+            }
+        }
+
+        /* --- Full Screen Real Application Overlays Integration (Sidebar Modules Fix) --- */
+        function launchAppOverlayInterface(moduleType) {
+            closeAllDrawers();
+            toggleSettingsPanel(false);
+            
+            const overlay = document.getElementById('genericAppViewOverlay');
+            const title = document.getElementById('genericAppOverlayTitleNode');
+            const body = document.getElementById('genericAppOverlayBodyNode');
+            
+            overlay.style.display = "flex";
+            body.innerHTML = ''; 
+
+            if(moduleType === 'library') {
+                title.innerText = "Jarvis Library Hub";
+                body.innerHTML = `
+                    <div style="color:#8e8e93; margin-bottom:16px;">Explore custom templates and prompt directories.</div>
+                    <div style="background:#212121; padding:14px; border-radius:8px; margin-bottom:10px; border:1px solid #333;">📖 Academic Writing Assistant</div>
+                    <div style="background:#212121; padding:14px; border-radius:8px; margin-bottom:10px; border:1px solid #333;">💻 Full-Stack Code Reviewer Node</div>
+                    <div style="background:#212121; padding:14px; border-radius:8px; margin-bottom:10px; border:1px solid #333;">🎨 Creative Art Concept Sandbox</div>
+                `;
+            } else if(moduleType === 'projects') {
+                title.innerText = "Workspace Projects";
+                body.innerHTML = `
+                    <div style="text-align:center; padding:40px 0; color:#666;">
+                        <div style="font-size:2.5rem; margin-bottom:12px;">📁</div>
+                        <div>Start your first interactive project. Projects help you organize chats and code blueprints.</div>
+                        <button style="background:#10a37f; color:#fff; border:none; padding:10px 20px; border-radius:20px; font-weight:600; margin-top:20px;">+ New Project</button>
+                    </div>
+                `;
+            } else if(moduleType === 'apps') {
+                title.innerText = "Explore GPT Apps";
+                body.innerHTML = `
+                    <input type="text" placeholder="Search public plugin extensions..." style="width:100%; background:#2d2d2d; border:1px solid #444; padding:12px; border-radius:8px; color:#fff; margin-bottom:20px; box-sizing:border-box;">
+                    <div style="font-size:0.85rem; color:#8e8e93; margin-bottom:10px; font-weight:700; text-transform:uppercase;">Top Picks This Week</div>
+                    <div style="display:flex; align-items:center; gap:12px; background:#212121; padding:12px; border-radius:8px; margin-bottom:10px;">
+                        <div style="font-size:1.5rem;">🎬</div><div><b>Video AI Maker</b><div style="font-size:0.75rem; color:#777;">By invideo.io</div></div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px; background:#212121; padding:12px; border-radius:8px; margin-bottom:10px;">
+                        <div style="font-size:1.5rem;">🎨</div><div><b>Canva Designer Pro</b><div style="font-size:0.75rem; color:#777;">By community builder</div></div>
+                    </div>
+                `;
+            } else if(moduleType === 'more') {
+                title.innerText = "Advanced Tool Matrix";
+                body.innerHTML = `<div style="color:#b4b4b4;">Computational matrix grid online. Custom parameters setup engine running inside WebView frameworks successfully.</div>`;
+            } else if(moduleType === 'plugins') {
+                title.innerText = "Jarvis Plugin Extensions";
+                body.innerHTML = `
+                    <div style="background:#212121; padding:16px; border-radius:12px; border:1px solid #333; margin-bottom:12px;">
+                        <div style="display:flex; justify-content:between; align-items:center; width:100%;">
+                            <div style="flex:1;"><b>🌐 Web Live Search Mode</b><div style="font-size:0.8rem; color:#666;">Allows parsing internet search queries</div></div>
+                            <input type="checkbox" checked style="accent-color:#10a37f; transform:scale(1.2);">
+                        </div>
+                    </div>
+                    <div style="background:#212121; padding:16px; border-radius:12px; border:1px solid #333; margin-bottom:12px;">
+                        <div style="display:flex; justify-content:between; align-items:center; width:100%;">
+                            <div style="flex:1;"><b>📊 Data Analyst Toolkit</b><div style="font-size:0.8rem; color:#666;">Python execution environment simulation</div></div>
+                            <input type="checkbox" style="accent-color:#10a37f; transform:scale(1.2);">
+                        </div>
+                    </div>
+                `;
+            } else {
+                title.innerText = "System Preference Node";
+                body.innerHTML = `<div style="color:#b4b4b4;">System parameter integration successfully initialized without trace alerts.</div>`;
+            }
+        }
+
+        function closeGenericAppOverlayCard() {
+            document.getElementById('genericAppViewOverlay').style.display = "none";
         }
 
         function toggleMenu(show) {
@@ -752,6 +1059,7 @@
 
         function closeAllDrawers() {
             toggleMenu(false);
+            openGoogleAccountRegistrationPicker(false);
             document.getElementById('attachPopupMenuBox').style.display = 'none';
             document.getElementById('attachActionBtn').innerText = "+";
         }
@@ -761,35 +1069,29 @@
             document.getElementById('userInputMsg').focus();
         }
 
-        function insertInternalWorkspaceNotice(msg) {
-            const workspace = document.getElementById('chatWorkspace');
-            const bubble = document.createElement('div');
-            bubble.className = 'msg-bubble jarvis';
-            bubble.style.borderLeft = '3px solid var(--accent-color)';
-            bubble.style.background = 'rgba(255,255,255,0.02)';
-            bubble.innerHTML = `🤖 <b>Jarvis System Notification:</b> ${msg}`;
-            workspace.appendChild(bubble);
-            workspace.scrollTop = workspace.scrollHeight;
-            toggleSettingsPanel(false);
-            closeAllDrawers();
-        }
-
         function executeNativeCaptureRoute(targetMode) {
             closeAllDrawers();
             if(targetMode === 'camera') document.getElementById('cameraSystemNode').click();
             if(targetMode === 'photos') document.getElementById('photoLibrarySystemNode').click();
             if(targetMode === 'files') document.getElementById('genericFilePickerSystemNode').click();
-            if(targetMode === 'plugins') insertInternalWorkspaceNotice("Advanced plugin matrices modules running inline.");
+            if(targetMode === 'plugins') launchAppOverlayInterface('plugins');
         }
 
         function handleFilePayloadAttach(e, contextTitle) {
             const payload = e.target.files[0];
             if(payload) {
-                insertInternalWorkspaceNotice(`Attached payload metadata resource: <b>${payload.name}</b> via context pipeline node [${contextTitle}].`);
+                const workspace = document.getElementById('chatWorkspace');
+                const systemBubble = document.createElement('div');
+                systemBubble.className = 'msg-bubble jarvis';
+                systemBubble.style.borderLeft = '3px solid var(--accent-color)';
+                systemBubble.style.background = 'rgba(255, 255, 255, 0.02)';
+                systemBubble.innerHTML = `📎 <b>Resource Uploaded:</b> <code>${payload.name}</code> (${Math.round(payload.size / 1024)} KB) attached for context extraction processing loop.`;
+                workspace.appendChild(systemBubble);
+                workspace.scrollTop = workspace.scrollHeight;
+                document.getElementById('smartInputPillbox').style.display = 'none';
             }
         }
 
-        // --- Live Interactive Styling Controllers Matrix ---
         function applyGlobalStyleThemeProperty() {
             const val = document.getElementById('appThemeSelectorNode').value;
             if(val === 'light') {
@@ -808,18 +1110,16 @@
             document.documentElement.style.setProperty('--accent-color', clr);
         }
 
-        // --- Mock Age Verification Face Tracking Engine Workflow ---
         function launchAgeVerificationWorkflow() {
             toggleSettingsPanel(false);
             const panel = document.getElementById('faceScanVerificationWrapper');
             const feedback = document.getElementById('biometricInstructionFeedback');
             panel.style.display = 'flex';
             
-            // Activate device user-facing camera feed array
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
             .then(stream => {
                 document.getElementById('simulatedFaceCamFeed').srcObject = stream;
-            }).catch(err => console.log("Biometric camera interface sandbox limitation bypassed."));
+            }).catch(err => console.log("Biometric camera interface simulation mode running."));
 
             setTimeout(() => { feedback.innerText = "Hold still... 3"; }, 1500);
             setTimeout(() => { feedback.innerText = "Hold still... 2"; }, 2500);
@@ -829,16 +1129,22 @@
             
             setTimeout(() => {
                 panel.style.display = 'none';
-                // Deactivate system camera streams
                 const videoEl = document.getElementById('simulatedFaceCamFeed');
                 if(videoEl.srcObject) {
                     videoEl.srcObject.getTracks().forEach(track => track.stop());
                 }
-                insertInternalWorkspaceNotice("<b>Age Verification Successful</b>. Identity credentials updated securely inside application server frameworks.");
+                
+                const workspace = document.getElementById('chatWorkspace');
+                const successBubble = document.createElement('div');
+                successBubble.className = 'msg-bubble jarvis';
+                successBubble.style.borderLeft = '3px solid #10a37f';
+                successBubble.style.background = 'rgba(16,163,127,0.03)';
+                successBubble.innerHTML = "🆔 <b>Biometric Verification Successful:</b> User identity validated securely inside hardware parameters ecosystem layers.";
+                workspace.appendChild(successBubble);
+                workspace.scrollTop = workspace.scrollHeight;
             }, 9500);
         }
 
-        // --- Custom Global Modals Popups Launch Matrix ---
         function displayCustomModalDialogCard(header, descriptions, acceptBtnText, acceptCallback) {
             document.getElementById('popupHeaderTitle').innerText = header;
             document.getElementById('popupBodyDescription').innerText = descriptions;
@@ -868,17 +1174,23 @@
         function triggerSignOutFlowModal() {
             displayCustomModalDialogCard(
                 "Log out", 
-                "You'll need to sign back in to keep using Jarvis Portal. Cache data session logs will preserve safety bounds.", 
+                "You'll need to sign back in to keep using Jarvis Portal. Local history vaults remain encrypted.", 
                 "Log out", 
                 () => {
+                    localStorage.removeItem('jarvis_user_email');
+                    localStorage.removeItem('jarvis_user_name');
+                    localStorage.removeItem('jarvis_user_avatar_base64');
                     toggleSettingsPanel(false);
-                    document.getElementById('appLoginGateway').style.display = 'flex';
-                    document.getElementById('appLoginGateway').style.opacity = '1';
+                    
+                    const gateway = document.getElementById('appLoginGateway');
+                    gateway.style.display = 'flex';
+                    gateway.style.opacity = '1';
+                    document.getElementById('authInputFullName').value = '';
+                    document.getElementById('authInputEmailAddress').value = '';
                 }
             );
         }
 
-        // --- Standard Intelligent Messaging System Layout Engine ---
         function formatAIResponse(rawText) {
             if (!rawText) return "";
             let parsedText = rawText;
@@ -996,6 +1308,20 @@
 
             localStorage.setItem('jarvis_vault_sessions', JSON.stringify(chatSessions));
         }
+
+        // --- Core Startup Gate System Configuration ---
+        window.onload = function() {
+            const savedEmail = localStorage.getItem('jarvis_user_email');
+            const savedName = localStorage.getItem('jarvis_user_name');
+            
+            if (savedEmail && savedName) {
+                document.getElementById('appLoginGateway').style.display = 'none';
+                applyLoggedUserDetailsToUI(savedEmail, savedName);
+                initAppSession();
+            } else {
+                document.getElementById('appLoginGateway').style.display = 'flex';
+            }
+        };
     </script>
 </body>
 </html>
