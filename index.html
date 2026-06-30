@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jarvis AI Portal</title>
-    
     <style>
         /* --- Premium Cyberpunk & Glassmorphic Layout --- */
         body {
@@ -43,11 +42,11 @@
         }
 
         .brand-title {
-            font-size: 1.2rem;
-            font-weight: 700;
+            font-size: 1.3rem;
+            font-weight: 800;
             color: #00ffcc;
             text-shadow: 0 0 8px rgba(0, 255, 204, 0.4);
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
         .menu-btn {
@@ -70,7 +69,7 @@
             border-right: 1px solid rgba(0, 255, 204, 0.2);
             box-shadow: 5px 0 25px rgba(0,0,0,0.5);
             transition: 0.3s ease;
-            z-index: 99999;
+            z-index: 999;
             padding: 15px;
             box-sizing: border-box;
             display: flex;
@@ -156,8 +155,10 @@
             border-radius: 6px;
             cursor: pointer;
             color: #fff;
-            text-decoration: none;
             font-size: 0.9rem;
+            border: none;
+            text-align: left;
+            width: 100%;
         }
 
         .sidebar-overlay {
@@ -168,7 +169,7 @@
             height: 100%;
             background: rgba(0,0,0,0.6);
             display: none;
-            z-index: 99998;
+            z-index: 998;
         }
 
         /* Chat Workspace View */
@@ -204,7 +205,7 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Suggestion Grid Layer */
+        /* ChatGPT Style Suggestion Grid Layer */
         .suggestion-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -221,6 +222,10 @@
             cursor: pointer;
             text-align: left;
         }
+        .suggest-card:hover {
+            background: rgba(0, 255, 204, 0.08);
+            border-color: #00ffcc;
+        }
 
         .suggest-card .title-text {
             font-size: 0.85rem;
@@ -234,16 +239,15 @@
             color: #8899a6;
         }
 
-        /* Input Controls */
+        /* Input command controls */
         .input-bar-container {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             background: rgba(255, 255, 255, 0.06);
-            padding: 8px 12px;
+            padding: 8px 14px;
             border-radius: 25px;
             border: 1px solid rgba(255, 255, 255, 0.12);
-            margin-bottom: 5px;
         }
 
         .chat-input {
@@ -253,6 +257,21 @@
             color: #fff;
             font-size: 0.98rem;
             outline: none;
+        }
+
+        .action-icon-btn {
+            background: none;
+            border: none;
+            color: #8899a6;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .action-icon-btn:hover {
+            color: #00ffcc;
         }
 
         .send-action-btn {
@@ -268,15 +287,6 @@
             cursor: pointer;
             font-weight: bold;
         }
-
-        /* Secure Isolated Container for Banner Ads to prevent overlay blocking */
-        .ad-safe-zone {
-            width: 100%;
-            text-align: center;
-            margin: 5px 0;
-            position: relative;
-            z-index: 999;
-        }
     </style>
 </head>
 <body>
@@ -285,19 +295,24 @@
 
     <div class="sidebar" id="sidebarMenu">
         <div class="sidebar-header">🤖 Jarvis Intelligence</div>
+        
         <div class="new-chat-sidebar-btn" onclick="startBrandNewSession()">+ New Chat</div>
+        
         <div class="recents-section-title">Recent Chats</div>
+        
         <div class="recents-container" id="recentsLogContainer"></div>
+        
         <div class="static-menu-list">
-            <div class="menu-item" onclick="alert('Profile secure.')">👤 User Account Profile</div>
-            <a href="https://osachin84.github.io/Jarvis/" target="_blank" class="menu-item">🔒 Privacy Security Policy</a>
+            <div class="menu-item" onclick="viewAccountProfile()">👤 User Account Profile</div>
+            <div class="menu-item" onclick="openPrivacyPolicy()">🔒 Privacy Security Policy</div>
+            <div class="menu-item" onclick="triggerLogout()" style="color: #ff4a4a;">🚪 Logout Account</div>
         </div>
     </div>
 
     <div class="container">
         <div class="top-navbar">
             <button class="menu-btn" onclick="toggleMenu(true)">☰</button>
-            <div class="brand-title">JARVIS CORE AI</div>
+            <div class="brand-title">JARVIS</div>
             <span id="liveTime" style="color: #ff9900; font-size: 0.85rem; font-weight: 600;">00:00:00 AM</span>
         </div>
 
@@ -315,12 +330,10 @@
         </div>
 
         <div class="input-bar-container">
+            <button class="action-icon-btn" onclick="triggerCameraPhoto()" title="Open Camera / Photo">📷</button>
             <input type="text" id="userInputMsg" placeholder="Ask Jarvis anything..." class="chat-input" onkeypress="handleKeyPress(event)">
             <button class="send-action-btn" onclick="executeCommand()">➔</button>
         </div>
-
-        <div class="ad-safe-zone">
-            </div>
     </div>
 
     <script>
@@ -339,7 +352,30 @@
         setInterval(runClock, 1000);
         runClock();
 
-        // Markdown Parser Engine for cleaning raw AI responses
+        // Account & Security Utility Logic Links
+        function viewAccountProfile() {
+            alert("👤 Account Profile Details:\n\nUser ID: SACHIN SAINI\nTier Status: PRO\nActive Email: sachinsaini.pro@gmail.com");
+        }
+
+        function openPrivacyPolicy() {
+            // Secure redirection method bypassing app target locks
+            window.location.href = "https://osachin84.github.io/Jarvis/";
+        }
+
+        function triggerLogout() {
+            if(confirm("🚪 Kya aap sach mein logout karke saari chat history mitalna chahte hain?")) {
+                localStorage.removeItem('jarvis_vault_sessions');
+                chatSessions = [];
+                startBrandNewSession();
+                alert("Logged out successfully.");
+            }
+        }
+
+        function triggerCameraPhoto() {
+            alert("📷 Camera Mode Interface Initializing...\n[Photo upload system active]");
+        }
+
+        // SMART MARKDOWN PARSER ENGINE
         function formatAIResponse(rawText) {
             if (!rawText) return "";
             let parsedText = rawText;
@@ -431,9 +467,9 @@
             chatSessions[sessionIndex].chats.push({ sender: 'user', text: userText });
 
             setTimeout(() => {
-                let aiReply = "**Free - Fire ke jaise top-tier mobile shooters:**\n\n• **PUBG Mobile** - Battle-royale ka asli king, thoda zyaada realistic graphics aur depth framework.\n• **Call of Duty Mobile** - Fast-paced gunnery system, weekly events, aur dynamic multiplayer PvP arena matches.";
+                let aiReply = "Analyzing request matrix parameters.";
                 if (userText.toLowerCase().includes('time')) {
-                    aiReply = `🕰️ Precise synchronized system clock time is **${new Date().toLocaleTimeString()}** in your local device zone setup.`;
+                    aiReply = `| Current system clock reads **${new Date().toLocaleTimeString()}** in your location zone layer setup.`;
                 }
 
                 const jBubble = document.createElement('div');
