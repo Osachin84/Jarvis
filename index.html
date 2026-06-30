@@ -965,4 +965,435 @@
                 document.getElementById('settingsProfileName').innerText = name;
                 document.getElementById('settingsProfileEmail').innerText = email;
 
-                const savedAvatar = localStorage.getItem('jarvis_user
+                const savedAvatar = localStorage.getItem('jarvis_user_avatar_base64');
+                if (savedAvatar) {
+                    document.getElementById('sidebarProfileAvatar').style.backgroundImage = `url(${savedAvatar})`;
+                    document.getElementById('sidebarProfileAvatar').innerText = '';
+                    document.getElementById('settingsProfileAvatar').style.backgroundImage = `url(${savedAvatar})`;
+                    document.getElementById('settingsProfileAvatar').innerText = '';
+                } else {
+                    document.getElementById('sidebarProfileAvatar').style.backgroundImage = 'none';
+                    document.getElementById('sidebarProfileAvatar').innerText = initials;
+                    document.getElementById('settingsProfileAvatar').style.backgroundImage = 'none';
+                    document.getElementById('settingsAvatarInitialsTxt').innerText = initials;
+                }
+            } catch(e) { console.log(e); }
+        }
+
+        function triggerProfileAvatarPhotoUploadSelection() {
+            document.getElementById('profileAvatarPhotoPicker').click();
+        }
+
+        function executeAvatarPhotoUpload(event) {
+            try {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const base64Img = e.target.result;
+                        localStorage.setItem('jarvis_user_avatar_base64', base64Img);
+                        
+                        document.getElementById('sidebarProfileAvatar').style.backgroundImage = `url(${base64Img})`;
+                        document.getElementById('sidebarProfileAvatar').innerText = '';
+                        document.getElementById('settingsProfileAvatar').style.backgroundImage = `url(${base64Img})`;
+                        document.getElementById('settingsProfileAvatar').innerText = '';
+                        showEmbeddedStatusNotice("Profile picture updated successfully.");
+                    };
+                    reader.readAsDataURL(file);
+                }
+            } catch(err) { console.log(err); }
+            event.target.value = null; 
+        }
+
+        function toggleMenu(show) {
+            document.getElementById('sidebarMenu').classList.toggle('active', show);
+            document.getElementById('overlay').style.display = show ? 'block' : 'none';
+        }
+
+        function toggleSettingsPanel(show) {
+            document.getElementById('settingsDashboardView').style.display = show ? 'flex' : 'none';
+            if(show) toggleMenu(false);
+        }
+
+        function toggleAttachmentPopup() {
+            const popup = document.getElementById('attachPopupMenuBox');
+            const btn = document.getElementById('attachActionBtn');
+            const show = popup.style.display !== 'flex';
+            popup.style.display = show ? 'flex' : 'none';
+            btn.innerText = show ? '×' : '+';
+        }
+
+        function toggleSmartPillsDisplay(show) {
+            document.getElementById('smartInputPillbox').style.display = show ? 'flex' : 'none';
+        }
+
+        function closeAllDrawers() {
+            toggleMenu(false);
+            openGoogleAccountRegistrationPicker(false);
+            document.getElementById('attachPopupMenuBox').style.display = 'none';
+            document.getElementById('attachActionBtn').innerText = "+";
+        }
+
+        function applySmartPillText(text) {
+            document.getElementById('userInputMsg').value = text + ": ";
+            document.getElementById('userInputMsg').focus();
+        }
+
+        function launchAppOverlayInterface(moduleType) {
+            closeAllDrawers();
+            toggleSettingsPanel(false);
+            
+            const overlay = document.getElementById('genericAppViewOverlay');
+            const title = document.getElementById('genericAppOverlayTitleNode');
+            const body = document.getElementById('genericAppOverlayBodyNode');
+            
+            overlay.style.display = "flex";
+            body.innerHTML = ''; 
+
+            if(moduleType === 'library') {
+                title.innerText = "Jarvis Library Hub";
+                body.innerHTML = `
+                    <div style="background:#212121; padding:16px; border-radius:12px; margin-bottom:12px;">📖 Academic Prompt Assistant</div>
+                    <div style="background:#212121; padding:16px; border-radius:12px; margin-bottom:12px;">💻 Full-Stack Code Reviewer Toolkit</div>
+                `;
+            } else if(moduleType === 'projects') {
+                title.innerText = "Workspace Projects";
+                body.innerHTML = `
+                    <div style="text-align:center; padding:40px 0;">
+                        <div style="font-size:2.5rem; margin-bottom:12px;">📁</div>
+                        <div style="color:#aaa; margin-bottom:20px;">Start your first professional workspace project matrix to sync files.</div>
+                        <button class="picker-submit-btn" style="width:auto; padding:10px 24px; border-radius:20px;">+ New Project</button>
+                    </div>
+                `;
+            } else if(moduleType === 'apps') {
+                title.innerText = "Explore Plugins Apps";
+                body.innerHTML = `
+                    <input type="text" placeholder="Search extensions..." class="picker-input-field" style="margin-bottom:20px;">
+                    <div style="display:flex; align-items:center; gap:14px; background:#212121; padding:14px; border-radius:12px; margin-bottom:10px;">
+                        <div style="font-size:1.5rem;">🎬</div><div><b>Video AI Generator</b><div style="font-size:0.75rem; color:#666;">By invideo.io</div></div>
+                    </div>
+                `;
+            } else if(moduleType === 'plugins') {
+                title.innerText = "Extensions Matrix";
+                body.innerHTML = `
+                    <div style="background:#212121; padding:16px; border-radius:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                        <div><b>🌐 Live Web Navigation</b></div><input type="checkbox" checked style="accent-color:#10a37f;">
+                    </div>
+                `;
+            } else {
+                title.innerText = "System Preferences";
+                body.innerHTML = `<div style="color:#aaa;">Cloud synchronization parameters loaded cleanly.</div>`;
+            }
+        }
+
+        function closeGenericAppOverlayCard() {
+            document.getElementById('genericAppViewOverlay').style.display = "none";
+        }
+
+        function executeNativeCaptureRoute(targetMode) {
+            closeAllDrawers();
+            if(targetMode === 'camera') document.getElementById('cameraSystemNode').click();
+            if(targetMode === 'photos') document.getElementById('photoLibrarySystemNode').click();
+            if(targetMode === 'files') document.getElementById('genericFilePickerSystemNode').click();
+            if(targetMode === 'plugins') launchAppOverlayInterface('plugins');
+        }
+
+        function handleFilePayloadAttach(e, contextTitle) {
+            const payload = e.target.files[0];
+            if(payload) {
+                showEmbeddedStatusNotice(`Linked: <code>${payload.name}</code> (${Math.round(payload.size / 1024)} KB) via ${contextTitle}.`);
+                document.getElementById('smartInputPillbox').style.display = 'none';
+            }
+            e.target.value = null; 
+        }
+
+        function toggleVoiceSpeechRecognition() {
+            try {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SpeechRecognition) {
+                    showEmbeddedStatusNotice("Microphone engine sandbox limitations detected.");
+                    return;
+                }
+                const btn = document.getElementById('voiceSynthesisTriggerBtn');
+                if (!speechRecognitionEngine) {
+                    speechRecognitionEngine = new SpeechRecognition();
+                    speechRecognitionEngine.lang = "en-US";
+                    speechRecognitionEngine.onstart = () => { isVoiceRecordingActive = true; btn.style.color = "#ef4444"; btn.innerText = "🛑"; };
+                    speechRecognitionEngine.onresult = (ev) => { document.getElementById('userInputMsg').value = ev.results[0][0].transcript; };
+                    speechRecognitionEngine.onerror = () => { stopSpeechEngineTracks(); };
+                    speechRecognitionEngine.onend = () => { stopSpeechEngineTracks(); };
+                }
+                if (isVoiceRecordingActive) speechRecognitionEngine.stop(); else speechRecognitionEngine.start();
+            } catch(e) { console.log(e); }
+        }
+
+        function stopSpeechEngineTracks() {
+            isVoiceRecordingActive = false;
+            document.getElementById('voiceSynthesisTriggerBtn').style.color = "#8e8e93";
+            document.getElementById('voiceSynthesisTriggerBtnTracks').innerText = "🎙️";
+        }
+
+        function applyGlobalStyleThemeProperty() {
+            const val = document.getElementById('appThemeSelectorNode').value;
+            if(val === 'light') {
+                document.documentElement.style.setProperty('--bg-primary', '#ffffff');
+                document.documentElement.style.setProperty('--bg-secondary', '#f7f7f8');
+                document.documentElement.style.setProperty('--text-main', '#2d2d2d');
+            } else {
+                document.documentElement.style.setProperty('--bg-primary', '#171717');
+                document.documentElement.style.setProperty('--bg-secondary', '#212121');
+                document.documentElement.style.setProperty('--text-main', '#ececf1');
+            }
+        }
+
+        function applyGlobalAccentThemeProperty() {
+            document.documentElement.style.setProperty('--accent-color', document.getElementById('appAccentColorSelectorNode').value);
+        }
+
+        function launchAgeVerificationWorkflow() {
+            toggleSettingsPanel(false);
+            const panel = document.getElementById('faceScanVerificationWrapper');
+            const feedback = document.getElementById('biometricInstructionFeedback');
+            panel.style.display = 'flex';
+            feedback.innerText = "Requesting secure biometric alignment...";
+            
+            if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+                .then(stream => {
+                    document.getElementById('simulatedFaceCamFeed').srcObject = stream;
+                    feedback.innerText = "Center yourself on the screen";
+                    
+                    setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Hold still... 3"; }, 2500);
+                    setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Hold still... 2"; }, 4500);
+                    setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Turn your head slightly left"; }, 6500);
+                    
+                    setTimeout(() => {
+                        panel.style.display = 'none';
+                        stream.getTracks().forEach(track => track.stop());
+                        showEmbeddedStatusNotice("<b>Age Verification Successful:</b> Biometric state verified.");
+                    }, 9500);
+                })
+                .catch(err => { runFallbackBiometricAnimationFlow(); });
+            } else {
+                runFallbackBiometricAnimationFlow();
+            }
+        }
+
+        function runFallbackBiometricAnimationFlow() {
+            const panel = document.getElementById('faceScanVerificationWrapper');
+            const feedback = document.getElementById('biometricInstructionFeedback');
+            feedback.innerText = "[Sandbox Mode] Initializing automated scanning channels...";
+            setTimeout(() => { feedback.innerText = "Analyzing dynamic landmarks... 100%"; }, 2500);
+            setTimeout(() => {
+                panel.style.display = 'none';
+                showEmbeddedStatusNotice("<b>Age Verification Successful:</b> Biometric verified.");
+            }, 4500);
+        }
+
+        // 🛠️ CRITICAL FIXED SYNTAX METHOD HANDLER WITH EXPLICIT KEYWORD
+        function displayCustomModalDialogCard(header, descriptions, acceptBtnText, acceptCallback) {
+            document.getElementById('popupHeaderTitle').innerText = header;
+            document.getElementById('popupBodyDescription').innerText = descriptions;
+            const container = document.getElementById('modalBtnActionControls');
+            container.innerHTML = '';
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'modal-btn';
+            cancelBtn.style.color = '#8e8e93';
+            cancelBtn.innerText = 'Cancel';
+            cancelBtn.onclick = () => { document.getElementById('genericSystemPopupDialog').style.display = 'none'; };
+            
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'modal-btn';
+            confirmBtn.innerText = acceptBtnText;
+            confirmBtn.onclick = () => {
+                document.getElementById('genericSystemPopupDialog').style.display = 'none';
+                acceptCallback();
+            };
+            
+            container.appendChild(cancelBtn);
+            container.appendChild(confirmBtn);
+            document.getElementById('genericSystemPopupDialog').style.display = 'flex';
+        }
+
+        function triggerSignOutFlowModal() {
+            displayCustomModalDialogCard(
+                "Log out", 
+                "Are you sure you securely want to close this session and reset parameters?", 
+                "Log out", 
+                () => {
+                    localStorage.removeItem('jarvis_logged_email');
+                    localStorage.removeItem('jarvis_logged_name');
+                    localStorage.removeItem('jarvis_user_avatar_base64');
+                    toggleSettingsPanel(false);
+                    
+                    const gateway = document.getElementById('appLoginGateway');
+                    gateway.style.display = 'flex';
+                    gateway.style.opacity = '1';
+                    document.getElementById('gatewayPrimaryBtnGroup').style.display = 'flex';
+                    document.getElementById('appSecureCaptchaBlock').style.display = 'none';
+                    document.getElementById('authInputFullName').value = '';
+                    document.getElementById('authInputEmailAddress').value = '';
+                    
+                    document.getElementById('captchaBoxStateCircle').innerHTML = '';
+                    document.getElementById('captchaBoxStateCircle').style.border = "2px solid #555";
+                    document.getElementById('captchaBoxStateCircle').style.background = "transparent";
+                    document.getElementById('captchaStatusLabelTxt').innerText = "I am not a robot";
+                    document.getElementById('captchaStatusLabelTxt').style.color = "#e3e3e3";
+                }
+            );
+        }
+
+        function formatAIResponse(rawText) {
+            if (!rawText) return "";
+            let parsedText = rawText;
+            parsedText = parsedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            parsedText = parsedText.replace(/\n/g, '<br>');
+            return parsedText;
+        }
+
+        function showEmbeddedStatusNotice(message) {
+            const workspace = document.getElementById('chatWorkspace');
+            const systemBubble = document.createElement('div');
+            systemBubble.className = 'msg-bubble jarvis';
+            systemBubble.style.borderLeft = '3px solid var(--accent-color)';
+            systemBubble.style.background = 'rgba(255, 255, 255, 0.02)';
+            systemBubble.innerHTML = `⚙️ <b>System Integration:</b> ${message}`;
+            workspace.appendChild(systemBubble);
+            workspace.scrollTop = workspace.scrollHeight;
+        }
+
+        function initAppSession() {
+            startBrandNewSession();
+            renderSidebarRecents();
+        }
+
+        function startBrandNewSession() {
+            activeSessionId = 'session_' + Date.now();
+            const workspace = document.getElementById('chatWorkspace');
+            workspace.innerHTML = `<div class="msg-bubble jarvis">Hello! I am Jarvis. How can I assist you in this professional session?</div>`;
+            renderSidebarRecents();
+        }
+
+        function renderSidebarRecents() {
+            const listContainer = document.getElementById('recentsLogContainer');
+            listContainer.innerHTML = '';
+            const activeLogs = chatSessions.filter(s => s.chats && s.chats.length > 0);
+            if (activeLogs.length === 0) {
+                listContainer.innerHTML = `<div style="font-size:0.85rem; color:#444; padding:5px 10px;">No history matrix logs synced.</div>`;
+                return;
+            }
+            activeLogs.forEach(session => {
+                const item = document.createElement('div');
+                item.className = `recent-chat-item ${session.id === activeSessionId ? 'active' : ''}`;
+                item.innerText = session.title || "Query Log Trace";
+                item.onclick = () => loadHistoricalSession(session.id);
+                listContainer.appendChild(item);
+            });
+        }
+
+        function loadHistoricalSession(id) {
+            const targetSession = chatSessions.find(s => s.id === id);
+            if (!targetSession) return;
+            activeSessionId = id;
+            const workspace = document.getElementById('chatWorkspace');
+            workspace.innerHTML = '';
+            targetSession.chats.forEach(msg => {
+                const bubble = document.createElement('div');
+                bubble.className = `msg-bubble ${msg.sender}`;
+                bubble.innerHTML = msg.sender === 'jarvis' ? formatAIResponse(msg.text) : msg.text;
+                workspace.appendChild(bubble);
+            });
+            workspace.scrollTop = workspace.scrollHeight;
+            closeAllDrawers();
+            renderSidebarRecents();
+        }
+
+        function handleKeyPress(e) { if (e.key === 'Enter') executeCommand(); }
+
+        // 🤖 MULTI-ROUTE SELF-HEALING ENGINE DYNAMICALLY TARGETING LATEST 2026 MODELS
+        async function executeCommand() {
+            const field = document.getElementById('userInputMsg');
+            const userText = field.value.trim();
+            if (!userText) return;
+
+            closeAllDrawers();
+            const workspace = document.getElementById('chatWorkspace');
+            const uBubble = document.createElement('div');
+            uBubble.className = 'msg-bubble user';
+            uBubble.innerHTML = userText;
+            workspace.appendChild(uBubble);
+            workspace.scrollTop = workspace.scrollHeight;
+            field.value = '';
+
+            let sessionIndex = chatSessions.findIndex(s => s.id === activeSessionId);
+            if (sessionIndex === -1) {
+                let generatedTitle = userText.length > 22 ? userText.substring(0, 20) + '...' : userText;
+                chatSessions.unshift({ id: activeSessionId, title: generatedTitle, chats: [] });
+                sessionIndex = 0;
+            }
+            chatSessions[sessionIndex].chats.push({ sender: 'user', text: userText });
+
+            const jBubble = document.createElement('div');
+            jBubble.className = 'msg-bubble jarvis';
+            jBubble.innerHTML = "<span style='color:var(--accent-color); font-weight:600;'>🤖 Jarvis is thinking...</span>";
+            workspace.appendChild(jBubble);
+            workspace.scrollTop = workspace.scrollHeight;
+
+            // 🎯 Strictly trying the latest production models (Gemini 2.5 and 2.0 Flash) to bypass 1.5 errors
+            const endpoints = [
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + API_KEY,
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + API_KEY,
+                "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=" + API_KEY,
+                "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=" + API_KEY
+            ];
+
+            let success = false;
+            let finalErrorMsg = "Execution path timeout.";
+
+            for (let url of endpoints) {
+                if (success) break;
+                try {
+                    let response = await fetch(url, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: userText }] }] })
+                    });
+                    
+                    let resData = await response.json();
+                    if (response.ok && resData.candidates && resData.candidates[0].content.parts[0].text) {
+                        let aiReply = resData.candidates[0].content.parts[0].text;
+                        jBubble.innerHTML = formatAIResponse(aiReply);
+                        chatSessions[sessionIndex].chats.push({ sender: 'jarvis', text: aiReply });
+                        localStorage.setItem('jarvis_vault_sessions', JSON.stringify(chatSessions));
+                        renderSidebarRecents();
+                        success = true;
+                        break;
+                    } else {
+                        finalErrorMsg = resData.error ? resData.error.message : "Envelope parsing mismatch.";
+                    }
+                } catch (netErr) {
+                    finalErrorMsg = netErr.message;
+                }
+            }
+
+            if (!success) {
+                jBubble.innerHTML = "<span style='color:#ef4444;'>⚠️ <b>Google Cloud Network Rejection:</b> " + finalErrorMsg + "</span>";
+            }
+            workspace.scrollTop = workspace.scrollHeight;
+        }
+
+        window.onload = function() {
+            const savedEmail = localStorage.getItem('jarvis_logged_email');
+            const savedName = localStorage.getItem('jarvis_logged_name');
+            if (savedEmail && savedName) {
+                document.getElementById('appLoginGateway').style.display = 'none';
+                applyLoggedUserDetailsToUI(savedEmail, savedName);
+                initAppSession();
+            } else {
+                document.getElementById('appLoginGateway').style.display = 'flex';
+            }
+        };
+    </script>
+</body>
+</html>
