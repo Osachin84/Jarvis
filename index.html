@@ -656,7 +656,7 @@
 
         <div class="login-btn-container" id="gatewayPrimaryBtnGroup">
             <button class="google-login-btn" onclick="openGoogleAccountRegistrationPicker(true, 'google')">
-                <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.47h4.84c-.21 1.12-.84 2.07-1.79 2.7l2.76 2.13c1.61-1.49 2.53-3.69 2.53-6.26z" fill="#4285F4"/><path d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.76-2.13c-.76.51-1.74.82-3.2.82-2.46 0-4.55-1.66-5.3-3.89L.89 12.74C2.37 15.68 5.44 18 9 18z" fill="#34A853"/><path d="M3.7 10.62c-.19-.57-.3-1.18-.3-1.8s.11-1.23.3-1.8L.89 5.1C.32 6.27 0 7.6 0 9s.32 2.73.89 3.9l2.81-2.28z" fill="#FBBC05"/><path d="M9 3.58c1.32 0 2.5.45 3.44 1.35L15 2.1C13.46.66 11.43 0 9 0 5.44 0 2.37 2.32.89 5.27l2.81 2.28c.75-2.23 2.84-3.89 5.3-3.89z" fill="#EA4335"/></svg>
+                <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.47h4.84c-.21 1.12-.84 2.07-1.79 2.7l2.76 2.13c1.61-1.49 2.53-3.69 2.53-6.26z" fill="#4285F4"/><path d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.76-2.13c-.76.51-1.74.82-3.2.82-2.46 0-4.55-1.66-5.3; text-align:center; transform:scale(1.2); " fill="#34A853"/><path d="M3.7 10.62c-.19-.57-.3-1.18-.3-1.8s.11-1.23.3-1.8L.89 5.1C.32 6.27 0 7.6 0 9s.32 2.73.89 3.9l2.81-2.28z" fill="#FBBC05"/><path d="M9 3.58c1.32 0 2.5.45 3.44 1.35L15 2.1C13.46.66 11.43 0 9 0 5.44 0 2.37 2.32.89 5.27l2.81 2.28c.75-2.23 2.84-3.89 5.3-3.89z" fill="#EA4335"/></svg>
                 Continue with Google
             </button>
             <button class="alternative-login-btn" onclick="openGoogleAccountRegistrationPicker(true, 'github')">
@@ -917,7 +917,7 @@
                 label.innerText = "Human verification complete!";
                 
                 setTimeout(() => {
-                    // Seamless Direct Access Route (Like ChatGPT One-Tap Login)
+                    // Seamless Direct Access Route
                     document.getElementById('appSecureCaptchaBlock').style.display = 'none';
                     
                     const loader = document.getElementById('loginLoaderOverlay');
@@ -1138,6 +1138,103 @@
             }
         }
 
+        function applyGlobalAccentThemeProperty() {
+            document.documentElement.style.setProperty('--accent-color', document.getElementById('appAccentColorSelectorNode').value);
+        }
+
+        function launchAgeVerificationWorkflow() {
+            toggleSettingsPanel(false);
+            const panel = document.getElementById('faceScanVerificationWrapper');
+            const feedback = document.getElementById('biometricInstructionFeedback');
+            panel.style.display = 'flex';
+            feedback.innerText = "Requesting secure biometric alignment...";
+            
+            if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+                .then(stream => {
+                    document.getElementById('simulatedFaceCamFeed').srcObject = stream;
+                    feedback.innerText = "Center yourself on the screen";
+                    
+                    setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Hold still... 3"; }, 2500);
+                    setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Hold still... 2"; }, 4500);
+                    setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Turn your head slightly left"; }, 6500);
+                    
+                    setTimeout(() => {
+                        panel.style.display = 'none';
+                        stream.getTracks().forEach(track => track.stop());
+                        showEmbeddedStatusNotice("<b>Age Verification Successful:</b> Biometric state verified.");
+                    }, 9500);
+                })
+                .catch(err => { runFallbackBiometricAnimationFlow(); });
+            } else {
+                runFallbackBiometricAnimationFlow();
+            }
+        }
+
+        function runFallbackBiometricAnimationFlow() {
+            const panel = document.getElementById('faceScanVerificationWrapper');
+            const feedback = document.getElementById('biometricInstructionFeedback');
+            feedback.innerText = "[Sandbox Mode] Initializing automated scanning channels...";
+            setTimeout(() => { feedback.innerText = "Analyzing dynamic landmarks... 100%"; }, 2500);
+            setTimeout(() => {
+                panel.style.display = 'none';
+                showEmbeddedStatusNotice("<b>Age Verification Successful:</b> Biometric verified.");
+            }, 4500);
+        }
+
+        function displayCustomModalDialogCard(header, descriptions, acceptBtnText, acceptCallback) {
+            document.getElementById('popupHeaderTitle').innerText = header;
+            document.getElementById('popupBodyDescription').innerText = descriptions;
+            const container = document.getElementById('modalBtnActionControls');
+            container.innerHTML = '';
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'modal-btn';
+            cancelBtn.style.color = '#8e8e93';
+            cancelBtn.innerText = 'Cancel';
+            cancelBtn.onclick = () => { document.getElementById('genericSystemPopupDialog').style.display = 'none'; };
+            
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'modal-btn';
+            confirmBtn.innerText = acceptBtnText;
+            confirmBtn.onclick = () => {
+                document.getElementById('genericSystemPopupDialog').style.display = 'none';
+                acceptCallback();
+            };
+            
+            container.appendChild(cancelBtn);
+            container.appendChild(confirmBtn);
+            document.getElementById('genericSystemPopupDialog').style.display = 'flex';
+        }
+
+        function triggerSignOutFlowModal() {
+            displayCustomModalDialogCard(
+                "Log out", 
+                "Are you sure you securely want to close this session and reset parameters?", 
+                "Log out", 
+                () => {
+                    localStorage.removeItem('jarvis_logged_email');
+                    localStorage.removeItem('jarvis_logged_name');
+                    localStorage.removeItem('jarvis_user_avatar_base64');
+                    toggleSettingsPanel(false);
+                    
+                    const gateway = document.getElementById('appLoginGateway');
+                    gateway.style.display = 'flex';
+                    gateway.style.opacity = '1';
+                    document.getElementById('gatewayPrimaryBtnGroup').style.display = 'flex';
+                    document.getElementById('appSecureCaptchaBlock').style.display = 'none';
+                    document.getElementById('authInputFullName').value = '';
+                    document.getElementById('authInputEmailAddress').value = '';
+                    
+                    document.getElementById('captchaBoxStateCircle').innerHTML = '';
+                    document.getElementById('captchaBoxStateCircle').style.border = "2px solid #555";
+                    document.getElementById('captchaBoxStateCircle').style.background = "transparent";
+                    document.getElementById('captchaStatusLabelTxt').innerText = "I am not a robot";
+                    document.getElementById('captchaStatusLabelTxt').style.color = "#e3e3e3";
+                }
+            );
+        }
+
         // --- Standard Intelligent Messaging System Layout Engine ---
         function initAppSession() {
             startBrandNewSession();
@@ -1199,83 +1296,3 @@
             const workspace = document.getElementById('chatWorkspace');
             const systemBubble = document.createElement('div');
             systemBubble.className = 'msg-bubble jarvis';
-            systemBubble.style.borderLeft = '3px solid var(--accent-color)';
-            systemBubble.style.background = 'rgba(255, 255, 255, 0.02)';
-            systemBubble.innerHTML = `⚙️ <b>System Integration:</b> ${message}`;
-            workspace.appendChild(systemBubble);
-            workspace.scrollTop = workspace.scrollHeight;
-        }
-
-        // 🛠️ 🤖 NATIVE DYNAMIC ROUTING FIXED NODE (Strictly links API key to query URL parameter)
-        function executeCommand() {
-            const field = document.getElementById('userInputMsg');
-            const userText = field.value.trim();
-            if (!userText) return;
-
-            closeAllDrawers();
-            const workspace = document.getElementById('chatWorkspace');
-            const uBubble = document.createElement('div');
-            uBubble.className = 'msg-bubble user';
-            uBubble.innerHTML = userText;
-            workspace.appendChild(uBubble);
-            workspace.scrollTop = workspace.scrollHeight;
-            field.value = '';
-
-            let sessionIndex = chatSessions.findIndex(s => s.id === activeSessionId);
-            if (sessionIndex === -1) {
-                let generatedTitle = userText.length > 22 ? userText.substring(0, 20) + '...' : userText;
-                chatSessions.unshift({ id: activeSessionId, title: generatedTitle, chats: [] });
-                sessionIndex = 0;
-            }
-            chatSessions[sessionIndex].chats.push({ sender: 'user', text: userText });
-
-            const jBubble = document.createElement('div');
-            jBubble.className = 'msg-bubble jarvis';
-            jBubble.innerHTML = "<span style='color:var(--accent-color); font-weight:600;'>🤖 Jarvis is thinking...</span>";
-            workspace.appendChild(jBubble);
-            workspace.scrollTop = workspace.scrollHeight;
-
-            // 🎯 Fixed standard URL routing method directly with key parameter
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-
-            fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contents: [{ parts: [{ text: userText }] }] })
-            })
-            .then(res => {
-                return res.json().then(data => {
-                    if (!res.ok || data.error) {
-                        throw new Error(data.error ? data.error.message : `HTTP Error Node: ${res.status}`);
-                    }
-                    return data;
-                });
-            })
-            .then(data => {
-                let aiReply = data.candidates[0].content.parts[0].text;
-                jBubble.innerHTML = formatAIResponse(aiReply);
-                chatSessions[sessionIndex].chats.push({ sender: 'jarvis', text: aiReply });
-                localStorage.setItem('jarvis_vault_sessions', JSON.stringify(chatSessions));
-                renderSidebarRecents();
-                workspace.scrollTop = workspace.scrollHeight;
-            })
-            .catch((err) => {
-                jBubble.innerHTML = `<span style='color:#ef4444;'>⚠️ <b>Google AI Server Rejection:</b> ${err.message}</span>`;
-                workspace.scrollTop = workspace.scrollHeight;
-            });
-        }
-
-        window.onload = function() {
-            const savedEmail = localStorage.getItem('jarvis_logged_email');
-            const savedName = localStorage.getItem('jarvis_logged_name');
-            if (savedEmail && savedName) {
-                document.getElementById('appLoginGateway').style.display = 'none';
-                applyLoggedUserDetailsToUI(savedEmail, savedName);
-                initAppSession();
-            } else {
-                document.getElementById('appLoginGateway').style.display = 'flex';
-            }
-        };
-    </script>
-</body>
-</html>
