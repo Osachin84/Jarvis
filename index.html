@@ -901,7 +901,6 @@
             const nameField = document.getElementById('authInputFullName').value.trim();
             const emailField = document.getElementById('authInputEmailAddress').value.trim();
             
-            // Fixed Freeze Bug: Visual error alerts instead of hidden background returns
             if(!nameField || !emailField) {
                 alert("Please fill in both Username and Email fields to authenticate connection nodes.");
                 return;
@@ -1091,6 +1090,7 @@
             document.getElementById('genericAppViewOverlay').style.display = "none";
         }
 
+        // --- Hardware Node Trigger Logic Matrix ---
         function executeNativeCaptureRoute(targetMode) {
             closeAllDrawers();
             if(targetMode === 'camera') document.getElementById('cameraSystemNode').click();
@@ -1191,7 +1191,7 @@
             }, 4500);
         }
 
-        function displayCustomModalDialogCard(header, descriptions, acceptBtnText, acceptCallback) {
+        displayCustomModalDialogCard(header, descriptions, acceptBtnText, acceptCallback) {
             document.getElementById('popupHeaderTitle').innerText = header;
             document.getElementById('popupBodyDescription').innerText = descriptions;
             const container = document.getElementById('modalBtnActionControls');
@@ -1311,7 +1311,7 @@
 
         function handleKeyPress(e) { if (e.key === 'Enter') executeCommand(); }
 
-        // 🛠️ 🤖 NATIVE DYNAMIC ROUTING SYSTEM W/ GOOGLE ERROR RESPONSE CAPTURE
+        // 🛠️ 🤖 NATIVE DYNAMIC ROUTING FIXED NODE (Uses v1 stable endpoint path map)
         function executeCommand() {
             const field = document.getElementById('userInputMsg');
             const userText = field.value.trim();
@@ -1340,8 +1340,8 @@
             workspace.appendChild(jBubble);
             workspace.scrollTop = workspace.scrollHeight;
 
-            // Direct mapping approach strictly with key variable parameter string
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            // Changed v1beta to standard v1 for stable endpoint parsing route map execution
+            const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
             fetch(url, {
                 method: "POST",
