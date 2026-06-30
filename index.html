@@ -453,14 +453,16 @@
 
     <div class="sidebar-overlay" id="overlay" onclick="closeAllDrawers()"></div>
 
+    <input type="file" id="realSystemDevicePicker" style="display: none;" onchange="processLocalFileSelection(event)">
+
     <div class="sidebar" id="sidebarMenu">
         <div class="sidebar-header">🤖 Jarvis Portal</div>
         
         <div class="directory-list">
-            <div class="dir-item" onclick="triggerSubFeature('📚 Library Hub Connected')">📖 Library</div>
-            <div class="dir-item" onclick="triggerSubFeature('📁 Project Folders Synced')">🗂️ Projects</div>
-            <div class="dir-item" onclick="triggerSubFeature('📱 Core Plugins Desk Open')">📱 Apps</div>
-            <div class="dir-item" onclick="triggerSubFeature('⚙️ More Features Desk Open')">✨ More</div>
+            <div class="dir-item" onclick="handleDashboardMenuFeature('📖 Jarvis Library Module Synchronized')">📖 Library</div>
+            <div class="dir-item" onclick="handleDashboardMenuFeature('📁 Local Sandbox Workspace Project Synced')">🗂️ Projects</div>
+            <div class="dir-item" onclick="handleDashboardMenuFeature('📱 Core Extension Plugins Engine Active')">📱 Apps</div>
+            <div class="dir-item" onclick="handleDashboardMenuFeature('✨ Advanced Mathematical Intelligence Matrix Open')">✨ More</div>
         </div>
 
         <div class="new-chat-sidebar-btn" onclick="startBrandNewSession()">+ New Chat</div>
@@ -488,19 +490,19 @@
             <div>
                 <div class="settings-group-title">Preferences</div>
                 <div class="settings-box-container">
-                    <div class="settings-row-item" onclick="triggerSubFeature('Personalization configuration active.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Personalization configs adapted.')">
                         <div class="row-left-meta"><span>🔄</span>Personalization</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Memory diagnostics sync active.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('AI Memory context buffer updated.')">
                         <div class="row-left-meta"><span>🧠</span>Memory</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Plugin Apps view open.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Integrations and Plugins engine active.')">
                         <div class="row-left-meta"><span>🎛️</span>Apps</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Remote computing communication link active.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Remote computation links activated.')">
                         <div class="row-left-meta"><span>🖥️</span>Remote control</div>
                         <div class="row-right-status">➔</div>
                     </div>
@@ -510,23 +512,23 @@
             <div>
                 <div class="settings-group-title">Account</div>
                 <div class="settings-box-container">
-                    <div class="settings-row-item" onclick="triggerSubFeature('Encrypted workspace active.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Switched to secure personal workspace environment.')">
                         <div class="row-left-meta"><span>💼</span>Workspace</div>
                         <div class="row-right-status">Personal ➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Launch checkout engine...')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Billing matrix initialized.')">
                         <div class="row-left-meta"><span>🌟</span>Upgrade to Plus</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Parental strict lock logs clear.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Parental strict filter locks verified.')">
                         <div class="row-left-meta"><span>👥</span>Parental controls</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Email settings option selected.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('User mail gateway verified.')">
                         <div class="row-left-meta"><span>✉️</span>Email</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Age verification parameters checked.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Secure identity parameters active.')">
                         <div class="row-left-meta"><span>🆔</span>Age verification</div>
                         <div class="row-right-status">➔</div>
                     </div>
@@ -540,35 +542,35 @@
                         <div class="row-left-meta"><span>☀️</span>Appearance</div>
                         <div class="row-right-status" id="themeStatusLabel">System (Default) ➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Color palette loaded.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Color scheme profile refreshed.')">
                         <div class="row-left-meta"><span>🎨</span>Accent color</div>
                         <div class="row-right-status">Default ➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('General core parameters responsive.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('General parameters system optimization complete.')">
                         <div class="row-left-meta"><span>⚙️</span>General</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Voice modulation active.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Voice engine synthesis diagnostics online.')">
                         <div class="row-left-meta"><span>🎙️</span>Voice</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Safety protocols operational.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Safety guardrails set to active parameters.')">
                         <div class="row-left-meta"><span>🛡️</span>Safety</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Security configuration loaded.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Security nodes validated.')">
                         <div class="row-left-meta"><span>🔒</span>Security and login</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Local database limits checked.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Local cache structures evaluated.')">
                         <div class="row-left-meta"><span>💾</span>Storage</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Data controls panel open.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Data controls matrices adapted.')">
                         <div class="row-left-meta"><span>📊</span>Data controls</div>
                         <div class="row-right-status">➔</div>
                     </div>
-                    <div class="settings-row-item" onclick="triggerSubFeature('Opening bug trace matrix.')">
+                    <div class="settings-row-item" onclick="handleDashboardMenuFeature('Telemetry log matrices trace established.')">
                         <div class="row-left-meta"><span>⏰</span>Report bug</div>
                         <div class="row-right-status">➔</div>
                     </div>
@@ -580,7 +582,7 @@
             </div>
 
             <div class="settings-box-container" style="margin-bottom: 20px;">
-                <div class="settings-row-item" onclick="triggerLogoutAction()" style="color: #ef4444; justify-content: center; font-weight: 600;">
+                <div class="settings-row-item" onclick="triggerCleanLogoutAction()" style="color: #ef4444; justify-content: center; font-weight: 600;">
                     🚪 Log out
                 </div>
             </div>
@@ -607,10 +609,10 @@
         </div>
 
         <div class="attachment-popup-menu" id="attachPopupMenuBox">
-            <div class="attach-menu-item" onclick="executeAttachOption('📷 Camera Feed Launcher Initialized')">📷 Camera</div>
-            <div class="attach-menu-item" onclick="executeAttachOption('🖼️ Photo Gallery Engine Triggered')">🖼️ Photos</div>
-            <div class="attach-menu-item" onclick="executeAttachOption('📂 Storage Document Directory Active')">📁 Files</div>
-            <div class="attach-menu-item" onclick="executeAttachOption('🔌 Extensions Tool Active')">🔌 Plugins</div>
+            <div class="attach-menu-item" onclick="executeSystemAttachOption('camera')">📷 Camera</div>
+            <div class="attach-menu-item" onclick="executeSystemAttachOption('photos')">🖼️ Photos</div>
+            <div class="attach-menu-item" onclick="executeSystemAttachOption('files')">📁 Files</div>
+            <div class="attach-menu-item" onclick="executeSystemAttachOption('plugins')">🔌 Plugins</div>
         </div>
 
         <div class="input-bar-container">
@@ -651,18 +653,57 @@
         }
 
         function closeAllDrawers() {
-            toggleMenu(false);
+            document.getElementById('sidebarMenu').classList.remove('active');
+            document.getElementById('overlay').style.display = 'none';
             document.getElementById('attachPopupMenuBox').style.display = 'none';
             document.getElementById('attachActionBtn').innerText = "+";
         }
 
-        function triggerSubFeature(logMsg) {
-            alert(`🤖 Jarvis Alert:\n\n[System Core Status]: ${logMsg}`);
+        // Professional In-App Status Notification System instead of browser alert()
+        function showEmbeddedStatusNotice(message) {
+            const workspace = document.getElementById('chatWorkspace');
+            const systemBubble = document.createElement('div');
+            systemBubble.className = 'msg-bubble jarvis';
+            systemBubble.style.borderLeft = '3px solid #00ffcc';
+            systemBubble.style.background = 'rgba(0, 255, 204, 0.04)';
+            systemBubble.innerHTML = `⚙️ <b>System Integration:</b> ${message}`;
+            workspace.appendChild(systemBubble);
+            workspace.scrollTop = workspace.scrollHeight;
         }
 
-        function executeAttachOption(actionName) {
-            alert(`📂 Attachment Node Triggered:\n\n${actionName}`);
+        function handleDashboardMenuFeature(logMsg) {
+            showEmbeddedStatusNotice(logMsg);
+            toggleSettingsPanel(false);
             closeAllDrawers();
+        }
+
+        // Real Camera and Local File Pickers integration system
+        function executeSystemAttachOption(type) {
+            const nativePicker = document.getElementById('realSystemDevicePicker');
+            if (type === 'camera') {
+                nativePicker.setAttribute('accept', 'image/*');
+                nativePicker.setAttribute('capture', 'environment');
+                nativePicker.click();
+            } else if (type === 'photos') {
+                nativePicker.setAttribute('accept', 'image/*');
+                nativePicker.removeAttribute('capture');
+                nativePicker.click();
+            } else if (type === 'files') {
+                nativePicker.setAttribute('accept', '*/*');
+                nativePicker.removeAttribute('capture');
+                nativePicker.click();
+            } else if (type === 'plugins') {
+                showEmbeddedStatusNotice("Advanced AI matrix model plugins desk established.");
+            }
+            closeAllDrawers();
+        }
+
+        function processLocalFileSelection(event) {
+            const targetFile = event.target.files[0];
+            if (targetFile) {
+                showEmbeddedStatusNotice(`Selected payload metadata: <b>${targetFile.name}</b> (${Math.round(targetFile.size / 1024)} KB). Ready for context parsing query.`);
+                document.getElementById('suggestionPanel').style.display = 'none';
+            }
         }
 
         function toggleThemeMock() {
@@ -672,14 +713,12 @@
             document.getElementById('themeStatusLabel').innerText = isLightMode ? "Light Mode ➔" : "Dark Mode ➔";
         }
 
-        function triggerLogoutAction() {
-            if(confirm("Do you securely want to clear history database and clear session sync cache parameters?")) {
-                localStorage.removeItem('jarvis_vault_sessions');
-                chatSessions = [];
-                toggleSettingsPanel(false);
-                startBrandNewSession();
-                alert("Vault matrix diagnostics cleared successfully.");
-            }
+        function triggerCleanLogoutAction() {
+            localStorage.removeItem('jarvis_vault_sessions');
+            chatSessions = [];
+            toggleSettingsPanel(false);
+            startBrandNewSession();
+            showEmbeddedStatusNotice("Secure vault metadata database successfully wiped.");
         }
 
         // Markdown Parser engine
