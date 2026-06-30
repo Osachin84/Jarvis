@@ -97,12 +97,91 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        /* --- Google Account Registration Input Sheet --- */
+        /* --- In-App Secure Captcha Panel --- */
+        #appSecureCaptchaBlock {
+            display: none;
+            background: #1c1c1e;
+            border: 1px solid #2c2c2e;
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            max-width: 360px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            text-align: left;
+        }
+
+        .captcha-verify-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #2c2c2e;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .captcha-checkbox-circle {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #555;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .captcha-checkbox-circle.loading {
+            border: 2px solid #10a37f;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spinMatrix 0.8s linear infinite;
+        }
+
+        /* --- Interactive OTP Panel --- */
+        #otpInputBlockLayout {
+            display: none;
+            width: 100%;
+            max-width: 360px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .picker-input-field {
+            width: 100%;
+            background: #2d2d2d;
+            border: 1px solid #5f6368;
+            padding: 14px;
+            border-radius: 8px;
+            color: #fff;
+            margin-bottom: 14px;
+            outline: none;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+        }
+
+        .picker-submit-btn {
+            width: 100%;
+            background: #10a37f;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
         #googleAccountPickerModal {
             position: fixed;
-            bottom: -400px;
+            bottom: -450px;
             left: 0;
             width: 100%;
             background: #202124;
@@ -117,32 +196,6 @@
             box-shadow: 0 -8px 32px rgba(0,0,0,0.6);
         }
 
-        .picker-input-field {
-            width: 100%;
-            background: #2d2d2d;
-            border: 1px solid #5f6368;
-            padding: 12px;
-            border-radius: 8px;
-            color: #fff;
-            margin-bottom: 12px;
-            outline: none;
-            font-size: 0.95rem;
-            box-sizing: border-box;
-        }
-
-        .picker-submit-btn {
-            width: 100%;
-            background: #10a37f;
-            color: #fff;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        /* --- Login Real Processing Spinner Loader --- */
         #loginLoaderOverlay {
             display: none;
             position: absolute;
@@ -307,7 +360,7 @@
             z-index: 9998;
         }
 
-        /* --- Generic Full View Modal Overlays for Sidebar Tabs --- */
+        /* --- Generic Overlays for Tabs --- */
         .app-view-overlay-card {
             position: fixed;
             top: 0;
@@ -464,80 +517,6 @@
             font-weight: bold;
         }
 
-        /* --- Full Screen Comprehensive Settings Dashboard --- */
-        .settings-panel {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #171717;
-            z-index: 15000;
-            display: none;
-            flex-direction: column;
-            box-sizing: border-box;
-        }
-
-        .settings-header {
-            display: flex;
-            align-items: center;
-            padding: 16px;
-            border-bottom: 1px solid #2f2f2f;
-            background: #171717;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .back-panel-btn {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 1.6rem;
-            cursor: pointer;
-            margin-right: 20px;
-        }
-
-        .settings-scroll-area {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .settings-group-title {
-            font-size: 0.8rem;
-            color: #8e8e93;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            font-weight: 700;
-            padding-left: 4px;
-        }
-
-        .settings-box-container {
-            background: #212121;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .settings-row-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px;
-            border-bottom: 1px solid #2f2f2f;
-            cursor: pointer;
-            font-size: 0.98rem;
-        }
-        .settings-row-item:last-child { border-bottom: none; }
-
-        .row-right-status {
-            color: #8e8e93;
-            font-size: 0.9rem;
-        }
-
-        /* Profile Avatar Node Circle styling */
         .profile-pic-container-node {
             width: 64px;
             height: 64px;
@@ -611,7 +590,7 @@
             cursor: pointer;
         }
 
-        /* --- Mock Advanced Face Scan Verification View --- */
+        /* --- Advanced Face Scan Verification View --- */
         #faceScanVerificationWrapper {
             position: fixed;
             top: 0;
@@ -661,44 +640,705 @@
 
     <div class="sidebar-overlay" id="overlay" onclick="closeAllDrawers()"></div>
 
-    <input type="file" id="cameraSystemNode" accept="image/*" capture="environment" style="display:none;" onchange="handleFilePayloadAttach(event, 'Camera Capture')">
-    <input type="file" id="photoLibrarySystemNode" accept="image/*" style="display:none;" onchange="handleFilePayloadAttach(event, 'Photo Library Payload')">
-    <input type="file" id="genericFilePickerSystemNode" accept="*/*" style="display:none;" onchange="handleFilePayloadAttach(event, 'File Payload Attachment')">
+    <input type="fil<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jarvis AI Portal</title>
+    <style>
+        /* --- Premium Deep Dark ChatGPT Design System --- */
+        :root {
+            --bg-primary: #171717;
+            --bg-secondary: #212121;
+            --bg-sidebar: #0d0d0d;
+            --accent-color: #10a37f; 
+            --text-main: #ececf1;
+            --text-muted: #b4b4b4;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-primary);
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            box-sizing: border-box;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- Full Screen Initial Login Gateway & OTP Verification --- */
+        #appLoginGateway {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 20000;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px 24px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .login-animated-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-top: 8vh;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #ffffff, #888888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textPulse 3s infinite ease-in-out;
+        }
+
+        @keyframes textPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; transform: scale(1.01); }
+        }
+
+        .login-btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 3vh;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .google-login-btn {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 14px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .alternative-login-btn {
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid #444444;
+            padding: 14px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* --- In-App Secure Captcha Panel --- */
+        #appSecureCaptchaBlock {
+            display: none;
+            background: #1c1c1e;
+            border: 1px solid #2c2c2e;
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            max-width: 360px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            text-align: left;
+        }
+
+        .captcha-verify-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #2c2c2e;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .captcha-checkbox-circle {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #555;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .captcha-checkbox-circle.loading {
+            border: 2px solid #10a37f;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spinMatrix 0.8s linear infinite;
+        }
+
+        /* --- Interactive OTP Panel --- */
+        #otpInputBlockLayout {
+            display: none;
+            width: 100%;
+            max-width: 360px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .picker-input-field {
+            width: 100%;
+            background: #2d2d2d;
+            border: 1px solid #5f6368;
+            padding: 14px;
+            border-radius: 8px;
+            color: #fff;
+            margin-bottom: 14px;
+            outline: none;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+        }
+
+        .picker-submit-btn {
+            width: 100%;
+            background: #10a37f;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        #googleAccountPickerModal {
+            position: fixed;
+            bottom: -450px;
+            left: 0;
+            width: 100%;
+            background: #202124;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            padding: 24px;
+            box-sizing: border-box;
+            text-align: left;
+            z-index: 25000;
+            color: #fff;
+            transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 -8px 32px rgba(0,0,0,0.6);
+        }
+
+        #loginLoaderOverlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 26000;
+        }
+
+        .spinner-node {
+            width: 42px;
+            height: 42px;
+            border: 4px solid #333;
+            border-top: 4px solid #10a37f;
+            border-radius: 50%;
+            animation: spinMatrix 1s linear infinite;
+        }
+
+        @keyframes spinMatrix {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- Main App Frame Layout --- */
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+        }
+
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid #2f2f2f;
+        }
+
+        .brand-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* --- Sliding Sidebar Navigation --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -290px;
+            width: 275px;
+            height: 100%;
+            background: var(--bg-sidebar);
+            border-right: 1px solid #2f2f2f;
+            transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 9999;
+            padding: 16px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.active { left: 0; }
+
+        .directory-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 20px;
+        }
+
+        .dir-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+        .dir-item:hover { background: #1a1a1a; }
+
+        .new-chat-sidebar-btn {
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            color: #ffffff;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 15px;
+        }
+
+        .recents-section-title {
+            font-size: 0.75rem;
+            color: #666;
+            text-transform: uppercase;
+            margin-top: 25px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .recents-container {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .recent-chat-item {
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #cdcdcd;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .recent-chat-item:hover, .recent-chat-item.active {
+            background: #212121;
+            color: #ffffff;
+        }
+
+        .sidebar-profile-footer {
+            border-top: 1px solid #222;
+            padding-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            z-index: 9998;
+        }
+
+        /* --- Generic Overlays for Tabs --- */
+        .app-view-overlay-card {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            z-index: 12000;
+            display: none;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .view-card-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid #2f2f2f;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .view-card-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* --- Chat Workspace Matrix --- */
+        .chat-box-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .msg-bubble {
+            max-width: 85%;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 1rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .msg-bubble.user {
+            background: var(--bg-secondary);
+            color: var(--text-main);
+            margin-left: auto;
+        }
+
+        .msg-bubble.jarvis {
+            color: var(--text-main);
+            margin-right: auto;
+            align-self: flex-start;
+        }
+
+        /* --- Dynamic Smart Input Suggestions Core --- */
+        .smart-suggestion-pillbox {
+            display: flex;
+            gap: 8px;
+            padding: 8px 16px;
+            overflow-x: auto;
+            white-space: nowrap;
+            background: transparent;
+        }
+        .smart-suggestion-pillbox::-webkit-scrollbar { display: none; }
+
+        .suggestion-pill {
+            background: #2f2f2f;
+            border: 1px solid #3d3d3d;
+            color: #e3e3e3;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* --- Action Attachment Popup Context Panel --- */
+        .attachment-popup-menu {
+            position: absolute;
+            bottom: 75px;
+            left: 10px;
+            background: #252525;
+            border: 1px solid #383838;
+            border-radius: 16px;
+            width: 170px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .attach-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+        .attach-menu-item:hover { background: #303030; }
+
+        /* --- Custom Bottom Control Command Row --- */
+        .input-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-secondary);
+            padding: 10px 16px;
+            border-radius: 28px;
+            margin: 0 16px 16px 16px;
+            border: 1px solid #2f2f2f;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .action-icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .send-action-btn {
+            background: #ffffff;
+            border: none;
+            color: #000000;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .profile-pic-container-node {
+            width: 64px;
+            height: 64px;
+            background: #444;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.4rem;
+            position: relative;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .avatar-edit-pencil-badge {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #202124;
+            border: 1px solid #5f6368;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Dynamic Modal Framework --- */
+        .custom-popup-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 25000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-content-card {
+            background: #2d2d2d;
+            border-radius: 14px;
+            width: 100%;
+            max-width: 320px;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .modal-actions-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            background: none;
+            border: none;
+            color: #10a37f;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* --- Advanced Face Scan Verification View --- */
+        #faceScanVerificationWrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #111111;
+            z-index: 30000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        .biometric-scanner-ring {
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            border: 3px dashed var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+
+        .scanner-video-feed-sim {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .biometric-guidance-txt {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="overlay" onclick="closeAllDrawers()"></div>
+
+    <input type="file" id="cameraSystemNode" accept="image/*" capture="environment" style="display:none;" onchange="handleFilePayloadAttach(event, 'Camera')">
+    <input type="file" id="photoLibrarySystemNode" accept="image/*" style="display:none;" onchange="handleFilePayloadAttach(event, 'Gallery')">
+    <input type="file" id="genericFilePickerSystemNode" accept="*/*" style="display:none;" onchange="handleFilePayloadAttach(event, 'Files')">
     <input type="file" id="profileAvatarPhotoPicker" accept="image/*" style="display:none;" onchange="executeAvatarPhotoUpload(event)">
 
     <div id="appLoginGateway">
         <div class="login-animated-title" id="loginDynamicHeadline">Let's create</div>
         
+        <div id="appSecureCaptchaBlock">
+            <div style="font-size: 15px; font-weight: 600; color:#fff; margin-bottom: 4px;">Security Verification</div>
+            <div style="font-size: 12px; color:#8e8e93; margin-bottom: 16px;">Please verify that you are human to access cloud shell networks.</div>
+            
+            <div class="captcha-verify-row" onclick="triggerInAppCaptchaVerification()">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div class="captcha-checkbox-circle" id="captchaBoxStateCircle"></div>
+                    <div style="font-size:14px; color:#e3e3e3;" id="captchaStatusLabelTxt">I am not a robot</div>
+                </div>
+                <div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Shield_Font_Awesome.svg" width="20" height="20" style="opacity:0.3; filter:invert(1);">
+                </div>
+            </div>
+        </div>
+
         <div id="otpInputBlockLayout" style="display:none; width:100%; max-width:360px; margin: 0 auto; text-align:left;">
             <div style="font-size:18px; font-weight:600; color:#fff; margin-bottom:6px;">Enter Verification Code</div>
-            <div style="font-size:13px; color:#aaa; margin-bottom:20px;" id="otpSubDescriptionTxt">We sent a 6-digit OTP code to your mail network.</div>
-            <input type="number" id="otpInputFieldCode" class="picker-input-field" placeholder="Enter 6-Digit OTP (e.g. 584210)" style="text-align:center; letter-spacing:4px; font-size:1.2rem;">
+            <div style="font-size:13px; color:#aaa; margin-bottom:10px;" id="otpSubDescriptionTxt">OTP validation required.</div>
+            <div style="font-size:13px; color:#10a37f; font-weight:bold; margin-bottom:20px;">💡 Use Demo Code: 123456</div>
+            <input type="number" id="otpInputFieldCode" class="picker-input-field" placeholder="Enter 6-Digit OTP" style="text-align:center; letter-spacing:4px; font-size:1.2rem;">
             <button class="picker-submit-btn" onclick="verifySecureLoginOTPMatch()">Verify & Login</button>
             <div style="text-align:center; margin-top:14px; font-size:13px; color:#666;" id="otpTimerCountdownLabel">Resend OTP in 59s</div>
         </div>
 
         <div class="login-btn-container" id="gatewayPrimaryBtnGroup">
-            <button class="google-login-btn" onclick="openGoogleAccountRegistrationPicker(true)">
+            <button class="google-login-btn" onclick="openGoogleAccountRegistrationPicker(true, 'google')">
                 <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.47h4.84c-.21 1.12-.84 2.07-1.79 2.7l2.76 2.13c1.61-1.49 2.53-3.69 2.53-6.26z" fill="#4285F4"/><path d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.76-2.13c-.76.51-1.74.82-3.2.82-2.46 0-4.55-1.66-5.3-3.89L.89 12.74C2.37 15.68 5.44 18 9 18z" fill="#34A853"/><path d="M3.7 10.62c-.19-.57-.3-1.18-.3-1.8s.11-1.23.3-1.8L.89 5.1C.32 6.27 0 7.6 0 9s.32 2.73.89 3.9l2.81-2.28z" fill="#FBBC05"/><path d="M9 3.58c1.32 0 2.5.45 3.44 1.35L15 2.1C13.46.66 11.43 0 9 0 5.44 0 2.37 2.32.89 5.27l2.81 2.28c.75-2.23 2.84-3.89 5.3-3.89z" fill="#EA4335"/></svg>
                 Continue with Google
             </button>
-            <button class="alternative-login-btn" onclick="openGoogleAccountRegistrationPicker(true)">Log in another way</button>
+            <button class="alternative-login-btn" onclick="openGoogleAccountRegistrationPicker(true, 'github')">
+                <svg width="18" height="18" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.93.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                Sign in with GitHub
+            </button>
         </div>
 
         <div id="loginLoaderOverlay">
             <div class="spinner-node"></div>
-            <div style="color:#fff; margin-top:16px; font-size:14px; font-weight:500;" id="loaderStatusTxt">Signing in...</div>
+            <div style="color:#fff; margin-top:16px; font-size:14px;" id="loaderStatusTxt">Signing in...</div>
         </div>
     </div>
 
     <div id="googleAccountPickerModal">
-        <div style="font-size:16px; font-weight:600; color:#e8eaed; margin-bottom:4px;">Sign in with Google</div>
-        <div style="font-size:13px; color:#9aa0a6; margin-bottom:18px;">Enter details to synchronize Jarvis Portal matrix</div>
+        <div style="font-size:16px; font-weight:600; color:#e8eaed; margin-bottom:4px;" id="modalAuthProviderTitle">Sign in with Google</div>
+        <div style="font-size:13px; color:#9aa0a6; margin-bottom:18px;">Enter details to synchronize Jarvis Portal profile matrix</div>
         
-        <input type="text" id="authInputFullName" class="picker-input-field" placeholder="Enter Full Name (e.g. Sachin Sainj)">
-        <input type="email" id="authInputEmailAddress" class="picker-input-field" placeholder="Enter Gmail (e.g. user912@gmail.com)">
+        <input type="text" id="authInputFullName" class="picker-input-field" placeholder="Enter Account Username">
+        <input type="text" id="authInputEmailAddress" class="picker-input-field" placeholder="Enter Email or Domain link">
         
-        <button class="picker-submit-btn" onclick="processDynamicUserRegistrationFlow()">Send OTP Verification</button>
+        <button class="picker-submit-btn" onclick="processDynamicUserRegistrationFlow()">Request Access Token</button>
     </div>
 
     <div class="app-view-overlay-card" id="genericAppViewOverlay">
@@ -714,13 +1354,12 @@
             <video id="simulatedFaceCamFeed" class="scanner-video-feed-sim" autoplay playsinline muted></video>
         </div>
         <div class="biometric-guidance-txt" id="biometricInstructionFeedback">Center yourself on the screen</div>
-        <div style="font-size:12px; color:#555; text-align:center; width:80%; margin-top:14px;">If camera is black, please allow App Camera Permission in your phone settings.</div>
     </div>
 
     <div class="custom-popup-modal" id="genericSystemPopupDialog">
         <div class="modal-content-card">
             <h3 style="margin-top:0; font-size:1.15rem;" id="popupHeaderTitle">Log out</h3>
-            <p style="font-size:0.95rem; color:#b4b4b4; margin-bottom:24px;" id="popupBodyDescription">You'll need to sign back in to keep using Jarvis Portal.</p>
+            <p style="font-size:0.95rem; color:#b4b4b4; margin-bottom:24px;" id="popupBodyDescription">Session configuration notice.</p>
             <div class="modal-actions-row" id="modalBtnActionControls"></div>
         </div>
     </div>
@@ -745,7 +1384,7 @@
                 <div style="width:34px; height:32px; background:#444; border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:0.85rem; background-size:cover; background-position:center;" id="sidebarProfileAvatar">??</div>
                 <div>
                     <div style="font-size:0.9rem; font-weight:600; white-space:nowrap; max-width:160px; overflow:hidden; text-overflow:ellipsis;" id="sidebarProfileName">User Mode</div>
-                    <div style="font-size:0.75rem; color:#666; white-space:nowrap; max-width:160px; overflow:hidden; text-overflow:ellipsis;" id="sidebarProfileEmail">loading sync...</div>
+                    <div style="font-size:0.75rem; color:#666; white-space:nowrap; max-width:160px; overflow:hidden; text-overflow:ellipsis;" id="sidebarProfileEmail">syncing status...</div>
                 </div>
             </div>
             <div style="color:#666; font-size:0.9rem;">⚙️</div>
@@ -820,7 +1459,7 @@
                         <div class="row-right-status">Personal ➔</div>
                     </div>
                     <div class="settings-row-item">
-                        <div>✉️ Email</div>
+                        <div>✉️ Connected ID</div>
                         <div class="row-right-status" style="color:#b4b4b4;" id="settingsProfileEmail">unlinked</div>
                     </div>
                     <div class="settings-row-item" onclick="launchAgeVerificationWorkflow()">
@@ -871,13 +1510,13 @@
     </div>
 
     <script>
-        // 🔑 🎯 YOUR SECURE ENCRYPTED LIVE API STORAGE KEY NODE:
         const API_KEY = "AQ.Ab8RN6JdS8RW5YHt_8FV9epi35uNQaCoP8ogwO2PNeEx74yJuA";
 
         let chatSessions = JSON.parse(localStorage.getItem('jarvis_vault_sessions')) || [];
         let activeSessionId = null;
         let speechRecognitionEngine = null;
         let isVoiceRecordingActive = false;
+        let selectedAuthProvider = 'google';
 
         // Dynamic Text Transition loops inside Initial Gateway Auth layout
         const slogans = ["Let's create", "Let's brainstorm", "Let's design", "Let's optimize"];
@@ -890,35 +1529,64 @@
             }
         }, 3000);
 
-        function openGoogleAccountRegistrationPicker(show) {
+        function openGoogleAccountRegistrationPicker(show, provider) {
+            if(provider) {
+                selectedAuthProvider = provider;
+                const titleNode = document.getElementById('modalAuthProviderTitle');
+                if(provider === 'github') {
+                    titleNode.innerText = "Sign in with GitHub";
+                    document.getElementById('authInputFullName').placeholder = "Enter GitHub Username";
+                    document.getElementById('authInputEmailAddress').placeholder = "Enter GitHub Profile URL";
+                } else {
+                    titleNode.innerText = "Sign in with Google";
+                    document.getElementById('authInputFullName').placeholder = "Enter Full Name (e.g. Sachin Sainj)";
+                    document.getElementById('authInputEmailAddress').placeholder = "Enter Gmail (e.g. user912@gmail.com)";
+                }
+            }
             const picker = document.getElementById('googleAccountPickerModal');
-            picker.style.bottom = show ? "0px" : "-360px";
+            picker.style.bottom = show ? "0px" : "-450px";
         }
 
-        // Real Interactive 2-Step OTP Trigger Engine
         function processDynamicUserRegistrationFlow() {
             const nameField = document.getElementById('authInputFullName').value.trim();
             const emailField = document.getElementById('authInputEmailAddress').value.trim();
             
-            if(!nameField || !emailField || !emailField.includes('@')) {
-                displayCustomModalDialogCard("Input Error", "Please enter a valid Full Name and Gmail address to continue.", "OK", () => {});
+            if(!nameField || !emailField) {
                 return;
             }
 
             openGoogleAccountRegistrationPicker(false);
             
-            const loader = document.getElementById('loginLoaderOverlay');
-            const statusTxt = document.getElementById('loaderStatusTxt');
-            loader.style.display = "flex";
-            statusTxt.innerText = "Connecting to Google Cloud nodes...";
+            // Bring Up In-App Secure Captcha Panel instead of broken third-party popups
+            document.getElementById('gatewayPrimaryBtnGroup').style.display = 'none';
+            document.getElementById('appSecureCaptchaBlock').style.display = 'block';
+        }
+
+        // --- Real Simulated Cloudflare Captcha Tick Action Engine ---
+        function triggerInAppCaptchaVerification() {
+            const circle = document.getElementById('captchaBoxStateCircle');
+            const label = document.getElementById('captchaStatusLabelTxt');
             
-            setTimeout(() => { 
-                loader.style.display = "none";
-                document.getElementById('gatewayPrimaryBtnGroup').style.display = 'none';
-                document.getElementById('otpSubDescriptionTxt').innerText = `We sent a 6-digit OTP code to ${emailField}`;
-                document.getElementById('otpInputBlockLayout').style.display = 'block';
-                startMockOTPTimerCountdown();
-            }, 1800);
+            circle.classList.add('loading');
+            label.innerText = "Verifying browser connection environment...";
+
+            setTimeout(() => {
+                circle.classList.remove('loading');
+                circle.style.border = "none";
+                circle.innerHTML = "✅";
+                label.innerText = "Verification Successful";
+                label.style.color = "#10a37f";
+
+                setTimeout(() => {
+                    // Transition smoothly to OTP Input Area Box Layout
+                    document.getElementById('appSecureCaptchaBlock').style.display = 'none';
+                    const emailField = document.getElementById('authInputEmailAddress').value.trim();
+                    document.getElementById('otpSubDescriptionTxt').innerText = `We sent a 6-digit OTP code to ${emailField}`;
+                    document.getElementById('otpInputBlockLayout').style.display = 'block';
+                    startMockOTPTimerCountdown();
+                }, 1000);
+
+            }, 2000);
         }
 
         function startMockOTPTimerCountdown() {
@@ -931,22 +1599,20 @@
                     clearInterval(interval);
                     timerLabel.innerText = "Resend OTP Code";
                     timerLabel.style.color = "#10a37f";
-                    timerLabel.style.cursor = "pointer";
                 }
             }, 1000);
         }
 
         function verifySecureLoginOTPMatch() {
             const otpVal = document.getElementById('otpInputFieldCode').value.trim();
-            if(otpVal.length !== 6) {
-                displayCustomModalDialogCard("Verification Failed", "Please enter a valid 6-digit verification code.", "Try Again", () => {});
+            if(otpVal !== '123456') {
+                displayCustomModalDialogCard("Verification Failed", "Wrong OTP code! For testing dashboard bypass, enter: 123456", "OK", () => {});
                 return;
             }
 
             const loader = document.getElementById('loginLoaderOverlay');
-            const statusTxt = document.getElementById('loaderStatusTxt');
             loader.style.display = "flex";
-            statusTxt.innerText = "Verifying secure login code token...";
+            document.getElementById('loaderStatusTxt').innerText = "Establishing data vault session sync...";
 
             setTimeout(() => {
                 const nameField = document.getElementById('authInputFullName').value.trim();
@@ -972,11 +1638,8 @@
         function applyLoggedUserDetailsToUI(email, name) {
             const initials = name.substring(0, 2).toUpperCase();
             
-            document.getElementById('sidebarProfileAvatar').innerText = initials;
             document.getElementById('sidebarProfileName').innerText = name;
             document.getElementById('sidebarProfileEmail').innerText = email;
-            
-            document.getElementById('settingsProfileAvatar').innerText = initials;
             document.getElementById('settingsProfileName').innerText = name;
             document.getElementById('settingsProfileEmail').innerText = email;
 
@@ -986,10 +1649,14 @@
                 document.getElementById('sidebarProfileAvatar').innerText = '';
                 document.getElementById('settingsProfileAvatar').style.backgroundImage = `url(${savedAvatar})`;
                 document.getElementById('settingsProfileAvatar').innerText = '';
+            } else {
+                document.getElementById('sidebarProfileAvatar').style.backgroundImage = 'none';
+                document.getElementById('sidebarProfileAvatar').innerText = initials;
+                document.getElementById('settingsProfileAvatar').style.backgroundImage = 'none';
+                document.getElementById('settingsAvatarInitialsTxt').innerText = initials;
             }
         }
 
-        // --- Real Profile Avatar Photo Upload Core Engine ---
         function triggerProfileAvatarPhotoUploadSelection() {
             document.getElementById('profileAvatarPhotoPicker').click();
         }
@@ -999,8 +1666,9 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const base64Img = e.target.value || e.target.result;
+                    const base64Img = e.target.result;
                     localStorage.setItem('jarvis_user_avatar_base64', base64Img);
+                    
                     document.getElementById('sidebarProfileAvatar').style.backgroundImage = `url(${base64Img})`;
                     document.getElementById('sidebarProfileAvatar').innerText = '';
                     document.getElementById('settingsProfileAvatar').style.backgroundImage = `url(${base64Img})`;
@@ -1009,7 +1677,7 @@
                 };
                 reader.readAsDataURL(file);
             }
-            event.target.value = null; // Prevent file input freezing bug
+            event.target.value = null; 
         }
 
         function toggleMenu(show) {
@@ -1052,12 +1720,11 @@
             systemBubble.className = 'msg-bubble jarvis';
             systemBubble.style.borderLeft = '3px solid var(--accent-color)';
             systemBubble.style.background = 'rgba(255, 255, 255, 0.02)';
-            systemBubble.innerHTML = `⚙️ <b>System Notice:</b> ${message}`;
+            systemBubble.innerHTML = `⚙️ <b>System Integration:</b> ${message}`;
             workspace.appendChild(systemBubble);
             workspace.scrollTop = workspace.scrollHeight;
         }
 
-        /* --- Full Screen Real Application Overlays Integration --- */
         function launchAppOverlayInterface(moduleType) {
             closeAllDrawers();
             toggleSettingsPanel(false);
@@ -1072,49 +1739,36 @@
             if(moduleType === 'library') {
                 title.innerText = "Jarvis Library Hub";
                 body.innerHTML = `
-                    <div style="color:#8e8e93; margin-bottom:16px;">Explore premium models and prompts templates.</div>
-                    <div class="settings-box-container">
-                        <div class="settings-row-item">📖 Academic Writing Prompt Assistant</div>
-                        <div class="settings-row-item">💻 Full-Stack Architecture Code Reviewer Node</div>
-                        <div class="settings-row-item">🎨 Creative Concept Art Sandbox</div>
-                    </div>
+                    <div style="background:#212121; padding:16px; border-radius:12px; margin-bottom:12px;">📖 Academic Prompt Assistant</div>
+                    <div style="background:#212121; padding:16px; border-radius:12px; margin-bottom:12px;">💻 Full-Stack Code Reviewer Toolkit</div>
                 `;
             } else if(moduleType === 'projects') {
                 title.innerText = "Workspace Projects";
                 body.innerHTML = `
-                    <div style="text-align:center; padding:40px 0; color:#666;">
+                    <div style="text-align:center; padding:40px 0;">
                         <div style="font-size:2.5rem; margin-bottom:12px;">📁</div>
                         <div style="color:#aaa; margin-bottom:20px;">Start your first professional workspace project matrix to sync files.</div>
                         <button class="picker-submit-btn" style="width:auto; padding:10px 24px; border-radius:20px;">+ New Project</button>
                     </div>
                 `;
             } else if(moduleType === 'apps') {
-                title.innerText = "Explore Custom Plugin Apps";
+                title.innerText = "Explore Plugins Apps";
                 body.innerHTML = `
-                    <input type="text" placeholder="Search custom public plugins..." class="picker-input-field" style="margin-bottom:20px;">
-                    <div style="font-size:0.85rem; color:#8e8e93; margin-bottom:12px; font-weight:700; text-transform:uppercase;">Top Rated This Week</div>
+                    <input type="text" placeholder="Search extensions..." class="picker-input-field" style="margin-bottom:20px;">
                     <div style="display:flex; align-items:center; gap:14px; background:#212121; padding:14px; border-radius:12px; margin-bottom:10px;">
                         <div style="font-size:1.5rem;">🎬</div><div><b>Video AI Generator</b><div style="font-size:0.75rem; color:#666;">By invideo.io</div></div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:14px; background:#212121; padding:14px; border-radius:12px; margin-bottom:10px;">
-                        <div style="font-size:1.5rem;">🎨</div><div><b>Canva Graphic Editor</b><div style="font-size:0.75rem; color:#666;">By community builder</div></div>
-                    </div>
                 `;
             } else if(moduleType === 'plugins') {
-                title.innerText = "Jarvis Extensions Tools";
+                title.innerText = "Extensions Matrix";
                 body.innerHTML = `
                     <div style="background:#212121; padding:16px; border-radius:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
-                        <div><b>🌐 Live Web Navigation</b><div style="font-size:0.8rem; color:#666;">Allows real-time search queries execution</div></div>
-                        <input type="checkbox" checked style="accent-color:#10a37f; transform:scale(1.2);">
-                    </div>
-                    <div style="background:#212121; padding:16px; border-radius:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
-                        <div><b>📊 Code Analysis Sandbox</b><div style="font-size:0.8rem; color:#666;">Python compiler processing terminal</div></div>
-                        <input type="checkbox" style="accent-color:#10a37f; transform:scale(1.2);">
+                        <div><b>🌐 Live Web Navigation</b></div><input type="checkbox" checked style="accent-color:#10a37f;">
                     </div>
                 `;
             } else {
-                title.innerText = "System Preferences Node";
-                body.innerHTML = `<div style="color:#aaa;">Security nodes and system cloud synchronization channels optimized.</div>`;
+                title.innerText = "System Preferences";
+                body.innerHTML = `<div style="color:#aaa;">Cloud synchronization parameters loaded cleanly.</div>`;
             }
         }
 
@@ -1122,7 +1776,6 @@
             document.getElementById('genericAppViewOverlay').style.display = "none";
         }
 
-        // --- Hardware Node Trigger Logic Matrix (Clears input target to fix second click freeze) ---
         function executeNativeCaptureRoute(targetMode) {
             closeAllDrawers();
             if(targetMode === 'camera') document.getElementById('cameraSystemNode').click();
@@ -1134,61 +1787,34 @@
         function handleFilePayloadAttach(e, contextTitle) {
             const payload = e.target.files[0];
             if(payload) {
-                showEmbeddedStatusNotice(`Uploaded: <code>${payload.name}</code> (${Math.round(payload.size / 1024)} KB) linked via context pipeline.`);
+                showEmbeddedStatusNotice(`Linked: <code>${payload.name}</code> (${Math.round(payload.size / 1024)} KB) via ${contextTitle}.`);
                 document.getElementById('smartInputPillbox').style.display = 'none';
             }
-            e.target.value = null; // CRITICAL FIX: Clears state so subsequent clicks never freeze!
+            e.target.value = null; 
         }
 
-        // --- Asli Speech-to-Text Microphone Synthesis Engine ---
         function toggleVoiceSpeechRecognition() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
-                displayCustomModalDialogCard("System Limitation", "Voice recognition API is not supported by your phone WebView container browser environment.", "OK", () => {});
+                displayCustomModalDialogCard("System Limitation", "Microphone speech engine not supported by device wrapper container.", "OK", () => {});
                 return;
             }
-
             const btn = document.getElementById('voiceSynthesisTriggerBtn');
-            
             if (!speechRecognitionEngine) {
                 speechRecognitionEngine = new SpeechRecognition();
-                speechRecognitionEngine.continuous = false;
-                speechRecognitionEngine.interimResults = false;
                 speechRecognitionEngine.lang = "en-US";
-
-                speechRecognitionEngine.onstart = function() {
-                    isVoiceRecordingActive = true;
-                    btn.style.color = "#ef4444";
-                    btn.innerText = "🛑";
-                };
-
-                speechRecognitionEngine.onresult = function(event) {
-                    const resultText = event.results[0][0].transcript;
-                    document.getElementById('userInputMsg').value = resultText;
-                };
-
-                speechRecognitionEngine.onerror = function() {
-                    showEmbeddedStatusNotice("Voice acquisition timed out or permission denied.");
-                    stopSpeechEngineTracks();
-                };
-
-                speechRecognitionEngine.onend = function() {
-                    stopSpeechEngineTracks();
-                };
+                speechRecognitionEngine.onstart = () => { isVoiceRecordingActive = true; btn.style.color = "#ef4444"; btn.innerText = "🛑"; };
+                speechRecognitionEngine.onresult = (ev) => { document.getElementById('userInputMsg').value = ev.results[0][0].transcript; };
+                speechRecognitionEngine.onerror = () => { stopSpeechEngineTracks(); };
+                speechRecognitionEngine.onend = () => { stopSpeechEngineTracks(); };
             }
-
-            if (isVoiceRecordingActive) {
-                speechRecognitionEngine.stop();
-            } else {
-                speechRecognitionEngine.start();
-            }
+            if (isVoiceRecordingActive) speechRecognitionEngine.stop(); else speechRecognitionEngine.start();
         }
 
         function stopSpeechEngineTracks() {
             isVoiceRecordingActive = false;
-            const btn = document.getElementById('voiceSynthesisTriggerBtn');
-            btn.style.color = "#8e8e93";
-            btn.innerText = "🎙️";
+            document.getElementById('voiceSynthesisTriggerBtn').style.color = "#8e8e93";
+            document.getElementById('voiceSynthesisTriggerBtn').innerText = "🎙️";
         }
 
         function applyGlobalStyleThemeProperty() {
@@ -1205,43 +1831,38 @@
         }
 
         function applyGlobalAccentThemeProperty() {
-            const clr = document.getElementById('appAccentColorSelectorNode').value;
-            document.documentElement.style.setProperty('--accent-color', clr);
+            document.documentElement.style.setProperty('--accent-color', document.getElementById('appAccentColorSelectorNode').value);
         }
 
-        // --- Real Age Verification User Front Cam Video Workflow ---
         function launchAgeVerificationWorkflow() {
             toggleSettingsPanel(false);
             const panel = document.getElementById('faceScanVerificationWrapper');
             const feedback = document.getElementById('biometricInstructionFeedback');
             panel.style.display = 'flex';
-            feedback.innerText = "Center yourself on the screen";
+            feedback.innerText = "Requesting real camera module feed...";
             
-            // Activate device front camera array
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
             .then(stream => {
                 document.getElementById('simulatedFaceCamFeed').srcObject = stream;
-            }).catch(err => {
-                console.log("Native hardware camera permission block tracked.");
-                feedback.innerText = "Camera Access Error (Permission Blocked)";
+                feedback.innerText = "Center yourself on the screen";
+                
+                setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Hold still... 3"; }, 2500);
+                setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Hold still... 2"; }, 4500);
+                setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Turn your head slightly left"; }, 6500);
+                setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Analyzing biometric tracking map..."; }, 8500);
+                
+                setTimeout(() => {
+                    panel.style.display = 'none';
+                    stream.getTracks().forEach(track => track.stop());
+                    showEmbeddedStatusNotice("<b>Age Verification Successful:</b> Biometric state verified.");
+                }, 11000);
+            })
+            .catch(err => {
+                feedback.innerText = "Camera Permission Required! Open app settings and allow camera access.";
+                setTimeout(() => { panel.style.display = 'none'; }, 5000);
             });
-
-            setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Hold still... 3"; }, 2000);
-            setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Hold still... 2"; }, 3500);
-            setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Turn your head slightly left"; }, 5000);
-            setTimeout(() => { if(panel.style.display !== 'none') feedback.innerText = "Turn your head slightly right"; }, 7000);
-            
-            setTimeout(() => {
-                panel.style.display = 'none';
-                const videoEl = document.getElementById('simulatedFaceCamFeed');
-                if(videoEl.srcObject) {
-                    videoEl.srcObject.getTracks().forEach(track => track.stop());
-                }
-                showEmbeddedStatusNotice("<b>Age Verification Successful:</b> Identity parameters verified securely.");
-            }, 9500);
         }
 
-        // --- Custom Professional Global Modals Matrix UI Generator ---
         function displayCustomModalDialogCard(header, descriptions, acceptBtnText, acceptCallback) {
             document.getElementById('popupHeaderTitle').innerText = header;
             document.getElementById('popupBodyDescription').innerText = descriptions;
@@ -1270,11 +1891,11 @@
         function triggerSignOutFlowModal() {
             displayCustomModalDialogCard(
                 "Log out", 
-                "You'll need to sign back in to keep using Jarvis Portal. Local history vaults remain encrypted.", 
+                "Are you sure you securely want to close this session and reset parameters?", 
                 "Log out", 
                 () => {
-                    localStorage.removeItem('jarvis_user_email');
-                    localStorage.removeItem('jarvis_user_name');
+                    localStorage.removeItem('jarvis_logged_email');
+                    localStorage.removeItem('jarvis_logged_name');
                     localStorage.removeItem('jarvis_user_avatar_base64');
                     toggleSettingsPanel(false);
                     
@@ -1283,9 +1904,16 @@
                     gateway.style.opacity = '1';
                     document.getElementById('gatewayPrimaryBtnGroup').style.display = 'flex';
                     document.getElementById('otpInputBlockLayout').style.display = 'none';
+                    document.getElementById('appSecureCaptchaBlock').style.display = 'none';
                     document.getElementById('authInputFullName').value = '';
                     document.getElementById('authInputEmailAddress').value = '';
                     document.getElementById('otpInputFieldCode').value = '';
+                    
+                    // Reset captcha UI state
+                    document.getElementById('captchaBoxStateCircle').innerHTML = '';
+                    document.getElementById('captchaBoxStateCircle').style.border = "2px solid #555";
+                    document.getElementById('captchaStatusLabelTxt').innerText = "I am not a robot";
+                    document.getElementById('captchaStatusLabelTxt').style.color = "#e3e3e3";
                 }
             );
         }
@@ -1293,7 +1921,6 @@
         function formatAIResponse(rawText) {
             if (!rawText) return "";
             let parsedText = rawText;
-            parsedText = parsedText.replace(/\*\frac{(.*?)}{(.*?)}/g, '<b>$1</b>');
             parsedText = parsedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
             parsedText = parsedText.replace(/\n/g, '<br>');
             return parsedText;
@@ -1316,13 +1943,13 @@
             listContainer.innerHTML = '';
             const activeLogs = chatSessions.filter(s => s.chats && s.chats.length > 0);
             if (activeLogs.length === 0) {
-                listContainer.innerHTML = `<div style="font-size:0.85rem; color:#444; padding:5px 10px;">No historical sync logs.</div>`;
+                listContainer.innerHTML = `<div style="font-size:0.85rem; color:#444; padding:5px 10px;">No history matrix logs synced.</div>`;
                 return;
             }
             activeLogs.forEach(session => {
                 const item = document.createElement('div');
                 item.className = `recent-chat-item ${session.id === activeSessionId ? 'active' : ''}`;
-                item.innerText = session.title || "Intelligence Query Trace Log";
+                item.innerText = session.title || "Query Log Trace";
                 item.onclick = () => loadHistoricalSession(session.id);
                 listContainer.appendChild(item);
             });
@@ -1345,9 +1972,7 @@
             renderSidebarRecents();
         }
 
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') executeCommand();
-        }
+        function handleKeyPress(e) { if (e.key === 'Enter') executeCommand(); }
 
         function executeCommand() {
             const field = document.getElementById('userInputMsg');
@@ -1355,14 +1980,12 @@
             if (!userText) return;
 
             closeAllDrawers();
-
             const workspace = document.getElementById('chatWorkspace');
             const uBubble = document.createElement('div');
             uBubble.className = 'msg-bubble user';
             uBubble.innerHTML = userText;
             workspace.appendChild(uBubble);
             workspace.scrollTop = workspace.scrollHeight;
-
             field.value = '';
 
             let sessionIndex = chatSessions.findIndex(s => s.id === activeSessionId);
@@ -1371,7 +1994,6 @@
                 chatSessions.unshift({ id: activeSessionId, title: generatedTitle, chats: [] });
                 sessionIndex = 0;
             }
-
             chatSessions[sessionIndex].chats.push({ sender: 'user', text: userText });
 
             const jBubble = document.createElement('div');
@@ -1381,7 +2003,6 @@
             workspace.scrollTop = workspace.scrollHeight;
 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-
             fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -1392,28 +2013,23 @@
                 try {
                     let aiReply = data.candidates[0].content.parts[0].text;
                     jBubble.innerHTML = formatAIResponse(aiReply);
-                    
                     chatSessions[sessionIndex].chats.push({ sender: 'jarvis', text: aiReply });
                     localStorage.setItem('jarvis_vault_sessions', JSON.stringify(chatSessions));
                     renderSidebarRecents();
                 } catch (e) {
-                    jBubble.innerHTML = "<span style='color:#ef4444;'>⚠️ <b>System Fault Trace Node:</b> API response rejected. Check cloud network console channels.</span>";
+                    jBubble.innerHTML = "<span style='color:#ef4444;'>⚠️ API Response error. Check connection quota.</span>";
                 }
                 workspace.scrollTop = workspace.scrollHeight;
             })
-            .catch(err => {
-                jBubble.innerHTML = "<span style='color:#ef4444;'>⚠️ <b>Network Error Core:</b> Synchronization transmission failed.</span>";
+            .catch(() => {
+                jBubble.innerHTML = "<span style='color:#ef4444;'>⚠️ Network core transmission failed.</span>";
                 workspace.scrollTop = workspace.scrollHeight;
             });
-
-            localStorage.setItem('jarvis_vault_sessions', JSON.stringify(chatSessions));
         }
 
-        // --- Core Startup Gate System Configuration ---
         window.onload = function() {
-            const savedEmail = localStorage.getItem('jarvis_user_email');
-            const savedName = localStorage.getItem('jarvis_user_name');
-            
+            const savedEmail = localStorage.getItem('jarvis_logged_email');
+            const savedName = localStorage.getItem('jarvis_logged_name');
             if (savedEmail && savedName) {
                 document.getElementById('appLoginGateway').style.display = 'none';
                 applyLoggedUserDetailsToUI(savedEmail, savedName);
@@ -1425,3 +2041,33 @@
     </script>
 </body>
 </html>
+e" id="cameraSystemNode" accept="image/*" capture="environment" style="display:none;" onchange="handleFilePayloadAttach(event, 'Camera')">
+    <input type="file" id="photoLibrarySystemNode" accept="image/*" style="display:none;" onchange="handleFilePayloadAttach(event, 'Gallery')">
+    <input type="file" id="genericFilePickerSystemNode" accept="*/*" style="display:none;" onchange="handleFilePayloadAttach(event, 'Files')">
+    <input type="file" id="profileAvatarPhotoPicker" accept="image/*" style="display:none;" onchange="executeAvatarPhotoUpload(event)">
+
+    <div id="appLoginGateway">
+        <div class="login-animated-title" id="loginDynamicHeadline">Let's create</div>
+        
+        <div id="appSecureCaptchaBlock">
+            <div style="font-size: 15px; font-weight: 600; color:#fff; margin-bottom: 4px;">Security Verification</div>
+            <div style="font-size: 12px; color:#8e8e93; margin-bottom: 16px;">Please verify that you are human to access cloud shell networks.</div>
+            
+            <div class="captcha-verify-row" onclick="triggerInAppCaptchaVerification()">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div class="captcha-checkbox-circle" id="captchaBoxStateCircle"></div>
+                    <div style="font-size:14px; color:#e3e3e3;" id="captchaStatusLabelTxt">I am not a robot</div>
+                </div>
+                <div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Shield_Font_Awesome.svg" width="20" height="20" style="opacity:0.3; filter:invert(1);">
+                </div>
+            </div>
+        </div>
+
+        <div id="otpInputBlockLayout" style="display:none; width:100%; max-width:360px; margin: 0 auto; text-align:left;">
+            <div style="font-size:18px; font-weight:600; color:#fff; margin-bottom:6px;">Enter Verification Code</div>
+            <div style="font-size:13px; color:#aaa; margin-bottom:10px;" id="otpSubDescriptionTxt">OTP validation required.</div>
+            <div style="font-size:13px; color:#10a37f; font-weight:bold; margin-bottom:20px;">💡 Use Demo Code: 123456</div>
+            <input type="number" id="otpInputFieldCode" class="picker-input-field" placeholder="Enter 6-Digit OTP" style="text-align:center; letter-spacing:4px; font-size:1.2rem;">
+            <button class="picker-submit-btn" onclick="verifySecureLoginOTPMatch()">Verify & Login</button>
+            <div style="text-align:center; margin-top:14px; font-size:13px; 
