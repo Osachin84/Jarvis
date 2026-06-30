@@ -1,476 +1,456 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S-Jarvis Intelligence</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jarvis AI Portal</title>
+    
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        
-        body { background-color: #0b0b0e; color: #ececf1; display: flex; height: 100vh; overflow: hidden; position: relative; }
-
-        /* 🔐 ULTRA-PREMIUM GLASSMORPHISM LOGIN INTERFACE */
-        .login-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: linear-gradient(135deg, #09090b 0%, #121217 100%);
-            z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px;
-        }
-        .login-brand { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 32px; }
-        .brand-icon { 
-            width: 54px; height: 54px; background: linear-gradient(135deg, #10a37f 0%, #0d8567 100%); 
-            color: white; border-radius: 16px; display: flex; align-items: center; justify-content: center; 
-            font-size: 1.8rem; font-weight: bold; box-shadow: 0 0 20px rgba(16,163,127,0.4);
-        }
-        .brand-name { font-size: 1.6rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; }
-        
-        .login-card { 
-            width: 100%; max-width: 380px; background: rgba(22, 22, 27, 0.8); 
-            border: 1px solid rgba(255, 255, 255, 0.08); padding: 32px 24px; border-radius: 24px; 
-            backdrop-filter: blur(16px); box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-        }
-        .card-title { font-size: 1.4rem; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
-        .card-subtitle { font-size: 0.88rem; color: #9ca3af; margin-bottom: 24px; line-height: 1.4; }
-        
-        .form-group { margin-bottom: 18px; position: relative; }
-        .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: #9ca3af; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        .login-input { 
-            width: 100%; padding: 14px 16px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; 
-            font-size: 0.95rem; outline: none; background-color: rgba(10,10,12,0.6); color: #fff; transition: all 0.2s ease; 
-        }
-        .login-input:focus { border-color: #10a37f; box-shadow: 0 0 0 3px rgba(16,163,127,0.2); }
-        
-        .login-btn { 
-            width: 100%; padding: 14px; background: linear-gradient(135deg, #10a37f 0%, #0d8567 100%); 
-            color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; 
-            transition: 0.2s; margin-top: 12px; box-shadow: 0 4px 12px rgba(16,163,127,0.2);
-        }
-        .login-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(16,163,127,0.3); }
-        .login-btn:disabled { background: #3f3f46; color: #a1a1aa; cursor: not-allowed; box-shadow: none; }
-        
-        .timer-text { font-size: 0.85rem; color: #10a37f; text-align: center; margin-top: 14px; font-weight: 500; }
-        .login-footer { font-size: 0.75rem; color: #6b7280; text-align: center; margin-top: 32px; line-height: 1.4; }
-
-        /* Step Panels logic */
-        .step-panel { display: none; }
-        .step-panel.active { display: block; animation: fadeIn 0.4s ease; }
-
-        /* 📱 PREMIUM APP INTERFACE STYLES */
-        .sidebar { 
-            position: fixed; top: 0; left: 0; width: 280px; height: 100%; background-color: #09090b; 
-            color: #ececf1; z-index: 1000; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; flex-direction: column; padding: 20px; border-right: 1px solid rgba(255,255,255,0.05);
-        }
-        .sidebar.open { transform: translateX(0); }
-        .sidebar-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 999; display: none; }
-        
-        .new-chat-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px; border-radius: 14px; text-align: center; font-size: 0.95rem; cursor: pointer; font-weight: 600; margin-bottom: 24px; transition: 0.2s; }
-        .new-chat-btn:hover { background: rgba(255,255,255,0.08); }
-        
-        .history-title { font-size: 0.75rem; color: #6b7280; margin-bottom: 12px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; }
-        .history-item { padding: 12px; border-radius: 10px; font-size: 0.9rem; color: #c5c5d2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: rgba(255,255,255,0.01); }
-        
-        .sidebar-footer { padding: 15px 0 5px 0; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; margin-top: auto; }
-        .privacy-link { color: #9ca3af; font-size: 0.85rem; text-decoration: none; cursor: pointer; display: block; transition: 0.2s; }
-        .privacy-link:hover { color: #ffffff; }
-
-        /* Main Workspace layout */
-        .main-content { flex: 1; display: flex; flex-direction: column; height: 100%; background-color: #121214; }
-        
-        .header { 
-            background-color: rgba(18, 18, 20, 0.8); backdrop-filter: blur(10px); padding: 14px 16px; 
-            display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.04); z-index: 900;
-        }
-        .header-btn { background: transparent; border: none; color: #ffffff; font-size: 1.4rem; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: 0.2s; }
-        .header-btn:hover { background: rgba(255,255,255,0.05); }
-        .get-plus-pill { background: linear-gradient(135deg, #2e1065 0%, #4c1d95 100%); color: #e9d5ff; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.1); }
-
-        /* 💬 STREAMING CHAT BUBBLES UI */
-        .chat-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; padding: 20px; gap: 16px; }
-        
-        .message-wrapper { display: flex; width: 100%; margin-bottom: 4px; }
-        .user-wrapper { justify-content: flex-end; }
-        .ai-wrapper { justify-content: flex-start; }
-        
-        .bubble { 
-            max-width: 75%; padding: 12px 16px; font-size: 0.98rem; line-height: 1.5; 
-            word-wrap: break-word; white-space: pre-wrap; cubic-bezier(0.4, 0, 0.2, 1); animation: bubbleFade 0.3s ease;
-        }
-        .user-bubble { 
-            background-color: #10a37f; color: #ffffff; 
-            border-radius: 18px 18px 4px 18px; box-shadow: 0 4px 12px rgba(16,163,127,0.15);
-        }
-        .ai-bubble { 
-            background-color: #1e1e24; color: #e3e3e6; border: 1px solid rgba(255,255,255,0.03);
-            border-radius: 18px 18px 18px 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .chat-img { max-width: 100%; max-height: 240px; border-radius: 14px; margin-top: 4px; }
-
-        /* Dashboard Suggestions Chips */
-        .suggestions-box { margin: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 500px; }
-        .suggestion-item { 
-            display: flex; align-items: center; gap: 12px; color: #c5c5d2; font-size: 0.9rem; 
-            cursor: pointer; padding: 14px; background: #1e1e24; border: 1px solid rgba(255,255,255,0.04); border-radius: 14px; transition: 0.2s;
-        }
-        .suggestion-item:hover { background: #272730; transform: translateY(-1px); }
-
-        /* 📊 ADSTERRA PREMIUM BANNER CONTAINER */
-        .adsterra-holder {
-            width: 100%; display: flex; justify-content: center; align-items: center;
-            background-color: #121214; padding: 6px 0; border-top: 1px solid rgba(255,255,255,0.02);
+        /* --- Premium Cyberpunk & Glassmorphic Layout --- */
+        body {
+            margin: 0;
+            padding: 10px;
+            background: linear-gradient(135deg, #0b151a, #132229, #1a303a);
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
-        /* INPUT AREA SLEEK CONTAINER */
-        .input-outer { padding: 16px; background-color: #121214; display: flex; justify-content: center; width: 100%; }
-        .input-container { 
-            width: 100%; max-width: 600px; background-color: #1e1e24; border: 1px solid rgba(255,255,255,0.06); 
-            border-radius: 24px; display: flex; align-items: center; padding: 4px 6px 4px 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); 
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 20px);
         }
-        input { flex: 1; padding: 12px 0; border: none; background: transparent; color: #ffffff; outline: none; font-size: 0.98rem; }
-        input::placeholder { color: #6b7280; }
-        
-        .pill-btn { background: transparent; border: none; color: #9ca3af; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border-radius: 50%; transition: 0.2s; }
-        .pill-btn:hover { background: rgba(255,255,255,0.05); color: white; }
-        .send-btn { background-color: #10a37f; color: white !important; font-size: 1rem; margin-left: 6px; box-shadow: 0 2px 8px rgba(16,163,127,0.3); }
-        .send-btn:hover { background-color: #0d8567; }
 
-        /* LIVE CAMERA & PRIVACY MODAL */
-        .camera-modal, .privacy-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 4000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .video-box, .privacy-box { width: 100%; max-width: 450px; border-radius: 24px; overflow: hidden; background: #1e1e24; border: 1px solid rgba(255,255,255,0.08); padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        video { width: 100%; display: block; border-radius: 16px; }
-        .cam-controls { display: flex; gap: 16px; margin-top: 20px; width: 100%; }
-        .cam-btn { padding: 12px 24px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; font-size: 0.95rem; flex: 1; text-align: center; }
-        .capture-btn { background-color: #10a37f; color: white; }
-        .cancel-btn { background-color: #3f3f46; color: white; }
-        .privacy-box h2 { color: #10a37f; margin-bottom: 12px; font-size: 1.4rem; }
-        .privacy-box p { color: #a1a1aa; font-size: 0.9rem; line-height: 1.5; }
-        .privacy-close-btn { background-color: #10a37f; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        /* Top Bar Interface */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 10px;
+        }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes bubbleFade { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .brand-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #00ffcc;
+            text-shadow: 0 0 8px rgba(0, 255, 204, 0.4);
+            letter-spacing: 0.5px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+
+        /* Sliding Gemini-Style Sidebar Drawer */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 260px;
+            height: 100%;
+            background: #0d1b2a;
+            border-right: 1px solid rgba(0, 255, 204, 0.2);
+            box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+            transition: 0.3s ease;
+            z-index: 99999;
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #00ffcc;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .new-chat-sidebar-btn {
+            background: rgba(0, 255, 204, 0.15);
+            border: 1px dashed #00ffcc;
+            color: #00ffcc;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .recents-section-title {
+            font-size: 0.8rem;
+            color: #8899a6;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .recents-container {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .recent-chat-item {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            font-size: 0.88rem;
+            color: #e2e8f0;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border: 1px solid transparent;
+        }
+        .recent-chat-item:hover, .recent-chat-item.active {
+            background: rgba(0, 255, 204, 0.08);
+            border-color: rgba(0, 255, 204, 0.3);
+            color: #00ffcc;
+        }
+
+        .static-menu-list {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 6px;
+            cursor: pointer;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            z-index: 99998;
+        }
+
+        /* Chat Workspace View */
+        .chat-box-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 5px;
+            margin-bottom: 10px;
+        }
+
+        .msg-bubble {
+            max-width: 85%;
+            margin-bottom: 12px;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 0.98rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .msg-bubble.user {
+            background: #004d40;
+            color: #fff;
+            margin-left: auto;
+            border-bottom-right-radius: 2px;
+        }
+
+        .msg-bubble.jarvis {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            margin-right: auto;
+            border-bottom-left-radius: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Suggestion Grid Layer */
+        .suggestion-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 5px;
+        }
+
+        .suggest-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .suggest-card .title-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .suggest-card .sub-text {
+            font-size: 0.72rem;
+            color: #8899a6;
+        }
+
+        /* Input Controls */
+        .input-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 8px 12px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            margin-bottom: 5px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 0.98rem;
+            outline: none;
+        }
+
+        .send-action-btn {
+            background: #00ffcc;
+            border: none;
+            color: #000;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Secure Isolated Container for Banner Ads to prevent overlay blocking */
+        .ad-safe-zone {
+            width: 100%;
+            text-align: center;
+            margin: 5px 0;
+            position: relative;
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
 
-    <div class="login-screen" id="loginScreen">
-        <div class="login-brand">
-            <div class="brand-icon">S</div>
-            <div class="brand-name">S-Jarvis Portal</div>
-        </div>
-        
-        <div class="login-card">
-            <div id="panelStep1" class="step-panel active">
-                <div class="card-title">Verify your email</div>
-                <div class="card-subtitle">Enter your personal email address to receive a secure login OTP code.</div>
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" id="userEmail" class="login-input" placeholder="name@example.com">
-                </div>
-                <button class="login-btn" id="sendOtpBtn" onclick="sendSecureOTP()">Send Verification Code</button>
-            </div>
+    <div class="sidebar-overlay" id="overlay" onclick="toggleMenu(false)"></div>
 
-            <div id="panelStep2" class="step-panel">
-                <div class="card-title">Enter Security Code</div>
-                <div class="card-subtitle" id="otpSubText">We sent a 6-digit verification code to your email.</div>
-                <div class="form-group">
-                    <label class="form-label">Secure OTP Code</label>
-                    <input type="text" id="otpInput" class="login-input" maxlength="6" style="letter-spacing: 6px; text-align: center; font-size: 1.3rem; font-weight: bold;" placeholder="000000">
-                </div>
-                <button class="login-btn" onclick="verifySecureOTP()">Verify & Continue</button>
-                <div class="timer-text" id="timerDisplay">Code expires in: 02:00</div>
-            </div>
-        </div>
-        
-        <p class="login-footer">Secured with client-side sandbox cryptographic shielding.<br>Google Play Console Distribution Approved Layout.</p>
-    </div>
-
-    <div class="sidebar-backdrop" id="backdrop" onclick="toggleSidebar()"></div>
-
-    <div class="sidebar" id="sidebar">
-        <button class="new-chat-btn" onclick="clearCurrentChat()">＋ New Chat</button>
-        <div class="history-title">Verified Profile</div>
-        <div class="history-box" id="historyBox">
-            <div class="history-item" id="userBadge" style="font-weight:bold; color:#10a37f;">👤 Loading account...</div>
-        </div>
-        <div class="sidebar-footer">
-            <span class="privacy-link" onclick="openPrivacyModal()">🔒 App Privacy Policy</span>
+    <div class="sidebar" id="sidebarMenu">
+        <div class="sidebar-header">🤖 Jarvis Intelligence</div>
+        <div class="new-chat-sidebar-btn" onclick="startBrandNewSession()">+ New Chat</div>
+        <div class="recents-section-title">Recent Chats</div>
+        <div class="recents-container" id="recentsLogContainer"></div>
+        <div class="static-menu-list">
+            <div class="menu-item" onclick="alert('Profile secure.')">👤 User Account Profile</div>
+            <a href="https://osachin84.github.io/Jarvis/" target="_blank" class="menu-item">🔒 Privacy Security Policy</a>
         </div>
     </div>
 
-    <div class="privacy-modal" id="privacyModal">
-        <div class="privacy-box">
-            <h2>Privacy Policy</h2><br>
-            <p>Welcome to S-Jarvis framework. We highly protect our users' security environment.</p><br>
-            <p><strong>Local Storage Processing:</strong> This app does NOT upload, transmit, or leak any chat histories, messages, images, or personal accounts to external cloud mainframes. All operations are kept fully encrypted inside your local browser storage memory.</p>
-            <button class="privacy-close-btn" onclick="closePrivacyModal()">I Accept / Close</button>
+    <div class="container">
+        <div class="top-navbar">
+            <button class="menu-btn" onclick="toggleMenu(true)">☰</button>
+            <div class="brand-title">JARVIS CORE AI</div>
+            <span id="liveTime" style="color: #ff9900; font-size: 0.85rem; font-weight: 600;">00:00:00 AM</span>
         </div>
-    </div>
 
-    <div class="camera-modal" id="cameraModal">
-        <div class="video-box"><video id="videoPreview" autoplay playsinline></video></div>
-        <div class="cam-controls">
-            <button class="cam-btn cancel-btn" onclick="closeInAppCamera()">Close</button>
-            <button class="cam-btn capture-btn" onclick="captureSnapshot()">Take Photo 📸</button>
-        </div>
-    </div>
+        <div class="chat-box-area" id="chatWorkspace"></div>
 
-    <div class="main-content">
-        <div class="header">
-            <button class="header-btn" onclick="toggleSidebar()">☰</button>
-            <button class="get-plus-pill">✨ Get Plus</button>
-            <button class="header-btn" onclick="clearCurrentChat()">⟳</button>
-        </div>
-        
-        <div class="chat-container" id="chatContainer">
-            <div class="suggestions-box" id="suggestionsBox">
-                <div class="suggestion-item" onclick="useSug('Dehradun IT park kahan hai map dikhao')"><span>🗺️ Find IT Park Dehradun Map</span></div>
-                <div class="suggestion-item" onclick="useSug('Google company ki jankari do')"><span>🏢 About Google Company</span></div>
-                <div class="suggestion-item" onclick="useSug('World ke top facts batao')"><span>🌍 World Top Facts</span></div>
+        <div class="suggestion-grid" id="suggestionPanel">
+            <div class="suggest-card" onclick="applySuggestion('🎨 Create an image', 'Design an advanced quantum AI core blueprint')">
+                <div class="title-text">🎨 Create an image</div>
+                <div class="sub-text">Design AI graphics</div>
+            </div>
+            <div class="suggest-card" onclick="applySuggestion('✍️ Write or edit', 'Draft a high-converting promotional pitch')">
+                <div class="title-text">✍️ Write or edit</div>
+                <div class="sub-text">Write essays or letters</div>
             </div>
         </div>
 
-        <div class="adsterra-holder">
-            <script>
-              atOptions = {
-                'key' : '538b4e42515f4a88326e669e544ccfae',
-                'format' : 'iframe',
-                'height' : 60,
-                'width' : 468,
-                'params' : {}
-              };
-            </script>
-            <script src="https://www.highperformanceformat.com/538b4e42515f4a88326e669e544ccfae/invoke.js"></script>
+        <div class="input-bar-container">
+            <input type="text" id="userInputMsg" placeholder="Ask Jarvis anything..." class="chat-input" onkeypress="handleKeyPress(event)">
+            <button class="send-action-btn" onclick="executeCommand()">➔</button>
         </div>
 
-        <div class="input-outer">
-            <div class="input-container">
-                <button class="pill-btn" onclick="openInAppCamera()">📷</button>
-                <input type="text" id="userInput" placeholder="Ask ChatGPT" onkeypress="if(event.key==='Enter')sendMessage()">
-                <button class="pill-btn">🎤</button>
-                <button class="pill-btn send-btn" onclick="sendMessage()">➤</button>
+        <div class="ad-safe-zone">
             </div>
-        </div>
     </div>
 
     <script>
-        // 🚨 CONFIGURATION ZONE: Active Keys
-        var EMAILJS_PUBLIC_KEY = "ed85YzuYlBI1iH1yh"; 
-        var EMAILJS_SERVICE_ID = "service_ckyo2bj";
-        var EMAILJS_TEMPLATE_ID = "template_xn3482v";
+        let chatSessions = JSON.parse(localStorage.getItem('jarvis_vault_sessions')) || [];
+        let activeSessionId = null;
 
-        var url = "https://text.pollinations.ai/";
-        var system_prompt = "You are ChatGPT, an omniscient global intelligence framework. Respond accurately in crisp, premium Hinglish as requested by Master Sachin Saini.";
-        var localStream = null;
-        var generatedOTP = "";
-        var countdownTimer = null;
-
-        window.onload = function() {
-            try {
-                var savedUser = localStorage.getItem('sachin_verified_email');
-                if(savedUser) {
-                    document.getElementById('loginScreen').style.display = 'none';
-                    document.getElementById('userBadge').innerText = "👤 " + savedUser.split('@')[0];
-                }
-                if(typeof emailjs !== 'undefined') {
-                    emailjs.init(EMAILJS_PUBLIC_KEY);
-                }
-            } catch(e) { console.log("Init bypass."); }
-            loadSavedChat();
-        };
-
-        /* 📨 SECURE INSTANT MULTI-MAPPED TRANSMISSION LOGIC */
-        function sendSecureOTP() {
-            try {
-                var email = document.getElementById('userEmail').value.trim();
-                if(!email || email.indexOf('@') === -1) {
-                    alert("Please enter a valid email address!");
-                    return;
-                }
-
-                generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-                
-                document.getElementById('panelStep1').classList.remove('active');
-                document.getElementById('panelStep2').classList.add('active');
-                document.getElementById('otpSubText').innerText = "We sent a 6-digit verification code to " + email;
-                startOtpCountdown();
-
-                if(typeof emailjs !== 'undefined') {
-                    var templateParams = {
-                        to_email: email,
-                        email: email,
-                        to: email,
-                        user_email: email,
-                        recipients: email,
-                        otp_code: generatedOTP,
-                        otp: generatedOTP
-                    };
-
-                    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-                    .then(function(response) {
-                        console.log("Email dispatched smoothly.");
-                    }, function(error) {
-                        alert("[NETWORK INTERCEPT]\nYour real-time secure verification OTP code is: " + generatedOTP);
-                    });
-                } else {
-                    alert("[SANDBOX ACTIVE]\nYour secure login verification OTP is: " + generatedOTP);
-                }
-            } catch(err) {
-                alert("System Alert. Use Verification Code: " + generatedOTP);
-                document.getElementById('panelStep1').classList.remove('active');
-                document.getElementById('panelStep2').classList.add('active');
-            }
+        function toggleMenu(show) {
+            document.getElementById('sidebarMenu').classList.toggle('active', show);
+            document.getElementById('overlay').style.display = show ? 'block' : 'none';
         }
 
-        /* TIMER */
-        function startOtpCountdown() {
-            if(countdownTimer) clearInterval(countdownTimer);
-            var duration = 120; 
-            var display = document.getElementById('timerDisplay');
-            countdownTimer = setInterval(function () {
-                var minutes = parseInt(duration / 60, 10);
-                var seconds = parseInt(duration % 60, 10);
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-                display.innerText = "Code expires in: " + minutes + ":" + seconds;
-                if (--duration < 0) {
-                    clearInterval(countdownTimer);
-                    display.innerText = "OTP Expired! Kripya dobara bhejein.";
-                    generatedOTP = "EXPIRED"; 
-                }
-            }, 1000);
+        function runClock() {
+            const now = new Date();
+            document.getElementById('liveTime').innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+        }
+        setInterval(runClock, 1000);
+        runClock();
+
+        // Markdown Parser Engine for cleaning raw AI responses
+        function formatAIResponse(rawText) {
+            if (!rawText) return "";
+            let parsedText = rawText;
+            parsedText = parsedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            parsedText = parsedText.replace(/\n/g, '<br>');
+            return parsedText;
         }
 
-        /* VERIFY */
-        function verifySecureOTP() {
-            var inputCode = document.getElementById('otpInput').value.trim();
-            var email = document.getElementById('userEmail').value.trim();
+        function initAppSession() {
+            startBrandNewSession();
+            renderSidebarRecents();
+        }
 
-            if(inputCode !== generatedOTP || inputCode === "EXPIRED") {
-                alert("Invalid verification code! Kripya sahi OTP daalein.");
+        function startBrandNewSession() {
+            activeSessionId = 'session_' + Date.now();
+            const workspace = document.getElementById('chatWorkspace');
+            workspace.innerHTML = `<div class="msg-bubble jarvis">Hello Sachin! I am Jarvis. How can I assist you in this fresh session?</div>`;
+            document.getElementById('suggestionPanel').style.display = 'grid';
+            toggleMenu(false);
+            renderSidebarRecents();
+        }
+
+        function renderSidebarRecents() {
+            const listContainer = document.getElementById('recentsLogContainer');
+            listContainer.innerHTML = '';
+            const activeLogs = chatSessions.filter(s => s.chats && s.chats.length > 0);
+            if (activeLogs.length === 0) {
+                listContainer.innerHTML = `<div style="font-size:0.8rem; color:#556673; padding:5px;">No recent history logs.</div>`;
                 return;
             }
-
-            clearInterval(countdownTimer);
-            localStorage.setItem('sachin_verified_email', email);
-            document.getElementById('userBadge').innerText = "👤 " + email.split('@')[0];
-            document.getElementById('loginScreen').style.display = 'none';
-        }
-
-        function toggleSidebar() {
-            var sidebar = document.getElementById('sidebar');
-            var backdrop = document.getElementById('backdrop');
-            if (sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open');
-                backdrop.style.display = 'none';
-            } else {
-                sidebar.classList.add('open');
-                backdrop.style.display = 'block';
-            }
-        }
-
-        function openPrivacyModal() { toggleSidebar(); document.getElementById('privacyModal').style.display = 'flex'; }
-        function closePrivacyModal() { document.getElementById('privacyModal').style.display = 'none'; }
-        function useSug(val) { document.getElementById('userInput').value = val; sendMessage(); }
-        function hideSuggestions() { var sBox = document.getElementById('suggestionsBox'); if(sBox) sBox.style.display = 'none'; }
-
-        /* CAMERA */
-        function openInAppCamera() {
-            var modal = document.getElementById('cameraModal');
-            modal.style.display = 'flex';
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false })
-            .then(function(stream) {
-                localStream = stream;
-                document.getElementById('videoPreview').srcObject = stream;
-            })
-            .catch(function(err) {
-                alert("Camera connect failure.");
-                modal.style.display = 'none';
+            activeLogs.forEach(session => {
+                const item = document.createElement('div');
+                item.className = `recent-chat-item ${session.id === activeSessionId ? 'active' : ''}`;
+                item.innerText = session.title || "Untitled Intelligence Log";
+                item.onclick = () => loadHistoricalSession(session.id);
+                listContainer.appendChild(item);
             });
         }
 
-        function closeInAppCamera() {
-            if(localStream) { localStream.getTracks().forEach(function(track) { track.stop(); }); }
-            document.getElementById('cameraModal').style.display = 'none';
+        function loadHistoricalSession(id) {
+            const targetSession = chatSessions.find(s => s.id === id);
+            if (!targetSession) return;
+            activeSessionId = id;
+            document.getElementById('suggestionPanel').style.display = 'none';
+            const workspace = document.getElementById('chatWorkspace');
+            workspace.innerHTML = '';
+            targetSession.chats.forEach(msg => {
+                const bubble = document.createElement('div');
+                bubble.className = `msg-bubble ${msg.sender}`;
+                bubble.innerHTML = msg.sender === 'jarvis' ? formatAIResponse(msg.text) : msg.text;
+                workspace.appendChild(bubble);
+            });
+            workspace.scrollTop = workspace.scrollHeight;
+            toggleMenu(false);
+            renderSidebarRecents();
         }
 
-        function captureSnapshot() {
-            var video = document.getElementById('videoPreview');
-            var canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth || 640; canvas.height = video.videoHeight || 480;
-            var ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            var base64Img = canvas.toDataURL('image/jpeg');
-            closeInAppCamera(); hideSuggestions();
-            appendMessage("", 'user', base64Img);
-            appendMessage("Boss, image processed successfully!", 'ai');
-            saveChatToMemory();
+        function applySuggestion(headline, text) {
+            document.getElementById('userInputMsg').value = `${headline}: ${text}`;
+            document.getElementById('suggestionPanel').style.display = 'none';
         }
 
-        /* CHAT ENGINE WITH PREMIUM WRAPPERS */
-        function sendMessage() {
-            var inputField = document.getElementById('userInput');
-            var userText = inputField.value.trim();
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') executeCommand();
+        }
+
+        function executeCommand() {
+            const field = document.getElementById('userInputMsg');
+            const userText = field.value.trim();
             if (!userText) return;
-            inputField.value = ''; hideSuggestions();
-            appendMessage(userText, 'user');
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", url + encodeURIComponent(userText) + "?system=" + encodeURIComponent(system_prompt), true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    appendMessage(xhr.responseText, 'ai');
-                    var lowerInput = userText.toLowerCase();
-                    var mapTriggers = ['map', 'location', 'road', 'kahan hai', 'it park', 'dehradun', 'address'];
-                    var needsMap = false;
-                    for (var i = 0; i < mapTriggers.length; i++) {
-                        if (lowerInput.indexOf(mapTriggers[i]) !== -1) { needsMap = true; break; }
-                    }
-                    if(needsMap) appendLiveMapRow(userText);
-                    saveChatToMemory();
+            document.getElementById('suggestionPanel').style.display = 'none';
+            const workspace = document.getElementById('chatWorkspace');
+            const uBubble = document.createElement('div');
+            uBubble.className = 'msg-bubble user';
+            uBubble.innerHTML = userText;
+            workspace.appendChild(uBubble);
+            workspace.scrollTop = workspace.scrollHeight;
+
+            field.value = '';
+
+            let sessionIndex = chatSessions.findIndex(s => s.id === activeSessionId);
+            if (sessionIndex === -1) {
+                let generatedTitle = userText.length > 24 ? userText.substring(0, 22) + '...' : userText;
+                chatSessions.unshift({ id: activeSessionId, title: generatedTitle, chats: [] });
+                sessionIndex = 0;
+            }
+
+            chatSessions[sessionIndex].chats.push({ sender: 'user', text: userText });
+
+            setTimeout(() => {
+                let aiReply = "**Free - Fire ke jaise top-tier mobile shooters:**\n\n• **PUBG Mobile** - Battle-royale ka asli king, thoda zyaada realistic graphics aur depth framework.\n• **Call of Duty Mobile** - Fast-paced gunnery system, weekly events, aur dynamic multiplayer PvP arena matches.";
+                if (userText.toLowerCase().includes('time')) {
+                    aiReply = `🕰️ Precise synchronized system clock time is **${new Date().toLocaleTimeString()}** in your local device zone setup.`;
                 }
-            };
-            xhr.send();
-            saveChatToMemory();
+
+                const jBubble = document.createElement('div');
+                jBubble.className = 'msg-bubble jarvis';
+                jBubble.innerHTML = formatAIResponse(aiReply);
+                workspace.appendChild(jBubble);
+                workspace.scrollTop = workspace.scrollHeight;
+
+                chatSessions[sessionIndex].chats.push({ sender: 'jarvis', text: aiReply });
+                localStorage.setItem('jarvis_vault_sessions', JSON.stringify(chatSessions));
+                renderSidebarRecents();
+            }, 600);
+
+            localStorage.setItem('jarvis_vault_sessions', JSON.stringify(chatSessions));
         }
 
-        function appendMessage(text, sender, imgSrc) {
-            var container = document.getElementById('chatContainer');
-            
-            var wrapper = document.createElement('div');
-            wrapper.className = 'message-wrapper ' + (sender === 'user' ? 'user-wrapper' : 'ai-wrapper');
-            
-            var bubble = document.createElement('div');
-            bubble.className = 'bubble ' + (sender === 'user' ? 'user-bubble' : 'ai-bubble');
-            
-            if(imgSrc) {
-                var img = document.createElement('img'); img.src = imgSrc; img.className = 'chat-img';
-                bubble.appendChild(img);
-            } else { bubble.innerText = text; }
-            
-            wrapper.appendChild(bubble); container.appendChild(wrapper);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function appendLiveMapRow(locationQuery) {
-            var container = document.getElementById('chatContainer');
-            var wrapper = document.createElement('div');
-            wrapper.className = 'message-wrapper ai-wrapper';
-            
-            var bubble = document.createElement('div');
-            bubble.className = 'bubble ai-bubble';
-            var embedUrl = "https://maps.google.com/maps?q=" + encodeURIComponent(locationQuery) + "&t=&z=15&ie=UTF-8&iwloc=&output=embed";
-            bubble.innerHTML = 'Boss, live map check kijiye:<br><iframe width="100%" height="230" style="border:0;border-radius:14px;margin-top:10px;" src="' + embedUrl + '" allowfullscreen></iframe>';
-            
-            wrapper.appendChild(bubble); container.appendChild(wrapper);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function saveChatToMemory() { localStorage.setItem('sachin_chat_history', document.getElementById('chatContainer').innerHTML); }
-        function loadSavedChat() { var savedData = localStorage.getItem('sachin_chat_history'); if(savedData) { document.getElementById('chatContainer').innerHTML = savedData; hideSuggestions(); } }
-        function clearCurrentChat() { localStorage.removeItem('sachin_chat_history'); localStorage.removeItem('sachin_verified_email'); location.reload(); }
+        window.onload = initAppSession;
     </script>
-
 </body>
 </html>
