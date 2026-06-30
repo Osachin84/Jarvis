@@ -1090,7 +1090,6 @@
             document.getElementById('genericAppViewOverlay').style.display = "none";
         }
 
-        // --- Hardware Node Trigger Logic Matrix ---
         function executeNativeCaptureRoute(targetMode) {
             closeAllDrawers();
             if(targetMode === 'camera') document.getElementById('cameraSystemNode').click();
@@ -1191,7 +1190,7 @@
             }, 4500);
         }
 
-        displayCustomModalDialogCard(header, descriptions, acceptBtnText, acceptCallback) {
+        function displayCustomModalDialogCard(header, descriptions, acceptBtnText, acceptCallback) {
             document.getElementById('popupHeaderTitle').innerText = header;
             document.getElementById('popupBodyDescription').innerText = descriptions;
             const container = document.getElementById('modalBtnActionControls');
@@ -1340,8 +1339,8 @@
             workspace.appendChild(jBubble);
             workspace.scrollTop = workspace.scrollHeight;
 
-            // Changed v1beta to standard v1 for stable endpoint parsing route map execution
-            const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            // Cache-busting dynamic token query mapping route execution
+            const url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + API_KEY;
 
             fetch(url, {
                 method: "POST",
@@ -1351,7 +1350,7 @@
             .then(res => {
                 return res.json().then(data => {
                     if (!res.ok || data.error) {
-                        throw new Error(data.error ? data.error.message : `HTTP Error Node: ${res.status}`);
+                        throw new Error(data.error ? data.error.message : "HTTP Error Node: " + res.status);
                     }
                     return data;
                 });
@@ -1365,7 +1364,7 @@
                 workspace.scrollTop = workspace.scrollHeight;
             })
             .catch((err) => {
-                jBubble.innerHTML = `<span style='color:#ef4444;'>⚠️ <b>Google AI Server Rejection:</b> ${err.message}</span>`;
+                jBubble.innerHTML = "<span style='color:#ef4444;'>⚠️ <b>Google AI Server Rejection:</b> " + err.message + "</span>";
                 workspace.scrollTop = workspace.scrollHeight;
             });
         }
