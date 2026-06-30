@@ -1310,7 +1310,7 @@
 
         function handleKeyPress(e) { if (e.key === 'Enter') executeCommand(); }
 
-        // 🤖 MULTI-ROUTE SELF-HEALING AI EXECUTION ENGINE
+        // 🤖 MULTI-ROUTE SELF-HEALING AI TUNNEL ENGINE
         async function executeCommand() {
             const field = document.getElementById('userInputMsg');
             const userText = field.value.trim();
@@ -1339,24 +1339,23 @@
             workspace.appendChild(jBubble);
             workspace.scrollTop = workspace.scrollHeight;
 
-            // 🎯 Matrix Fallback Loops for New Auth Key Formats
-            const options = [
-                { url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY, headers: {} },
-                { url: "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + API_KEY, headers: {} },
-                { url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent", headers: { "x-goog-api-key": API_KEY } },
-                { url: "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent", headers: { "x-goog-api-key": API_KEY } }
+            // 🎯 Try different versions and alternate dynamic model endpoints 
+            const endpoints = [
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY,
+                "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + API_KEY,
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=" + API_KEY,
+                "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=" + API_KEY
             ];
 
             let success = false;
-            let lastErrorMsg = "Connection timed out.";
+            let finalErrorMsg = "Execution path timeout.";
 
-            for (let route of options) {
+            for (let url of endpoints) {
                 if (success) break;
                 try {
-                    let baseHeaders = { "Content-Type": "application/json", ...route.headers };
-                    let response = await fetch(route.url, {
+                    let response = await fetch(url, {
                         method: "POST",
-                        headers: baseHeaders,
+                        headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ contents: [{ parts: [{ text: userText }] }] })
                     });
                     
@@ -1370,15 +1369,15 @@
                         success = true;
                         break;
                     } else {
-                        lastErrorMsg = resData.error ? resData.error.message : "Invalid response envelope.";
+                        finalErrorMsg = resData.error ? resData.error.message : "Structure parse mismatch.";
                     }
                 } catch (netErr) {
-                    lastErrorMsg = netErr.message;
+                    finalErrorMsg = netErr.message;
                 }
             }
 
             if (!success) {
-                jBubble.innerHTML = "<span style='color:#ef4444;'>⚠️ <b>Google Cloud Network Rejection:</b> " + lastErrorMsg + "</span>";
+                jBubble.innerHTML = "<span style='color:#ef4444;'>⚠️ <b>Google AI Engine Error:</b> " + finalErrorMsg + "</span>";
             }
             workspace.scrollTop = workspace.scrollHeight;
         }
