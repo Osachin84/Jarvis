@@ -1310,8 +1310,8 @@
 
         function handleKeyPress(e) { if (e.key === 'Enter') executeCommand(); }
 
-        // 🛠️ 🤖 NATIVE DYNAMIC ROUTING FIXED NODE (Uses v1 stable endpoint path map)
-        function executeCommand() {
+        // 🤖 MULTI-ROUTE SELF-HEALING AI EXECUTION ENGINE
+        async function executeCommand() {
             const field = document.getElementById('userInputMsg');
             const userText = field.value.trim();
             if (!userText) return;
@@ -1339,34 +1339,48 @@
             workspace.appendChild(jBubble);
             workspace.scrollTop = workspace.scrollHeight;
 
-            // Cache-busting dynamic token query mapping route execution
-            const url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + API_KEY;
+            // 🎯 Matrix Fallback Loops for New Auth Key Formats
+            const options = [
+                { url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY, headers: {} },
+                { url: "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + API_KEY, headers: {} },
+                { url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent", headers: { "x-goog-api-key": API_KEY } },
+                { url: "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent", headers: { "x-goog-api-key": API_KEY } }
+            ];
 
-            fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contents: [{ parts: [{ text: userText }] }] })
-            })
-            .then(res => {
-                return res.json().then(data => {
-                    if (!res.ok || data.error) {
-                        throw new Error(data.error ? data.error.message : "HTTP Error Node: " + res.status);
+            let success = false;
+            let lastErrorMsg = "Connection timed out.";
+
+            for (let route of options) {
+                if (success) break;
+                try {
+                    let baseHeaders = { "Content-Type": "application/json", ...route.headers };
+                    let response = await fetch(route.url, {
+                        method: "POST",
+                        headers: baseHeaders,
+                        body: JSON.stringify({ contents: [{ parts: [{ text: userText }] }] })
+                    });
+                    
+                    let resData = await response.json();
+                    if (response.ok && resData.candidates && resData.candidates[0].content.parts[0].text) {
+                        let aiReply = resData.candidates[0].content.parts[0].text;
+                        jBubble.innerHTML = formatAIResponse(aiReply);
+                        chatSessions[sessionIndex].chats.push({ sender: 'jarvis', text: aiReply });
+                        localStorage.setItem('jarvis_vault_sessions', JSON.stringify(chatSessions));
+                        renderSidebarRecents();
+                        success = true;
+                        break;
+                    } else {
+                        lastErrorMsg = resData.error ? resData.error.message : "Invalid response envelope.";
                     }
-                    return data;
-                });
-            })
-            .then(data => {
-                let aiReply = data.candidates[0].content.parts[0].text;
-                jBubble.innerHTML = formatAIResponse(aiReply);
-                chatSessions[sessionIndex].chats.push({ sender: 'jarvis', text: aiReply });
-                localStorage.setItem('jarvis_vault_sessions', JSON.stringify(chatSessions));
-                renderSidebarRecents();
-                workspace.scrollTop = workspace.scrollHeight;
-            })
-            .catch((err) => {
-                jBubble.innerHTML = "<span style='color:#ef4444;'>⚠️ <b>Google AI Server Rejection:</b> " + err.message + "</span>";
-                workspace.scrollTop = workspace.scrollHeight;
-            });
+                } catch (netErr) {
+                    lastErrorMsg = netErr.message;
+                }
+            }
+
+            if (!success) {
+                jBubble.innerHTML = "<span style='color:#ef4444;'>⚠️ <b>Google Cloud Network Rejection:</b> " + lastErrorMsg + "</span>";
+            }
+            workspace.scrollTop = workspace.scrollHeight;
         }
 
         window.onload = function() {
