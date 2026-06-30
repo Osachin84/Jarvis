@@ -580,4 +580,250 @@
             </div>
 
             <div class="settings-box-container" style="margin-bottom: 20px;">
-                <div class="settings-row-item" onclick="triggerLogoutAction()" style
+                <div class="settings-row-item" onclick="triggerLogoutAction()" style="color: #ef4444; justify-content: center; font-weight: 600;">
+                    🚪 Log out
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="top-navbar">
+            <button class="menu-btn" onclick="toggleMenu(true)">☰</button>
+            <div class="brand-title">JARVIS</div>
+        </div>
+
+        <div class="chat-box-area" id="chatWorkspace"></div>
+
+        <div class="suggestion-grid" id="suggestionPanel">
+            <div class="suggest-card" onclick="applySuggestion('🎨 Create an image', 'Design an advanced quantum AI core blueprint')">
+                <div class="title-text">🎨 Create an image</div>
+                <div class="sub-text">Design AI graphics</div>
+            </div>
+            <div class="suggest-card" onclick="applySuggestion('✍️ Write or edit', 'Draft a high-converting promotional pitch')">
+                <div class="title-text">✍️ Write or edit</div>
+                <div class="sub-text">Write essays or letters</div>
+            </div>
+        </div>
+
+        <div class="attachment-popup-menu" id="attachPopupMenuBox">
+            <div class="attach-menu-item" onclick="executeAttachOption('📷 Camera Feed Launcher Initialized')">📷 Camera</div>
+            <div class="attach-menu-item" onclick="executeAttachOption('🖼️ Photo Gallery Engine Triggered')">🖼️ Photos</div>
+            <div class="attach-menu-item" onclick="executeAttachOption('📂 Storage Document Directory Active')">📁 Files</div>
+            <div class="attach-menu-item" onclick="executeAttachOption('🔌 Extensions Tool Active')">🔌 Plugins</div>
+        </div>
+
+        <div class="input-bar-container">
+            <button class="action-icon-btn" onclick="toggleAttachmentPopup()" style="font-size: 1.5rem; color:#00ffcc;" id="attachActionBtn">+</button>
+            <input type="text" id="userInputMsg" placeholder="Ask Jarvis anything..." class="chat-input" onkeypress="handleKeyPress(event)">
+            <button class="send-action-btn" onclick="executeCommand()">➔</button>
+        </div>
+    </div>
+
+    <script>
+        // 🔑 🎯 YOUR LIVE GOOGLE GEMINI API KEY IS LOADED DIRECTLY BELOW:
+        const API_KEY = "AQ.Ab8RN6JdS8RW5YHt_8FV9epi35uNQaCoP8ogwO2PNeEx74yJuA";
+
+        let chatSessions = JSON.parse(localStorage.getItem('jarvis_vault_sessions')) || [];
+        let activeSessionId = null;
+        let isLightMode = false;
+
+        function toggleMenu(show) {
+            document.getElementById('sidebarMenu').classList.toggle('active', show);
+            document.getElementById('overlay').style.display = show ? 'block' : 'none';
+        }
+
+        function toggleSettingsPanel(show) {
+            document.getElementById('settingsDashboardView').style.display = show ? 'flex' : 'none';
+            if(show) toggleMenu(false);
+        }
+
+        function toggleAttachmentPopup() {
+            const popup = document.getElementById('attachPopupMenuBox');
+            const btn = document.getElementById('attachActionBtn');
+            if(popup.style.display === 'flex') {
+                popup.style.display = 'none';
+                btn.innerText = "+";
+            } else {
+                popup.style.display = 'flex';
+                btn.innerText = "×";
+            }
+        }
+
+        function closeAllDrawers() {
+            toggleMenu(false);
+            document.getElementById('attachPopupMenuBox').style.display = 'none';
+            document.getElementById('attachActionBtn').innerText = "+";
+        }
+
+        function triggerSubFeature(logMsg) {
+            alert(`🤖 Jarvis Alert:\n\n[System Core Status]: ${logMsg}`);
+        }
+
+        function executeAttachOption(actionName) {
+            alert(`📂 Attachment Node Triggered:\n\n${actionName}`);
+            closeAllDrawers();
+        }
+
+        function toggleThemeMock() {
+            isLightMode = !isLightMode;
+            document.body.style.background = isLightMode ? 'linear-gradient(135deg, #e2e8f0, #cbd5e1, #94a3b8)' : 'linear-gradient(135deg, #0b151a, #132229, #1a303a)';
+            document.body.style.color = isLightMode ? '#0f172a' : '#ffffff';
+            document.getElementById('themeStatusLabel').innerText = isLightMode ? "Light Mode ➔" : "Dark Mode ➔";
+        }
+
+        function triggerLogoutAction() {
+            if(confirm("Do you securely want to clear history database and clear session sync cache parameters?")) {
+                localStorage.removeItem('jarvis_vault_sessions');
+                chatSessions = [];
+                toggleSettingsPanel(false);
+                startBrandNewSession();
+                alert("Vault matrix diagnostics cleared successfully.");
+            }
+        }
+
+        // Markdown Parser engine
+        function formatAIResponse(rawText) {
+            if (!rawText) return "";
+            let parsedText = rawText;
+            parsedText = parsedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            parsedText = parsedText.replace(/\n/g, '<br>');
+            return parsedText;
+        }
+
+        function initAppSession() {
+            startBrandNewSession();
+            renderSidebarRecents();
+        }
+
+        function startBrandNewSession() {
+            activeSessionId = 'session_' + Date.now();
+            const workspace = document.getElementById('chatWorkspace');
+            workspace.innerHTML = `<div class="msg-bubble jarvis">Hello! I am Jarvis. How can I assist you in this fresh session?</div>`;
+            document.getElementById('suggestionPanel').style.display = 'grid';
+            closeAllDrawers();
+            renderSidebarRecents();
+        }
+
+        function renderSidebarRecents() {
+            const listContainer = document.getElementById('recentsLogContainer');
+            listContainer.innerHTML = '';
+            const activeLogs = chatSessions.filter(s => s.chats && s.chats.length > 0);
+            if (activeLogs.length === 0) {
+                listContainer.innerHTML = `<div style="font-size:0.8rem; color:#556673; padding:5px;">No recent history logs.</div>`;
+                return;
+            }
+            activeLogs.forEach(session => {
+                const item = document.createElement('div');
+                item.className = `recent-chat-item ${session.id === activeSessionId ? 'active' : ''}`;
+                item.innerText = session.title || "Untitled Intelligence Log";
+                item.onclick = () => loadHistoricalSession(session.id);
+                listContainer.appendChild(item);
+            });
+        }
+
+        function loadHistoricalSession(id) {
+            const targetSession = chatSessions.find(s => s.id === id);
+            if (!targetSession) return;
+            activeSessionId = id;
+            document.getElementById('suggestionPanel').style.display = 'none';
+            const workspace = document.getElementById('chatWorkspace');
+            workspace.innerHTML = '';
+            targetSession.chats.forEach(msg => {
+                const bubble = document.createElement('div');
+                bubble.className = `msg-bubble ${msg.sender}`;
+                bubble.innerHTML = msg.sender === 'jarvis' ? formatAIResponse(msg.text) : msg.text;
+                workspace.appendChild(bubble);
+            });
+            workspace.scrollTop = workspace.scrollHeight;
+            closeAllDrawers();
+            renderSidebarRecents();
+        }
+
+        function applySuggestion(headline, text) {
+            document.getElementById('userInputMsg').value = `${headline}: ${text}`;
+            document.getElementById('suggestionPanel').style.display = 'none';
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') executeCommand();
+        }
+
+        // 🤖 REAL LIVE AI PROCESSING MATRIX PIPELINE (HTTP POST FETCH INTEGRATION)
+        function executeCommand() {
+            const field = document.getElementById('userInputMsg');
+            const userText = field.value.trim();
+            if (!userText) return;
+
+            document.getElementById('suggestionPanel').style.display = 'none';
+            closeAllDrawers();
+
+            const workspace = document.getElementById('chatWorkspace');
+            const uBubble = document.createElement('div');
+            uBubble.className = 'msg-bubble user';
+            uBubble.innerHTML = userText;
+            workspace.appendChild(uBubble);
+            workspace.scrollTop = workspace.scrollHeight;
+
+            field.value = '';
+
+            let sessionIndex = chatSessions.findIndex(s => s.id === activeSessionId);
+            if (sessionIndex === -1) {
+                let generatedTitle = userText.length > 22 ? userText.substring(0, 20) + '...' : userText;
+                chatSessions.unshift({ id: activeSessionId, title: generatedTitle, chats: [] });
+                sessionIndex = 0;
+            }
+
+            chatSessions[sessionIndex].chats.push({ sender: 'user', text: userText });
+
+            // Create placeholder thinking bubble animation layout
+            const jBubble = document.createElement('div');
+            jBubble.className = 'msg-bubble jarvis';
+            jBubble.innerHTML = "🤖 Jarvis is thinking...";
+            workspace.appendChild(jBubble);
+            workspace.scrollTop = workspace.scrollHeight;
+
+            // 🛠️ Secure fallbacks checks for developers setup template keys
+            if (API_KEY === "YAHAN_APNI_API_KEY_PASTE_KAREIN" || API_KEY.trim() === "") {
+                setTimeout(() => {
+                    jBubble.innerHTML = "⚠️ <b>System Error:</b> API Key missing! Please edit the HTML file code and insert your Google AI Studio token.";
+                }, 500);
+                return;
+            }
+
+            // Target Cloud Optimization endpoint servers routing maps
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contents: [{ parts: [{ text: userText }] }] })
+            })
+            .then(res => res.json())
+            .then(data => {
+                try {
+                    let aiReply = data.candidates[0].content.parts[0].text;
+                    jBubble.innerHTML = formatAIResponse(aiReply);
+                    
+                    chatSessions[sessionIndex].chats.push({ sender: 'jarvis', text: aiReply });
+                    localStorage.setItem('jarvis_vault_sessions', JSON.stringify(chatSessions));
+                    renderSidebarRecents();
+                } catch (e) {
+                    jBubble.innerHTML = "⚠️ <b>API Parse Error:</b> Key is invalid or quota limit exceeded. Please generate a fresh key.";
+                    console.error("Data error:", data);
+                }
+                workspace.scrollTop = workspace.scrollHeight;
+            })
+            .catch(err => {
+                jBubble.innerHTML = "⚠️ <b>Network Error:</b> Problem connecting with cloud server layers. Check device connection channels.";
+                workspace.scrollTop = workspace.scrollHeight;
+                console.error("Fetch error:", err);
+            });
+
+            localStorage.setItem('jarvis_vault_sessions', JSON.stringify(chatSessions));
+        }
+
+        window.onload = initAppSession;
+    </script>
+</body>
+</html>
