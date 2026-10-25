@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Space Defender</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      background: #05050f;
+      overflow: hidden;
+      font-family: sans-serif;
+      touch-action: none;
+      color: #fff;
+    }
+    #gameCanvas {
+      display: block;
+      margin: 0 auto;
+      background: radial-gradient(circle, #0d122b 0%, #05050f 100%);
+    }
+    #ui {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      font-weight: bold;
+      text-shadow: 0 0 5px #00ffff;
+      pointer-events: none;
+    }
+    /* Mobile Controls */
+    .controls {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 25px;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+    .btn {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(0, 255, 255, 0.2);
+      border: 2px solid #00ffff;
+      color: #00ffff;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: auto;
+      touch-action: manipulation;
+    }
+    .btn:active {
+      background: rgba(0, 255, 255, 0.5);
+    }
+    #fireBtn {
+      background: rgba(255, 0, 85, 0.25);
+      border-color: #ff0055;
+      color: #ff0055;
+      width: 80px;
+      height: 80px;
+    }
+    #fireBtn:active {
+      background: rgba(255, 0, 85, 0.6);
+    }
+    #gameOverScreen {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      background: rgba(10, 10, 20, 0.9);
+      padding: 30px;
+      border-radius: 12px;
+      border: 1px solid #00ffff;
+    }
+    #restartBtn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #00ffff;
+      border: none;
+      color: #000;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="ui">
+    <div id="scoreText">Score: 0</div>
+    <div id="healthText">Shield: 100%</div>
+  </div>
+
+  <div id="gameOverScreen">
+    <h1 style="color: #ff0055; margin-bottom: 10px;">GAME OVER</h1>
+    <p id="finalScore" style="margin-bottom: 15px;">Your Score: 0</p>
+    <button id="restartBtn" onclick="restartGame()">Restart</button>
+  </div>
+
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- Mobile Controls -->
+  <div class="controls">
+    <div style="display: flex; gap: 15px;">
+      <div class="btn" id="leftBtn">◀</div>
+      <div class="btn" id="rightBtn">▶</div>
+    </div>
+    <div class="btn" id="fireBtn">🔥</div>
+  </div>
+
+<script>
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  let score = 0;
+  let health = 100;
+  let isGameOver = false;
+
+  const player = {
+    x: canvas.width / 2,
+    y: canvas.height - 120,
+    width: 36,
+    height: 36,
+    speed: 7,
+    dx: 0
+  };
+
+  let bullets = [];
+  let enemies = [];
+  let enemyTimer = 0;
+
+  // Sound Engine (Zero external files needed)
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  function playBeep(freq, type, duration) {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  }
+
+  // Shoot Bullet
+  function shoot() {
+    if (isGameOver) return;
+    bullets.push({
+      x: player.x,
+      y: player.y - 15,
+      radius: 4,
+      speed: 9
+    });
+    playBeep(600, "square", 0.1);
+  }
+
+  // Keyboard controls
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft" || e.key === "a") player.dx = -player.speed;
+    if (e.key === "ArrowRight" || e.key === "d") player.dx = player.speed;
+    if (e.key === " " || e.code === "Space") shoot();
+  });
+  window.addEventListener("keyup", (e) => {
+    if (["ArrowLeft", "ArrowRight", "a", "d"].includes(e.key)) player.dx = 0;
+  });
+
+  // Mobile Buttons
+  const leftBtn = document.getElementById("leftBtn");
+  const rightBtn = document.getElementById("rightBtn");
+  const fireBtn = document.getElementById("fireBtn");
+
+  leftBtn.addEventListener("touchstart", (e) => { e.preventDefault(); player.dx = -player.speed; });
+  leftBtn.addEventListener("touchend", () => { player.dx = 0; });
+  rightBtn.addEventListener("touchstart", (e) => { e.preventDefault(); player.dx = player.speed; });
+  rightBtn.addEventListener("touchend", () => { player.dx = 0; });
+  fireBtn.addEventListener("touchstart", (e) => { e.preventDefault(); shoot(); });
+
+  // Spawn Enemy
+  function spawnEnemy() {
+    const size = Math.random() * 20 + 20;
+    enemies.push({
+      x: Math.random() * (canvas.width - size),
+      y: -size,
+      size: size,
+      speed: Math.random() * 2 + 2
+    });
+  }
+
+  function update() {
+    if (isGameOver) return;
+
+    // Move player
+    player.x += player.dx;
+    if (player.x < player.width) player.x = player.width;
+    if (player.x > canvas.width - player.width) player.x = canvas.width - player.width;
+
+    // Move Bullets
+    bullets.forEach((b, i) => {
+      b.y -= b.speed;
+      if (b.y < 0) bullets.splice(i, 1);
+    });
+
+    // Enemy spawn loop
+    enemyTimer++;
+    if (enemyTimer % 50 === 0) spawnEnemy();
+
+    // Move enemies & collision check
+    enemies.forEach((enemy, ei) => {
+      enemy.y += enemy.speed;
+
+      // Enemy hit player base
+      if (enemy.y > canvas.height) {
+        enemies.splice(ei, 1);
+        health -= 15;
+        playBeep(120, "sawtooth", 0.2);
+        checkHealth();
+      }
+
+      // Bullet hit enemy
+      bullets.forEach((b, bi) => {
+        const dist = Math.hypot(b.x - (enemy.x + enemy.size / 2), b.y - (enemy.y + enemy.size / 2));
+        if (dist < enemy.size / 2 + b.radius) {
+          playBeep(250, "sine", 0.15);
+          enemies.splice(ei, 1);
+          bullets.splice(bi, 1);
+          score += 10;
+          document.getElementById("scoreText").innerText = "Score: " + score;
+        }
+      });
+    });
+  }
+
+  function checkHealth() {
+    if (health <= 0) {
+      health = 0;
+      isGameOver = true;
+      document.getElementById("finalScore").innerText = "Your Score: " + score;
+      document.getElementById("gameOverScreen").style.display = "block";
+    }
+    document.getElementById("healthText").innerText = "Shield: " + health + "%";
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw Player Ship
+    ctx.fillStyle = "#00ffff";
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = "#00ffff";
+    ctx.beginPath();
+    ctx.moveTo(player.x, player.y - player.height / 2);
+    ctx.lineTo(player.x - player.width / 2, player.y + player.height / 2);
+    ctx.lineTo(player.x + player.width / 2, player.y + player.height / 2);
+    ctx.closePath();
+    ctx.fill();
+
+    // Draw Bullets
+    ctx.fillStyle = "#ffff00";
+    ctx.shadowColor = "#ffff00";
+    bullets.forEach(b => {
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Draw Enemies
+    ctx.fillStyle = "#ff0055";
+    ctx.shadowColor = "#ff0055";
+    enemies.forEach(enemy => {
+      ctx.fillRect(enemy.x, enemy.y, enemy.size, enemy.size);
+    });
+
+    ctx.shadowBlur = 0;
+  }
+
+  function gameLoop() {
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
+  }
+
+  function restartGame() {
+    score = 0;
+    health = 100;
+    bullets = [];
+    enemies = [];
+    isGameOver = false;
+    document.getElementById("scoreText").innerText = "Score: 0";
+    document.getElementById("healthText").innerText = "Shield: 100%";
+    document.getElementById("gameOverScreen").style.display = "none";
+  }
+
+  gameLoop();
+</script>
+</body>
+  </html>
+    
